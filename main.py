@@ -1,21 +1,12 @@
 import pygame
+from core.engine import Engine
 
-pygame.init()
 
-SIZE = HEIGHT , WIDTH = 1280 , 720
-screen = pygame.display.set_mode(SIZE)
-clock = pygame.time.Clock()
-running = True
-
-while running:
+def main():
+    pygame.init()
+    engine = Engine()
+    engine.run()
+    pygame.quit()
     
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-            
-            
-    screen.fill("grey")
-    pygame.display.flip()
-    clock.tick(60)
-    
-pygame.quit()
+if __name__ == "__main__":
+    main()
