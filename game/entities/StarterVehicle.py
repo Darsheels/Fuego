@@ -9,12 +9,7 @@ class DefaultVehicle:
         self.rect = self.image.get_rect(center=(x,y))
         
         self.speed = 0
-        self.x = x
-        self.y = y
-        self.angle = 0
-        self.acceleration  = 0.2
-        self.max_speed = 6 
-        self.friction = 0.05
+      
         
     def update(self):
         keys = pygame.key.get_pressed()

@@ -1,6 +1,8 @@
 import pygame
 from config import SCREEN_WIDTH , SCREEN_HEIGHT , FPS , BG_COLOR
 from game.entities.StarterVehicle import DefaultVehicle
+from game.entities.buildings import FireStation , CommercialBuilding
+from game.entities.Button import Button
 
 class Engine:
     def __init__(self):
@@ -13,14 +15,9 @@ class Engine:
         self.background = pygame.image.load("assets/images/Fuego_BG.png").convert_alpha()
         self.ground = pygame.image.load("assets/images/Ground.png").convert_alpha()
         
-        self.fireDepartment = pygame.image.load("assets/images/buildings/Fire Department.png").convert_alpha()
         
         self.background = pygame.transform.scale(
             self.background , (SCREEN_WIDTH, SCREEN_HEIGHT)
-        )
-        
-        self.fireDepartment = pygame.transform.scale(
-            self.fireDepartment , (1100 ,750)
         )
         
         self.ground = pygame.transform.scale(
@@ -28,7 +25,12 @@ class Engine:
         )
         
         self.defaultVehicle = DefaultVehicle(100, 570) 
+        self.fireStation = FireStation(213 , -70)
+        self.commercialBuilding = CommercialBuilding(213 , -70)
+        self.button = Button(0,0)
         
+        self.buildings =  [self.fireStation , self.commercialBuilding]
+        self.current_building = 0
         
         
     def run(self):
@@ -43,14 +45,21 @@ class Engine:
             if event.type == pygame.QUIT:
                 self.running = False
                 
+            if self.button.is_clicked(event):
+                self.current_building = (self.current_building + 1) % len(self.buildings)
+               
+                
     def update(self):
         self.defaultVehicle.update()
     
     def draw(self):
         self.screen.blit(self.background , (0,0))
         self.screen.blit(self.ground , (0 , 450))
-        self.screen.blit(self.fireDepartment , (213 , -70))
-        self.defaultVehicle.draw(self.screen)
+    
+        self.buildings[self.current_building].draw(self.screen)
+        self.button.draw(self.screen)
         
-        
+        # self.defaultVehicle.draw(self.screen)
+        # self.fireStation.draw(self.screen)
+        # self.commercialBuilding.draw(self.screen)
         pygame.display.flip()
