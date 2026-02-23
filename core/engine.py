@@ -1,8 +1,10 @@
 import pygame
-from config import SCREEN_WIDTH , SCREEN_HEIGHT , FPS , BG_COLOR
+from config import SCREEN_WIDTH , SCREEN_HEIGHT , FPS , BG_COLOR , GROUND_LEVEL
 from game.entities.StarterVehicle import DefaultVehicle
 from game.entities.buildings import FireStation , CommercialBuilding
 from game.entities.Button import Button
+from game.entities.FireFighter import Firefighter
+
 
 class Engine:
     def __init__(self):
@@ -24,11 +26,12 @@ class Engine:
             self.ground , (100000  , 300)
         )
         
-        self.defaultVehicle = DefaultVehicle(100, 570) 
+        self.defaultVehicle = DefaultVehicle(100, GROUND_LEVEL) 
         self.fireStation = FireStation(213 , -70)
         self.commercialBuilding = CommercialBuilding(213 , -70)
         self.button = Button(0,0)
         
+        self.firefighter = Firefighter(213 , 590)
         self.buildings =  [self.fireStation , self.commercialBuilding]
         self.current_building = 0
         
@@ -51,6 +54,7 @@ class Engine:
                 
     def update(self):
         self.defaultVehicle.update()
+        self.firefighter.update()
     
     def draw(self):
         self.screen.blit(self.background , (0,0))
@@ -58,8 +62,7 @@ class Engine:
     
         self.buildings[self.current_building].draw(self.screen)
         self.button.draw(self.screen)
-        
-        # self.defaultVehicle.draw(self.screen)
-        # self.fireStation.draw(self.screen)
-        # self.commercialBuilding.draw(self.screen)
+        self.firefighter.draw(self.screen)
+       
+       
         pygame.display.flip()
