@@ -34,7 +34,20 @@ class Engine:
         self.firefighter = Firefighter(213 , 590)
         self.buildings =  [self.fireStation , self.commercialBuilding]
         self.current_building = 0
+        self.current_scene = "outside"
         
+        self.near_door = False
+        
+    def enter_building(self):
+        print("Entering Building ...")
+        self.current_scene = "interior"
+        
+        
+    def draw_interior(self):
+        self.screen.fill((20,20,20))
+        font = pygame.font.Font(None,60)
+        text = font.render("Inside Building" , True , (255 ,255 ,255))
+        self.screen.blit(text , (200,200))
         
     def run(self):
         while self.running:
@@ -48,6 +61,10 @@ class Engine:
             if event.type == pygame.QUIT:
                 self.running = False
                 
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_e and self.near_door:
+                    self.enter_building()
+            
             if self.button.is_clicked(event):
                 self.current_building = (self.current_building + 1) % len(self.buildings)
                
@@ -55,14 +72,36 @@ class Engine:
     def update(self):
         self.defaultVehicle.update()
         self.firefighter.update()
-    
+        
+        player_rect = self.firefighter.rect
+        current_building = self.buildings[self.current_building]
+        
+        self.near_door = current_building.door_zone.colliderect(player_rect)
+        
+        
     def draw(self):
+        
+        if self.current_scene == "interior":
+            self.draw_interior()
+            return
+        
+        
         self.screen.blit(self.background , (0,0))
         self.screen.blit(self.ground , (0 , 450))
     
-        self.buildings[self.current_building].draw(self.screen)
+        building = self.buildings[self.current_building]
+        building.draw(self.screen)
+        
+        
         self.button.draw(self.screen)
         self.firefighter.draw(self.screen)
        
+       
+       
+       
+        if self.near_door:
+            font = pygame.font.Font(None , 40)
+            text =font.render("Press E" , True , (255,255,255))
+            self.screen.blit(text , (building.door_zone.x , building.door_zone.y - 30))
        
         pygame.display.flip()
