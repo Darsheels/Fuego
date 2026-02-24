@@ -43,8 +43,17 @@ class Engine:
         self.current_scene = "interior"
         
         
-    def draw_interior(self):
-        self.screen.fill((20,20,20))
+    def draw_interior(self ):
+        if self.buildings[self.current_building] is self.fireStation:
+            self.innerFireDepartment = pygame.image.load("assets/images/buildings/innerFireDepartment.png").convert_alpha()
+            self.innerFireDepartment = pygame.transform.scale(
+                self.innerFireDepartment , (SCREEN_WIDTH , SCREEN_HEIGHT)
+            )
+            
+            self.screen.blit(self.innerFireDepartment ,(0 , 0))
+        else:
+            return
+        
         font = pygame.font.Font(None,60)
         text = font.render("Inside Building" , True , (255 ,255 ,255))
         self.screen.blit(text , (200,200))
@@ -83,6 +92,8 @@ class Engine:
         
         if self.current_scene == "interior":
             self.draw_interior()
+            self.firefighter.draw(self.screen)
+            pygame.display.flip()
             return
         
         
@@ -95,9 +106,6 @@ class Engine:
         
         self.button.draw(self.screen)
         self.firefighter.draw(self.screen)
-       
-       
-       
        
         if self.near_door:
             font = pygame.font.Font(None , 40)
