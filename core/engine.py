@@ -26,7 +26,7 @@ class Engine:
             self.ground , (100000  , 300)
         )
         
-        self.defaultVehicle = DefaultVehicle(100, GROUND_LEVEL) 
+        self.defaultVehicle = DefaultVehicle(600, 500) 
         self.fireStation = FireStation(213 , -70)
         self.commercialBuilding = CommercialBuilding(213 , -70)
         self.button = Button(0,0)
@@ -92,7 +92,8 @@ class Engine:
         
         if self.current_scene == "interior":
             self.draw_interior()
-            self.firefighter.draw(self.screen)
+            # self.firefighter.draw(self.screen)
+            self.defaultVehicle.draw(self.screen)
             pygame.display.flip()
             return
         
