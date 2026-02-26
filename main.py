@@ -1,13 +1,12 @@
 import pygame
-from core.engine import Engine
-
+from core.game import Game
 
 def main():
     pygame.init()
-    pygame.display.set_caption("Fuego")
-    engine = Engine()
-    engine.run()
+    game = Game()
+    game.run()
     pygame.quit()
     
 if __name__ == "__main__":
     main()
+    
