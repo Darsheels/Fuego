@@ -1,8 +1,18 @@
 import pygame
 
-class Scene_Manager:
+class SceneManager:
     def __init__(self):
-        pass
+        self.scenes = {}
+        self.current = None
     
-    def update(self):
-        pass
+    def add(self,name,scene):
+        self.scenes[name] = scene
+    
+    def set(self , name):
+        self.current = self.scenes[name]
+    
+    def update(self , keys):
+        self.current.update(keys)
+        
+    def draw(self , screen):
+        self.current.draw(screen)

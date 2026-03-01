@@ -4,7 +4,7 @@ class FireStation:
     def __init__(self , x ,y):
         CURRENT_SCALING  = 11
         
-        self.image = pygame.image.load("assets/images/buildings/Fire Department.png").convert_alpha()
+        self.image = pygame.image.load("assets/sprites/buildings/Fire Department.png").convert_alpha()
         self.image = pygame.transform.scale(self.image , (128 * CURRENT_SCALING,128 * CURRENT_SCALING))
         self.rect = self.image.get_rect(topleft=(x,y))
         
