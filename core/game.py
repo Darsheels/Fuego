@@ -20,9 +20,12 @@ class Game:
             self.ground , (SCREEN_WIDTH , 300)
         )
         
-        self.player = Player(400 , 570)
+        self.player = Player(400 , 480)
         self.interior_player = Player(800 , 570)
         self.fire_Station = FireStation(0 , -375)
+        self.all_sprites = pygame.sprite.Group()
+        self.all_sprites.add(self.player , self.interior_player)
+        
         
         self.current_scene = "outside"
         self.near_door = False
@@ -58,13 +61,19 @@ class Game:
                     self.enter_building()
                 
     def update(self):
-        self.player.update()
-        self.interior_player.update()
+        keys = pygame.key.get_pressed()
         
-        player_rect = self.player.rect
-        self.near_door = self.fire_Station.door_zone.colliderect(player_rect)
+        if self.current_scene == "outside":
+            self.player.update(keys)
+            player_rect = self.player.rect
+            self.near_door = self.fire_Station.door_zone.colliderect(player_rect)
+        else:
+            self.interior_player.update(keys)
+        
+       
     
     def draw(self):
+        keys = pygame.key.get_pressed()
         
         if self.current_scene == "interior":
             self.draw_interior()
