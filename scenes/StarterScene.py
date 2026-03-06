@@ -4,6 +4,8 @@ from entities.Player import Player
 from entities.Buildings import FireStation , FireStationInterior
 from entities.scene_config import SPAWN_POINTS
 from entities.vehicles import DefaultTruck
+from entities.loadingMaps import importMap
+
 
 class FireStationOutsideScene:
     def __init__(self , game , player):
@@ -33,16 +35,19 @@ class FireStationOutsideScene:
         
         
         
-        
-        
 class FireStationInteriorScene:
     def __init__(self , game , player):
+        
+        self.map = importMap(
+            "assets/tiles/InteriorTileSet.png",
+            "assets/maps/FireDepartmentIndoor.tmj"
+        )
         
         self.game = game
         self.player = player
        
         self.station_interior = FireStationInterior(0,0)
-        self.display_truck = DefaultTruck(100,300)
+        self.display_truck = DefaultTruck(50,300)
        
         self.interior_spawn = SPAWN_POINTS["fire_station_interior"]["default_interior"]
         
@@ -51,12 +56,10 @@ class FireStationInteriorScene:
         self.player.rect.topleft = self.interior_spawn 
         
     def enter_fire_truck(self):
-        
         spawn = SPAWN_POINTS["outside"]["fire_truck_spawn"]
-        
         self.game.fire_truck.rect.topleft = spawn
-        
         self.game.scene_manager.set("driving")
+        
         
     def update(self,keys):
         self.player.update(keys)

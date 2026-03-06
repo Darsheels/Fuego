@@ -33,8 +33,6 @@ class Game:
 
         self.ground = pygame.image.load("assets/sprites/buildingblocks/Ground.png").convert_alpha()
         self.ground = pygame.transform.scale(self.ground, (SCREEN_WIDTH, 300))
-
-    
     
     def run(self):
         while self.running:
@@ -54,14 +52,4 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
-    
-        
-       
-        
-       
-    
-    
-        
-  
-        
       
