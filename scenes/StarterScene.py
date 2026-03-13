@@ -38,15 +38,14 @@ class FireStationOutsideScene:
 class FireStationInteriorScene:
     def __init__(self , game , player):
         
-        self.map = importMap(
-            "assets/tiles/InteriorTileSet.png",
-            "assets/maps/FireDepartmentIndoor.tmj"
+        self.TruckApparitus = importMap(
+            "assets/maps/TruckApparitus.tmj"
         )
         
         self.game = game
         self.player = player
        
-        self.station_interior = FireStationInterior(0,0)
+        # self.station_interior = FireStationInterior(0,0)
         self.display_truck = DefaultTruck(50,300)
        
         self.interior_spawn = SPAWN_POINTS["fire_station_interior"]["default_interior"]
@@ -63,17 +62,18 @@ class FireStationInteriorScene:
         
     def update(self,keys):
         self.player.update(keys)
-        if self.station_interior.door_zone.colliderect(self.player.rect):
-            if keys[pygame.K_e]:
-                self.player.rect.topleft = self.outside_spawn
-                self.game.scene_manager.set("outside")
+        # if self.station_interior.door_zone.colliderect(self.player.rect):
+        #     if keys[pygame.K_e]:
+        #         self.player.rect.topleft = self.outside_spawn
+        #         self.game.scene_manager.set("outside")
         if self.display_truck.truck_zone.colliderect(self.player.rect):
             if keys[pygame.K_x]:
                 self.enter_fire_truck()
             
             
     def draw(self , screen):
-        self.station_interior.draw(screen)
+        # self.station_interior.draw(screen)
+        self.TruckApparitus.draw(screen)
         self.player.draw(screen)
         self.display_truck.draw(screen)
             
