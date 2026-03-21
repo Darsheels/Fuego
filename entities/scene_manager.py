@@ -11,8 +11,8 @@ class SceneManager:
     def set(self , name):
         self.current = self.scenes[name]
     
-    def update(self , keys):
-        self.current.update(keys)
+    def update(self , keys , dt):
+        self.current.update(keys , dt)
         
     def draw(self , screen):
         self.current.draw(screen)

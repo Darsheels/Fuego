@@ -6,7 +6,6 @@ from entities.scene_manager import SceneManager
 from scenes.StarterScene import FireStationOutsideScene , FireStationInteriorScene , FireTruckDrivingScene
 from entities.vehicles import DefaultTruck
 
-
 class Game:
     def __init__(self):
         self.screen = pygame.display.set_mode((SCREEN_WIDTH ,SCREEN_HEIGHT))
@@ -33,6 +32,8 @@ class Game:
 
         self.ground = pygame.image.load("assets/sprites/buildingblocks/Ground.png").convert_alpha()
         self.ground = pygame.transform.scale(self.ground, (SCREEN_WIDTH, 300))
+        
+      
     
     def run(self):
         while self.running:
@@ -40,12 +41,14 @@ class Game:
             
             self.handle_events()
             
-            self.scene_manager.update(keys)
+            dt = self.clock.tick(60) / 1000
+            
+            self.scene_manager.update(keys , dt)
             
             self.scene_manager.draw(self.screen)
             
             pygame.display.flip()
-            self.clock.tick(FPS)
+            
             
             
     def handle_events(self):
