@@ -1,13 +1,11 @@
 import pygame
 from entities.scene_manager import SceneManager
 from entities.Player import Player
-from entities.Buildings import FireStation , TruckApparatus , LockerRoom
+from entities.Buildings import FireStation , TruckApparatus , LockerRoom , map
 from entities.scene_config import SPAWN_POINTS
 from entities.vehicles import DefaultTruck
 from entities.pager import Pager
 from settings import SCREEN_WIDTH
-
-
 
 
 class FireStationOutsideScene:
@@ -37,81 +35,6 @@ class FireStationOutsideScene:
         self.player.draw(screen)
         
         
-        
-class FireStationInteriorScene:
-    def __init__(self , game , player):
-        self.game = game
-        self.player = player
-        self.TruckApparitus = TruckApparatus(0 , -100)
-       
-        self.display_truck = DefaultTruck(50,300)
-       
-        self.interior_spawn = SPAWN_POINTS["fire_station_interior"]["default_interior"]
-        
-        self.outside_spawn = SPAWN_POINTS["outside"]["fire_station_exit"]
-        
-        self.player.rect.topleft = self.interior_spawn 
-        
-        self.pager = Pager(1000,500)
-        
-    def enter_fire_truck(self):
-        self.time_inside = 0
-        self.pager_triggered = False
-        
-        spawn = SPAWN_POINTS["outside"]["fire_truck_spawn"]
-        self.game.fire_truck.rect.topleft = spawn
-        self.game.scene_manager.set("driving")
-        
-        
-    def update(self, keys , dt):
-        self.player.update(keys)
-        
-        self.pager.update(dt)
-           
-        if self.TruckApparitus.door_zone.colliderect(self.player.rect):
-            if keys[pygame.K_e]:
-                self.player.rect.topleft = self.outside_spawn
-                self.game.scene_manager.set("outside")
-     
-        if self.display_truck.truck_zone.colliderect(self.player.rect):
-            if keys[pygame.K_x]:
-                self.enter_fire_truck()
-    
-
-            
-    def draw(self , screen):
-        self.TruckApparitus.draw(screen)
-        self.player.draw(screen)
-        self.display_truck.draw(screen)
-        
-        self.pager.draw(screen)
-            
-        if self.player.rect.right >= SCREEN_WIDTH:
-            self.game.scene_manager.set("locker_room")
-            
-     
-            
-class LockerRoomScene:
-    def __init__(self,game,player):
-        self.game = game
-        self.player = player
-        self.locker_room = LockerRoom(0 , -200)
-        self.pager = Pager(1000,500)
-        
-        self.interior_spawn = SPAWN_POINTS["locker_room"]["default"]
-        
-        self.player.rect.topleft = self.interior_spawn
-        
-    def update(self,keys,dt):
-        self.player.update(keys)
-        self.pager.update(dt)
-        
-        
-    def draw(self,screen):
-        self.locker_room.draw(screen)
-        self.player.draw(screen)
-        self.pager.draw(screen)
-
 
 
             
@@ -120,7 +43,7 @@ class FireTruckDrivingScene:
         self.game = game
         self.fire_truck = fire_truck
         self.fire_station = FireStation(0 , -375)
-        self.fence = pygame.image.load
+       
         
     def update(self , keys , dt):
         self.fire_truck.update(keys)
@@ -128,7 +51,9 @@ class FireTruckDrivingScene:
             self.game.player.rect.topleft = SPAWN_POINTS["outside"]["fire_station_exit"]
             self.game.scene_manager.set("outside")
             self.fire_truck.speed = 0
-        
+        if self.fire_truck.rect.right > SCREEN_WIDTH:
+            self.game.scene_manager.set("community_map")
+            
         
     def draw(self,screen):
         screen.blit(self.game.background , (0,0))
@@ -136,3 +61,18 @@ class FireTruckDrivingScene:
         self.fire_station.draw(screen)
         self.fire_truck.draw(screen)
        
+       
+class CommunityMap:
+    def __init__(self , game , truck):
+        self.game = game
+        self.truck = truck
+        self.map = map(0,0)
+        
+    def update(self , keys , dt):
+        self.truck.update(keys)
+        
+        
+    def draw(self , screen):
+        self.map.draw(screen)
+        self.truck.draw(screen)
+        

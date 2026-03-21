@@ -3,7 +3,8 @@ from settings import SCREEN_HEIGHT , SCREEN_WIDTH , FPS
 from entities.Player import Player
 from entities.Buildings import FireStation
 from entities.scene_manager import SceneManager
-from scenes.StarterScene import FireStationOutsideScene , FireStationInteriorScene , FireTruckDrivingScene , LockerRoomScene
+from scenes.StarterScene import FireStationOutsideScene  , FireTruckDrivingScene , CommunityMap
+from scenes.Firedepartmentinside import FireStationInteriorScene , LockerRoomScene
 from entities.vehicles import DefaultTruck
 
 
@@ -23,10 +24,14 @@ class Game:
         self.scene_manager.add("locker_room" , LockerRoomScene(self , self.player))
         self.scene_manager.add("outside" , FireStationOutsideScene(self , self.player))
         self.scene_manager.add("fire_station_interior" , FireStationInteriorScene(self , self.player))
-        
-        
+ 
         
         self.fire_truck = DefaultTruck(100,250)
+               
+        self.scene_manager.add("community_map" , CommunityMap(self , self.fire_truck))
+        
+        
+        
         self.scene_manager.add("driving" , FireTruckDrivingScene(self,self.fire_truck))
         
         

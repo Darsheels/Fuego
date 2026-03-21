@@ -38,3 +38,16 @@ class LockerRoom:
         
     def draw(self,surface):
         surface.blit(self.image , self.rect)
+        
+        
+        
+class map:
+    def __init__(self,x,y):
+        CURRENT_SCALING = 5
+        
+        self.image = pygame.image.load("assets/sprites/buildings/tempmap.png").convert_alpha()
+        self.image = pygame.transform.scale(self.image, (256 * CURRENT_SCALING , 256 * CURRENT_SCALING))
+        self.rect = self.image.get_rect(topleft=(x,y))
+        
+    def draw(self,surface):
+        surface.blit(self.image , self.rect)
