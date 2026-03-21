@@ -1,10 +1,13 @@
 import pygame
 from entities.scene_manager import SceneManager
 from entities.Player import Player
-from entities.Buildings import FireStation , FireStationInterior
+from entities.Buildings import FireStation , TruckApparatus , LockerRoom
 from entities.scene_config import SPAWN_POINTS
 from entities.vehicles import DefaultTruck
 from entities.pager import Pager
+from settings import SCREEN_WIDTH
+
+
 
 
 class FireStationOutsideScene:
@@ -39,10 +42,7 @@ class FireStationInteriorScene:
     def __init__(self , game , player):
         self.game = game
         self.player = player
-        self.TruckApparitus = FireStationInterior(0 , -100)
-       
-        self.time_inside = 0
-        self.pager_triggered = False
+        self.TruckApparitus = TruckApparatus(0 , -100)
        
         self.display_truck = DefaultTruck(50,300)
        
@@ -52,7 +52,7 @@ class FireStationInteriorScene:
         
         self.player.rect.topleft = self.interior_spawn 
         
-        self.pager = Pager(1000,600)
+        self.pager = Pager(1000,500)
         
     def enter_fire_truck(self):
         self.time_inside = 0
@@ -65,14 +65,8 @@ class FireStationInteriorScene:
         
     def update(self, keys , dt):
         self.player.update(keys)
-
-        if not self.pager_triggered:
-            self.time_inside += dt
-            
-            if self.time_inside >= 60:
-                self.trigger_pager() 
-                
-        self.pager.update(None)
+        
+        self.pager.update(dt)
            
         if self.TruckApparitus.door_zone.colliderect(self.player.rect):
             if keys[pygame.K_e]:
@@ -83,20 +77,43 @@ class FireStationInteriorScene:
             if keys[pygame.K_x]:
                 self.enter_fire_truck()
     
-    def trigger_pager(self):
-        self.pager_triggered = True
-        
+
             
     def draw(self , screen):
         self.TruckApparitus.draw(screen)
         self.player.draw(screen)
         self.display_truck.draw(screen)
         
-        if self.pager_triggered:
-            self.pager.draw(screen)
+        self.pager.draw(screen)
+            
+        if self.player.rect.right >= SCREEN_WIDTH:
+            self.game.scene_manager.set("locker_room")
+            
      
             
-            
+class LockerRoomScene:
+    def __init__(self,game,player):
+        self.game = game
+        self.player = player
+        self.locker_room = LockerRoom(0 , -200)
+        self.pager = Pager(1000,500)
+        
+        self.interior_spawn = SPAWN_POINTS["locker_room"]["default"]
+        
+        self.player.rect.topleft = self.interior_spawn
+        
+    def update(self,keys,dt):
+        self.player.update(keys)
+        self.pager.update(dt)
+        
+        
+    def draw(self,screen):
+        self.locker_room.draw(screen)
+        self.player.draw(screen)
+        self.pager.draw(screen)
+
+
+
             
 class FireTruckDrivingScene:
     def __init__(self , game , fire_truck):

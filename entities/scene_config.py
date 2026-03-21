@@ -8,7 +8,11 @@ SPAWN_POINTS = {
     "fire_station_interior": {
         "default_interior": (700,480),
         "exit": (200 , 480)
-    }
+    } ,
+    
+    "locker_room": {
+        "default": (400 , 300)
+    }   
     
     
 }
