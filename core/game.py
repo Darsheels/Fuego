@@ -3,7 +3,7 @@ from settings import SCREEN_HEIGHT , SCREEN_WIDTH , FPS
 from entities.Player import Player
 from entities.Buildings import FireStation
 from entities.scene_manager import SceneManager
-from scenes.StarterScene import FireStationOutsideScene  , FireTruckDrivingScene , CommunityMap
+from scenes.StarterScene import FireStationOutsideScene  , FireTruckDrivingScene , House1Scene
 from scenes.Firedepartmentinside import FireStationInteriorScene , LockerRoomScene
 from entities.vehicles import DefaultTruck
 
@@ -18,24 +18,19 @@ class Game:
         
         
         self.player = Player(400 , 480)
-        
+        self.fire_truck = DefaultTruck(100,250)
         
         self.scene_manager = SceneManager()
         self.scene_manager.add("locker_room" , LockerRoomScene(self , self.player))
-        self.scene_manager.add("outside" , FireStationOutsideScene(self , self.player))
+        self.scene_manager.add("outside" , FireStationOutsideScene(self , self.fire_truck))
         self.scene_manager.add("fire_station_interior" , FireStationInteriorScene(self , self.player))
- 
-        
-        self.fire_truck = DefaultTruck(100,250)
                
-        self.scene_manager.add("community_map" , CommunityMap(self , self.fire_truck))
-        
-        
+        self.scene_manager.add("House1" , House1Scene(self , self.fire_truck))
         
         self.scene_manager.add("driving" , FireTruckDrivingScene(self,self.fire_truck))
         
         
-        self.scene_manager.set("outside")
+        self.scene_manager.set("fire_station_interior")
     
         self.background = pygame.image.load("assets/sprites/buildingblocks/Background.png").convert_alpha()
         self.background = pygame.transform.scale(self.background, (SCREEN_WIDTH, SCREEN_HEIGHT))

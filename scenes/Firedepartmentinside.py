@@ -1,7 +1,7 @@
 import pygame
 from entities.scene_manager import SceneManager
 from entities.Player import Player
-from entities.Buildings import FireStation , TruckApparatus , LockerRoom , map
+from entities.Buildings import FireStation , TruckApparatus , LockerRoom , House1
 from entities.scene_config import SPAWN_POINTS
 from entities.vehicles import DefaultTruck
 from entities.pager import Pager
@@ -38,10 +38,10 @@ class FireStationInteriorScene:
         
         self.pager.update(dt)
            
-        if self.TruckApparitus.door_zone.colliderect(self.player.rect):
-            if keys[pygame.K_e]:
-                self.player.rect.topleft = self.outside_spawn
-                self.game.scene_manager.set("outside")
+        # if self.TruckApparitus.door_zone.colliderect(self.player.rect):
+        #     if keys[pygame.K_e]:
+        #         self.player.rect.topleft = self.outside_spawn
+        #         self.game.scene_manager.set("outside")
      
         if self.display_truck.truck_zone.colliderect(self.player.rect):
             if keys[pygame.K_x]:
@@ -77,6 +77,9 @@ class LockerRoomScene:
         self.player.update(keys)
         self.pager.update(dt)
         
+        if self.player.rect.left < 0:
+            self.player.rect.topleft = SPAWN_POINTS["fire_station_interior"]["default_interior"]
+            self.game.scene_manager.set("fire_station_interior")
         
     def draw(self,screen):
         self.locker_room.draw(screen)
