@@ -20,6 +20,8 @@ class FireStationInteriorScene:
         
         self.outside_spawn = SPAWN_POINTS["outside"]["fire_station_exit"]
         
+        self.locker_room_entry = SPAWN_POINTS["locker_room"]["default"]
+        
         self.player.rect.topleft = self.interior_spawn 
         
         self.pager = Pager(1000,500)
@@ -38,10 +40,10 @@ class FireStationInteriorScene:
         
         self.pager.update(dt)
            
-        # if self.TruckApparitus.door_zone.colliderect(self.player.rect):
-        #     if keys[pygame.K_e]:
-        #         self.player.rect.topleft = self.outside_spawn
-        #         self.game.scene_manager.set("outside")
+        if self.TruckApparitus.door_zone.colliderect(self.player.rect):
+            if keys[pygame.K_e]:
+                self.player.rect.topleft = self.outside_spawn
+                self.game.scene_manager.set("outside")
      
         if self.display_truck.truck_zone.colliderect(self.player.rect):
             if keys[pygame.K_x]:
@@ -57,7 +59,7 @@ class FireStationInteriorScene:
         self.pager.draw(screen)
             
         if self.player.rect.right >= SCREEN_WIDTH:
-            self.player.rect.topleft = self.outside_spawn
+            self.player.rect.topleft = self.locker_room_entry
             self.game.scene_manager.set("locker_room")
             
      
@@ -78,7 +80,7 @@ class LockerRoomScene:
         self.pager.update(dt)
         
         if self.player.rect.left < 0:
-            self.player.rect.topleft = SPAWN_POINTS["fire_station_interior"]["default_interior"]
+            self.player.rect.topleft = SPAWN_POINTS["fire_station_interior"]["left_entry"]
             self.game.scene_manager.set("fire_station_interior")
         
     def draw(self,screen):

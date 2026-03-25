@@ -22,7 +22,7 @@ class Game:
         
         self.scene_manager = SceneManager()
         self.scene_manager.add("locker_room" , LockerRoomScene(self , self.player))
-        self.scene_manager.add("outside" , FireStationOutsideScene(self , self.fire_truck))
+        self.scene_manager.add("outside" , FireStationOutsideScene(self , self.player))
         self.scene_manager.add("fire_station_interior" , FireStationInteriorScene(self , self.player))
                
         self.scene_manager.add("House1" , House1Scene(self , self.fire_truck))
