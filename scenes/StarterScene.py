@@ -37,14 +37,32 @@ class FireStationOutsideScene:
             
             
 class FireTruckDrivingScene:
-    def __init__(self , game , fire_truck):
+    def __init__(self , game , player ,  fire_truck):
         self.game = game
+        self.player = player
         self.fire_truck = fire_truck
         self.fire_station = FireStation(0 , -375)
        
         
+    def exit_fire_truck(self):
+        self.player.in_vehicle = False
+        self.player.visible = True
+        
+        spawn = SPAWN_POINTS["outside"]["fire_truck_spawn"]
+        
+        exit_x = self.game.fire_truck.rect.x 
+        exit_y = self.game.fire_truck.rect.y 
+        self.player.rect.topleft = (exit_x, exit_y)
+        
+        self.game.scene_manager.set("outside")
+        
+        
     def update(self , keys , dt):
         self.fire_truck.update(keys)
+        
+        if keys[pygame.K_l] and self.player.in_vehicle:
+            self.exit_fire_truck()
+            
         
         if self.fire_truck.rect.right > SCREEN_WIDTH:
             self.fire_truck.rect.topleft = SPAWN_POINTS["house1"]["left_entry"]

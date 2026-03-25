@@ -15,6 +15,8 @@ class Player(pygame.sprite.Sprite):
        self.image = self.idle_anim.image
        self.rect = self.image.get_rect(topleft=(x,y))
        
+       self.in_vehicle = False
+       
        self.speed = 2
        self.facing_right = True
        

@@ -27,7 +27,7 @@ class Game:
                
         self.scene_manager.add("House1" , House1Scene(self , self.fire_truck))
         
-        self.scene_manager.add("driving" , FireTruckDrivingScene(self,self.fire_truck))
+        self.scene_manager.add("driving"  ,  FireTruckDrivingScene(self,self.player , self.fire_truck))
         
         
         self.scene_manager.set("fire_station_interior")
