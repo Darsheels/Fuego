@@ -3,8 +3,8 @@ from settings import SCREEN_WIDTH, SCREEN_HEIGHT
 
 class UIPrompt:
     def __init__(self, text, x, y):
-        # Scale font based on screen height
-        font_size = int(SCREEN_HEIGHT * 0.05)   # 3% of screen height
+        
+        font_size = int(SCREEN_HEIGHT * 0.05)  
         self.font = pygame.font.Font(None, font_size)
 
         self.text = text

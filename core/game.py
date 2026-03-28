@@ -16,6 +16,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
         
+        self.next_spawn = None
         
         self.player = Player(400 , 480)
         self.fire_truck = DefaultTruck(100,250)
@@ -29,7 +30,6 @@ class Game:
         
         self.scene_manager.add("driving"  ,  FireTruckDrivingScene(self,self.player , self.fire_truck))
         
-        
         self.scene_manager.set("fire_station_interior")
     
         self.background = pygame.image.load("assets/sprites/buildingblocks/Background.png").convert_alpha()
@@ -37,6 +37,7 @@ class Game:
 
         self.ground = pygame.image.load("assets/sprites/buildingblocks/Ground.png").convert_alpha()
         self.ground = pygame.transform.scale(self.ground, (SCREEN_WIDTH, 300))
+        
         
       
     

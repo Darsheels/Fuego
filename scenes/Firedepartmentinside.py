@@ -7,82 +7,29 @@ from entities.vehicles import DefaultTruck
 from entities.pager import Pager
 from settings import SCREEN_WIDTH , SCREEN_HEIGHT
 from entities.UI_prompt import UIPrompt
+from entities.Scenes import BaseScene
         
-class FireStationInteriorScene:
-    def __init__(self , game , player):
-        self.game = game
-        self.player = player
-        self.TruckApparitus = TruckApparatus(0 , -100)
-       
-        self.display_truck = DefaultTruck(50,300)
-       
-        self.interior_spawn = SPAWN_POINTS["fire_station_interior"]["default_interior"]
-        
-        self.outside_spawn = SPAWN_POINTS["outside"]["fire_station_exit"]
-        
-        self.locker_room_entry = SPAWN_POINTS["locker_room"]["default"]
-        
-        self.player.rect.topleft = self.interior_spawn 
-        
-        self.exit_firedept = UIPrompt("Press E to exit", 800 , 480)
-        self.enter_fire_truck_prompt = UIPrompt("Press X to enter the fire truck", 300 , 600)
-        
-        self.pager = Pager(1000,500)
-        
-    def enter_fire_truck(self):
-        self.time_inside = 0
-        self.pager_triggered = False
-        
-        self.player.in_vehicle = True
-        
-        self.player.visible = False
-        
-        spawn = SPAWN_POINTS["outside"]["fire_truck_spawn"]
-        self.game.fire_truck.rect.topleft = spawn
-        
-        self.game.scene_manager.set("driving")
-        
-        
-    def update(self, keys , dt):
-        self.player.update(keys)
-        
-        self.pager.update(dt)
-        
-           
-        if self.TruckApparitus.door_zone.colliderect(self.player.rect):
-            self.exit_firedept.show()
-            
-            if keys[pygame.K_e]:
-                self.player.rect.topleft = self.outside_spawn
-                self.game.scene_manager.set("outside")
-        else:
-            self.exit_firedept.hide()
-     
-        if self.display_truck.truck_zone.colliderect(self.player.rect):
-            self.enter_fire_truck_prompt.show()
-            
-            if keys[pygame.K_x]:
-                self.enter_fire_truck()
-        else:
-            self.enter_fire_truck_prompt.hide()
 
-        if self.player.rect.right >= SCREEN_WIDTH:
-            self.player.rect.topleft = self.locker_room_entry
-            self.game.scene_manager.set("locker_room")
+class FireStationInteriorScene(BaseScene):
+    def __init__(self, game, player):
+        super().__init__(game, player)
 
+        spawn_name = self.game.next_spawn if self.game.next_spawn is not None else "default_interior"
+        self.player.rect.topleft = SPAWN_POINTS["fire_station_interior"][spawn_name]
+        self.TruckApparatus = TruckApparatus(0, -100)
+        
+        self.display_truck = DefaultTruck(50, 300)
+        self.add_objects(self.TruckApparatus)
+        self.add_objects(self.display_truck)
 
-            
-    def draw(self , screen):
-        self.TruckApparitus.draw(screen)
-        self.player.draw(screen)
-        self.display_truck.draw(screen)
-        self.pager.draw(screen)
-        self.exit_firedept.draw(screen)
-        self.enter_fire_truck_prompt.draw(screen)
+        self.add_interaction("exit", "Press E to exit", zone=self.TruckApparatus.door_zone, key=pygame.K_e, target_scene="outside", spawn_point= "default")
+        self.add_interaction("enter_truck", "Press X to enter the fire truck", zone= self.display_truck.truck_zone, key=pygame.K_x, target_scene="driving", spawn_point="default")
+        
+        self.add_transition("locker_room", direction="right" , spawn_point= "locker_room_entry")
+        self.add_pager()
 
             
      
-            
 class LockerRoomScene:
     def __init__(self,game,player):
         self.game = game

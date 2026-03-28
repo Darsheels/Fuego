@@ -5,8 +5,8 @@ from entities.Buildings import FireStation , TruckApparatus , LockerRoom , House
 from entities.scene_config import SPAWN_POINTS
 from entities.vehicles import DefaultTruck
 from entities.pager import Pager
-from settings import SCREEN_WIDTH
-
+from settings import SCREEN_WIDTH ,SCREEN_HEIGHT
+from entities.UI_prompt import UIPrompt
 
 class FireStationOutsideScene:
     def __init__(self , game , player):
@@ -20,19 +20,24 @@ class FireStationOutsideScene:
         
         self.player.rect.topleft = self.outside_spawn
         
+        self.enter_fire_station_prompt = UIPrompt("Press E to enter the fire station", 450 , SCREEN_HEIGHT - 150)
+        
     def update(self,keys,dt):
         self.player.update(keys)
         
         if self.fire_station.door_zone.colliderect(self.player.rect):
+            self.enter_fire_station_prompt.show()
             if keys[pygame.K_e]:
                 self.player.rect.topleft = self.interior_spawn
                 self.game.scene_manager.set("fire_station_interior")
-                
+        else:
+            self.enter_fire_station_prompt.hide()
     def draw(self,screen):
         screen.blit(self.game.background, (0,0))
         screen.blit(self.game.ground, (0,450))
         self.fire_station.draw(screen)
         self.player.draw(screen)
+        self.enter_fire_station_prompt.draw(screen)
             
             
             
