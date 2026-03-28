@@ -1,12 +1,11 @@
 import pygame
-from entities.scene_config import SPAWN_POINTS 
+from entities.Scenes import BaseScene
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT
-from entities.UI_prompt import UIPrompt
 
 
-class TruckCutsceneScene:
+class TruckCutsceneScene(BaseScene):
     def __init__(self, game):
-        self.game = game
+        super().__init__(game, None)
 
         # Load truck image
         self.truck = pygame.image.load("assets/truck.png").convert_alpha()

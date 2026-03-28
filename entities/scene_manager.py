@@ -10,6 +10,8 @@ class SceneManager:
     
     def set(self , name):
         self.current = self.scenes[name]
+        if hasattr(self.current, "on_enter"):
+            self.current.on_enter()
     
     def update(self , keys , dt):
         self.current.update(keys , dt)

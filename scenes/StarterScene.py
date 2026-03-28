@@ -1,59 +1,56 @@
 import pygame
-from entities.scene_manager import SceneManager
-from entities.Player import Player
+from entities.Scenes import BaseScene
 from entities.Buildings import FireStation , TruckApparatus , LockerRoom , House1
 from entities.scene_config import SPAWN_POINTS
 from entities.vehicles import DefaultTruck
-from entities.pager import Pager
 from settings import SCREEN_WIDTH ,SCREEN_HEIGHT
-from entities.UI_prompt import UIPrompt
 
-class FireStationOutsideScene:
+class FireStationOutsideScene(BaseScene):
     def __init__(self , game , player):
-        self.game = game
-        self.player = player
+        super().__init__(game, player)
         self.fire_station = FireStation(0 , -375)
+        self.add_objects(self.fire_station)
+        self.add_interaction(
+            "enter_fire_station",
+            "Press E to enter the fire station",
+            zone=self.fire_station.door_zone,
+            key=pygame.K_e,
+            target_scene="fire_station_interior",
+            spawn_point="default_interior")
+
+    def on_enter(self):
+        spawn_name = self.game.next_spawn if self.game.next_spawn is not None else "default"
+        self.player.rect.topleft = SPAWN_POINTS["outside"][spawn_name]
+        self.game.next_spawn = None
         
-        self.interior_spawn = SPAWN_POINTS["fire_station_interior"]["default_interior"]
-        
-        self.outside_spawn = SPAWN_POINTS["outside"]["default"]
-        
-        self.player.rect.topleft = self.outside_spawn
-        
-        self.enter_fire_station_prompt = UIPrompt("Press E to enter the fire station", 450 , SCREEN_HEIGHT - 150)
-        
-    def update(self,keys,dt):
-        self.player.update(keys)
-        
-        if self.fire_station.door_zone.colliderect(self.player.rect):
-            self.enter_fire_station_prompt.show()
-            if keys[pygame.K_e]:
-                self.player.rect.topleft = self.interior_spawn
-                self.game.scene_manager.set("fire_station_interior")
-        else:
-            self.enter_fire_station_prompt.hide()
     def draw(self,screen):
         screen.blit(self.game.background, (0,0))
         screen.blit(self.game.ground, (0,450))
-        self.fire_station.draw(screen)
-        self.player.draw(screen)
-        self.enter_fire_station_prompt.draw(screen)
-            
-            
-            
-class FireTruckDrivingScene:
+        super().draw(screen)
+
+
+class FireTruckDrivingScene(BaseScene):
     def __init__(self , game , player ,  fire_truck):
-        self.game = game
-        self.player = player
+        super().__init__(game, player)
         self.fire_truck = fire_truck
         self.fire_station = FireStation(0 , -375)
-       
+        self.add_objects(self.fire_station)
+        self.add_objects(self.fire_truck)
+        self.add_transition("House1", direction="right", spawn_point="left_entry")
+
         
+    def on_enter(self):
+        if self.player:
+            self.player.in_vehicle = True
+            self.player.visible = False
+            
+        spawn_name = self.game.next_spawn if self.game.next_spawn is not None else "default"
+        self.player.rect.topleft = SPAWN_POINTS["outside"][spawn_name]
+        self.game.next_spawn = None
+
     def exit_fire_truck(self):
         self.player.in_vehicle = False
         self.player.visible = True
-        
-        spawn = SPAWN_POINTS["outside"]["fire_truck_spawn"]
         
         exit_x = self.game.fire_truck.rect.x 
         exit_y = self.game.fire_truck.rect.y 
@@ -61,41 +58,39 @@ class FireTruckDrivingScene:
         
         self.game.scene_manager.set("outside")
         
-        
     def update(self , keys , dt):
-        self.fire_truck.update(keys)
-        
-        if keys[pygame.K_l] and self.player.in_vehicle:
+        super().update(keys, dt)
+
+        if self.player and keys[pygame.K_l] and self.player.in_vehicle:
             self.exit_fire_truck()
             
-        
-        if self.fire_truck.rect.right > SCREEN_WIDTH:
-            self.fire_truck.rect.topleft = SPAWN_POINTS["house1"]["left_entry"]
-            self.game.scene_manager.set("House1")
-        
     def draw(self,screen):
         screen.blit(self.game.background , (0,0))
         screen.blit(self.game.ground, (0,450))
-        self.fire_station.draw(screen)
-        self.fire_truck.draw(screen)
+        super().draw(screen)
        
        
-class House1Scene:
+       
+       
+class House1Scene(BaseScene):
     def __init__(self , game , truck):
-        self.game = game
-        self.truck = truck
+        super().__init__(game, None)
+        self.fire_truck = truck
         self.house = House1(0,-350)
+        self.add_objects(self.house)
+        self.add_objects(self.fire_truck)
+        self.add_transition("driving", direction="left", spawn_point="right_entry")
+        
+    def on_enter(self):
+        spawn_name = self.game.next_spawn if self.game.next_spawn is not None else "default"
+        self.fire_truck.rect.topleft = SPAWN_POINTS["house1"][spawn_name]
+        self.game.next_spawn = None
         
     def update(self , keys , dt):
-        self.truck.update(keys)
-        
-        if self.truck.rect.left < 0:
-            self.truck.rect.topleft = SPAWN_POINTS["outside"]["right_entry"]
-            self.game.scene_manager.set("driving")
-        
+        super().update(keys, dt) 
+
     def draw(self , screen):
         screen.blit(self.game.background , (0,0))
         screen.blit(self.game.ground, (0,450))
-        self.house.draw(screen)
-        self.truck.draw(screen)
+        super().draw(screen)
         

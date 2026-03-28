@@ -16,8 +16,6 @@ class Pager():
             
             if self.time_inside >= 60:
                 self.trigger()
-                
-        
         
     def trigger(self):
         self.pager_triggered = True

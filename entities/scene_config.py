@@ -4,6 +4,7 @@ SPAWN_POINTS = {
         "fire_station_exit": (400 , 480),
         "fire_truck_spawn": (100 , 250),
         "right_entry": (500,250)
+        
     },
     
     "fire_station_interior": {
@@ -14,10 +15,11 @@ SPAWN_POINTS = {
     } ,
     
     "locker_room": {
-        "default": (100 , 480)
+        "locker_room_entry": (100 , 480)
     } ,
     
     "house1": {
+        "default": (400 , 480),
         "left_entry": (0 , 250)  
     }
         
