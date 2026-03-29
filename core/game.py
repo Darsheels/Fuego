@@ -4,7 +4,7 @@ from settings import SCREEN_HEIGHT , SCREEN_WIDTH , FPS
 from entities.Player import Player
 from entities.scene_manager import SceneManager
 from entities.scene_factory import build_scenes_from_definitions
-# from scenes.StarterScene import FireTruckDrivingScene
+
 from scenes.animation_scenes import TruckCutsceneScene
 from entities.vehicles import DefaultTruck
 
@@ -29,8 +29,6 @@ class Game:
         scenes = build_scenes_from_definitions(definitions_path, self)
         for scene_name, scene in scenes.items():
             self.scene_manager.add(scene_name, scene)
-
-        # self.scene_manager.add("driving"  ,  FireTruckDrivingScene(self, self.player , self.fire_truck))
 
         self.scene_manager.set("fire_station_interior")
     

@@ -27,12 +27,10 @@ class TruckCutsceneScene(BaseScene):
 
         if self.elapsed >= self.duration:
             self.game.scene_manager.set("House1")
-            # self.add_transition("House1", direction="up", spawn_point="left_entry")
+          
 
     def draw(self, screen):
         x = int(self.scroll_x) % SCREEN_WIDTH
         screen.blit(self.game.background, (-x, 0))
-        # screen.blit(self.game.background, (SCREEN_WIDTH - x, 0))
         screen.blit(self.game.ground, (-x, 450))
-        # screen.blit(self.game.ground, (SCREEN_WIDTH - x, 450))
         self.fire_truck.draw(screen)

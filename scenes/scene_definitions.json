@@ -29,7 +29,7 @@
       "draw_ground": false,
       "objects": [
         { "class": "TruckApparatus", "x": 0, "y": -100 },
-        { "class": "DefaultTruck", "x": 50, "y": 300 }
+        { "class": "DefaultTruck", "x": 50, "y": 250 }
       ],
       "interactions": [
         {
@@ -90,7 +90,7 @@
       "right_entry": [500, 250]
     },
     "fire_station_interior": {
-      "default_interior": [900, 480],
+      "default_interior": [400, 480],
       "left_entry": [1000, 480],
       "locker_room_entry": [100, 480],
       "exit": [200, 480]
