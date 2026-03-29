@@ -70,6 +70,10 @@ class BaseScene:
                 if t["direction"] == "left" and actor_rect.left <= 0:
                     self.game.next_spawn = t["spawn"]
                     self.game.scene_manager.set(t["target"])
+                
+                if t["direction"] == "up":
+                    self.game.next_spawn = t["spawn"]
+                    self.game.scene_manager.set(t["target"])
     
     def draw(self , screen):
         for obj in self.objects:
@@ -83,3 +87,61 @@ class BaseScene:
         
         for p in self.prompts:
             p["prompt"].draw(screen)
+
+
+class DataScene(BaseScene):
+    def __init__(
+        self,
+        game,
+        player=None,
+        objects=None,
+        scene_name=None,
+        spawn_points=None,
+        draw_background=False,
+        draw_ground=False,
+        use_shared_fire_truck=False,
+        fire_truck_alignment=None,
+    ):
+        super().__init__(game, player, game.fire_truck if use_shared_fire_truck else None)
+        self.scene_name = scene_name
+        self.spawn_points = spawn_points or {}
+        self.draw_background = draw_background
+        self.draw_ground = draw_ground
+        self.use_shared_fire_truck = use_shared_fire_truck
+        self.fire_truck_alignment = fire_truck_alignment
+
+        if objects:
+            for obj in objects:
+                self.add_objects(obj)
+
+        if self.fire_truck and use_shared_fire_truck:
+            self.add_objects(self.fire_truck)
+
+    def on_enter(self):
+        spawn_name = self.game.next_spawn if self.game.next_spawn is not None else "default"
+
+        if self.player and self.scene_name in self.spawn_points:
+            scene_spawns = self.spawn_points[self.scene_name]
+            spawn_position = scene_spawns.get(spawn_name, scene_spawns.get("default"))
+            if spawn_position:
+                self.player.rect.topleft = tuple(spawn_position)
+
+        if self.fire_truck and self.use_shared_fire_truck and self.scene_name in self.spawn_points:
+            scene_spawns = self.spawn_points[self.scene_name]
+            spawn_position = scene_spawns.get(spawn_name, scene_spawns.get("default"))
+            if spawn_position:
+                self.fire_truck.speed = 0
+                if self.fire_truck_alignment == "bottom":
+                    self.fire_truck.rect.x = spawn_position[0]
+                    self.fire_truck.rect.bottom = 780
+                else:
+                    self.fire_truck.rect.topleft = tuple(spawn_position)
+
+        self.game.next_spawn = None
+
+    def draw(self, screen):
+        if self.draw_background:
+            screen.blit(self.game.background, (0, 0))
+        if self.draw_ground:
+            screen.blit(self.game.ground, (0, 450))
+        super().draw(screen)

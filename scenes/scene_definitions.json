@@ -1,0 +1,107 @@
+{
+  "scenes": [
+    {
+      "name": "outside",
+      "use_player": true,
+      "draw_background": true,
+      "draw_ground": true,
+      "objects": [
+        { "class": "FireStation", "x": 0, "y": -375 }
+      ],
+      "interactions": [
+        {
+          "name": "enter_fire_station",
+          "text": "Press E to enter the fire station",
+          "zone": { "x": 150, "y": 525, "w": 100, "h": 100 },
+          "key": "K_e",
+          "target_scene": "fire_station_interior",
+          "spawn_point": "default_interior"
+        }
+      ],
+      "transitions": [
+        { "direction": "right", "target": "House1", "spawn": "left_entry" }
+      ]
+    },
+    {
+      "name": "fire_station_interior",
+      "use_player": true,
+      "draw_background": false,
+      "draw_ground": false,
+      "objects": [
+        { "class": "TruckApparatus", "x": 0, "y": -100 },
+        { "class": "DefaultTruck", "x": 50, "y": 300 }
+      ],
+      "interactions": [
+        {
+          "name": "exit",
+          "text": "Press E to exit",
+          "zone": { "x": 1000, "y": 400, "w": 100, "h": 100 },
+          "key": "K_e",
+          "target_scene": "outside",
+          "spawn_point": "default"
+        },
+        {
+          "name": "enter_truck",
+          "text": "Press X to enter the fire truck",
+          "zone": { "x": 150, "y": 600, "w": 100, "h": 100 },
+          "key": "K_x",
+          "target_scene": "truck_cutscene",
+          "spawn_point": "default"
+        }
+      ],
+      "transitions": [
+        { "direction": "right", "target": "locker_room", "spawn": "locker_room_entry" }
+      ]
+    },
+    {
+      "name": "locker_room",
+      "use_player": true,
+      "draw_background": false,
+      "draw_ground": false,
+      "objects": [
+        { "class": "LockerRoom", "x": 0, "y": -200 }
+      ],
+      "interactions": [],
+      "transitions": [
+        { "direction": "left", "target": "fire_station_interior", "spawn": "left_entry" }
+      ]
+    },
+    {
+      "name": "House1",
+      "use_player": false,
+      "use_shared_fire_truck": true,
+      "fire_truck_alignment": "bottom",
+      "draw_background": true,
+      "draw_ground": true,
+      "objects": [
+        { "class": "House1", "x": 0, "y": -350 }
+      ],
+      "interactions": [],
+      "transitions": [
+        { "direction": "left", "target": "driving", "spawn": "right_entry" }
+      ]
+    }
+  ],
+  "spawn_points": {
+    "outside": {
+      "default": [400, 480],
+      "fire_station_exit": [400, 480],
+      "fire_truck_spawn": [100, 250],
+      "right_entry": [500, 250]
+    },
+    "fire_station_interior": {
+      "default_interior": [900, 480],
+      "left_entry": [1000, 480],
+      "locker_room_entry": [100, 480],
+      "exit": [200, 480]
+    },
+    "locker_room": {
+      "locker_room_entry": [100, 480]
+    },
+    "House1": {
+      "default": [400, 480],
+      "left_entry": [0, 250],
+      "right_entry": [1200, 250]
+    }
+  }
+}

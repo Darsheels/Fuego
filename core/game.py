@@ -1,12 +1,12 @@
 import pygame
+from pathlib import Path
 from settings import SCREEN_HEIGHT , SCREEN_WIDTH , FPS
 from entities.Player import Player
-from entities.Buildings import FireStation
 from entities.scene_manager import SceneManager
-from scenes.StarterScene import FireStationOutsideScene  , FireTruckDrivingScene , House1Scene
-from scenes.Firedepartmentinside import FireStationInteriorScene , LockerRoomScene
+from entities.scene_factory import build_scenes_from_definitions
+# from scenes.StarterScene import FireTruckDrivingScene
+from scenes.animation_scenes import TruckCutsceneScene
 from entities.vehicles import DefaultTruck
-
 
 
 class Game:
@@ -22,14 +22,16 @@ class Game:
         self.fire_truck = DefaultTruck(100,250)
         
         self.scene_manager = SceneManager()
-        self.scene_manager.add("locker_room" , LockerRoomScene(self , self.player))
-        self.scene_manager.add("outside" , FireStationOutsideScene(self , self.player))
-        self.scene_manager.add("fire_station_interior" , FireStationInteriorScene(self , self.player))
-               
-        self.scene_manager.add("House1" , House1Scene(self , self.fire_truck))
-        
-        self.scene_manager.add("driving"  ,  FireTruckDrivingScene(self,self.player , self.fire_truck))
-        
+
+        self.scene_manager.add("truck_cutscene", TruckCutsceneScene(self , self.fire_truck))
+
+        definitions_path = Path(__file__).resolve().parent.parent / "scenes" / "scene_definitions.json"
+        scenes = build_scenes_from_definitions(definitions_path, self)
+        for scene_name, scene in scenes.items():
+            self.scene_manager.add(scene_name, scene)
+
+        # self.scene_manager.add("driving"  ,  FireTruckDrivingScene(self, self.player , self.fire_truck))
+
         self.scene_manager.set("fire_station_interior")
     
         self.background = pygame.image.load("assets/sprites/buildingblocks/Background.png").convert_alpha()

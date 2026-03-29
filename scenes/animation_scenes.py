@@ -4,35 +4,35 @@ from settings import SCREEN_WIDTH, SCREEN_HEIGHT
 
 
 class TruckCutsceneScene(BaseScene):
-    def __init__(self, game):
-        super().__init__(game, None)
+    def __init__(self, game, truck):
+        super().__init__(game, None, truck)
+        self.fire_truck = truck
+        self.duration = 2.0
+        self.elapsed = 0.0
+        self.scroll_x = 0.0
+        self.scroll_speed = 250
 
-        # Load truck image
-        self.truck = pygame.image.load("assets/truck.png").convert_alpha()
-        self.truck = pygame.transform.scale(self.truck, (400, 200))
-
-        # Start off-screen left
-        self.x = -400
-        self.y = SCREEN_HEIGHT * 0.6
-
-        # Speed of animation
-        self.speed = 600  # pixels per second
-
-        # Timer for ending the cutscene
-        self.timer = 0
-        self.duration = 3  # seconds
+    def on_enter(self):
+        self.elapsed = 0.0
+        self.scroll_x = 0.0
+        self.fire_truck.speed = 0
+        self.fire_truck.image = self.fire_truck.image_right
+        self.fire_truck.rect.topleft = (100, 250)
 
     def update(self, keys, dt):
-        # Move truck across screen
-        self.x += self.speed * dt
+        self.elapsed += dt
+        self.scroll_x += self.scroll_speed * dt
+        self.fire_truck.speed = 0
+        self.fire_truck.rect.topleft = (100, 250)
 
-        # Count time
-        self.timer += dt
-
-        # After duration → switch to fire scene
-        if self.timer >= self.duration:
-            self.game.scene_manager.set("fire_scene")
+        if self.elapsed >= self.duration:
+            self.game.scene_manager.set("House1")
+            # self.add_transition("House1", direction="up", spawn_point="left_entry")
 
     def draw(self, screen):
-        screen.fill((20, 20, 20))  # dark background
-        screen.blit(self.truck, (self.x, self.y))
+        x = int(self.scroll_x) % SCREEN_WIDTH
+        screen.blit(self.game.background, (-x, 0))
+        # screen.blit(self.game.background, (SCREEN_WIDTH - x, 0))
+        screen.blit(self.game.ground, (-x, 450))
+        # screen.blit(self.game.ground, (SCREEN_WIDTH - x, 450))
+        self.fire_truck.draw(screen)
