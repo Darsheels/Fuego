@@ -13,12 +13,10 @@ OBJECT_CLASSES = {
     "DefaultTruck": DefaultTruck
 }
 
-
 def load_scene_definitions(path):
     with Path(path).open("r", encoding="utf-8") as handle:
         definitions = json.load(handle)
     return definitions
-
 
 def _build_object(obj_def):
     obj_type = obj_def.get("class")
@@ -26,16 +24,13 @@ def _build_object(obj_def):
         raise ValueError(f"Unknown object class in scene definition: {obj_type}")
     return OBJECT_CLASSES[obj_type](obj_def.get("x", 0), obj_def.get("y", 0))
 
-
 def _build_zone(zone_def):
     return pygame.Rect(zone_def["x"], zone_def["y"], zone_def["w"], zone_def["h"])
-
 
 def _get_key(key_name):
     if not hasattr(pygame, key_name):
         raise ValueError(f"Unknown pygame key constant: {key_name}")
     return getattr(pygame, key_name)
-
 
 def build_scene(scene_def, game):
     objects = [_build_object(obj_def) for obj_def in scene_def.get("objects", [])]
@@ -68,9 +63,7 @@ def build_scene(scene_def, game):
             target_scene=interaction["target_scene"],
             spawn_point=interaction["spawn_point"],
         )
-
     return scene
-
 
 def build_scenes_from_definitions(path, game):
     definitions = load_scene_definitions(path)
