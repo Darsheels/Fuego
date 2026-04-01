@@ -27,6 +27,7 @@
       "use_player": true,
       "draw_background": false,
       "draw_ground": false,
+      "has_pager": true,
       "objects": [
         { "class": "TruckApparatus", "x": 0, "y": -100 },
         { "class": "DefaultTruck", "x": 50, "y": 250 }
@@ -43,7 +44,7 @@
         {
           "name": "enter_truck",
           "text": "Press X to enter the fire truck",
-          "zone": { "x": 150, "y": 600, "w": 100, "h": 100 },
+          "zone": { "x": 400, "y": 600, "w": 100, "h": 100 },
           "key": "K_x",
           "target_scene": "truck_cutscene",
           "spawn_point": "default"
@@ -58,17 +59,29 @@
       "use_player": true,
       "draw_background": false,
       "draw_ground": false,
+      "has_pager":true,
       "objects": [
         { "class": "LockerRoom", "x": 0, "y": -200 }
       ],
-      "interactions": [],
+      "interactions": [
+          {
+            "name": "change into gear and exit",
+            "text": "Press E to exit to truck",
+            "zone": { "x": 100, "y": 400, "w": 100, "h": 100 },
+            "use_player": false,
+            "use_fire_man": true,
+            "key": "K_e",
+            "target_scene": "fire_station_interior",
+            "spawn_point": "exit"
+          }
+      ],
       "transitions": [
         { "direction": "left", "target": "fire_station_interior", "spawn": "left_entry" }
       ]
     },
     {
       "name": "House1",
-      "use_player": false,
+      "use_player": true,
       "use_shared_fire_truck": true,
       "fire_truck_alignment": "bottom",
       "draw_background": true,
@@ -80,7 +93,24 @@
       "transitions": [
         { "direction": "left", "target": "driving", "spawn": "right_entry" }
       ]
+    } , 
+
+    {
+      "name": "driving",
+      "use_player": false,
+      "use_shared_fire_truck": true,
+      "fire_truck_alignment": "bottom",
+      "draw_background": true,
+      "draw_ground": true,
+      "objects": [
+        {"class": "FireStation", "x": 0, "y": -370 }
+      ],
+      "interactions": [],
+      "transitions": [
+        { "direction": "cutscene_end", "target": "driving", "spawn": "fire_truck_spawn" }
+      ]
     }
+
   ],
   "spawn_points": {
     "outside": {

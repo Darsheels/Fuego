@@ -23,22 +23,24 @@ class DefaultTruck:
         
         
     def update(self , keys):
+        pass
         
-        if keys[pygame.K_a]:
-            self.speed -= self.acceleration
-            self.image = self.image_left
+    
+        # if keys[pygame.K_a]:
+        #     self.speed -= self.acceleration
+        #     self.image = self.image_left
             
         
-        if keys[pygame.K_d]:
-            self.speed += self.acceleration
-            self.image = self.image_right
+        # if keys[pygame.K_d]:
+        #     self.speed += self.acceleration
+        #     self.image = self.image_right
             
-        if not (keys[pygame.K_a] or  keys[pygame.K_d]):
-            self.speed *= self.friction
+        # if not (keys[pygame.K_a] or  keys[pygame.K_d]):
+        #     self.speed *= self.friction
             
-        self.speed = max(-self.max_speed, min(self.speed , self.max_speed))
+        # self.speed = max(-self.max_speed, min(self.speed , self.max_speed))
         
-        self.rect.x += self.speed
+        # self.rect.x += self.speed
         
        
         

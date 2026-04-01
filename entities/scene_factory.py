@@ -1,6 +1,5 @@
 import json
 from pathlib import Path
-
 import pygame
 from entities.Buildings import FireStation, LockerRoom, House1, TruckApparatus
 from entities.Scenes import DataScene
@@ -49,7 +48,8 @@ def build_scene(scene_def, game):
         draw_background=scene_def.get("draw_background", False),
         draw_ground=scene_def.get("draw_ground", False),
         use_shared_fire_truck=scene_def.get("use_shared_fire_truck", False),
-        fire_truck_alignment=scene_def.get("fire_truck_alignment")
+        fire_truck_alignment=scene_def.get("fire_truck_alignment"),
+        has_pager= scene_def.get("has_pager", False)
     )
 
     for transition in scene_def.get("transitions", []):

@@ -6,7 +6,7 @@ from entities.scene_manager import SceneManager
 from entities.scene_factory import build_scenes_from_definitions
 from scenes.animation_scenes import TruckCutsceneScene
 from entities.vehicles import DefaultTruck
-
+from entities.pager import Pager
 
 class Game:
     def __init__(self):
@@ -19,6 +19,7 @@ class Game:
 
         self.player = Player(400, 480)
         self.fire_truck = DefaultTruck(100, 250)
+        self.pager = Pager(1000,500)
 
         self.scene_manager = SceneManager()
         self.scene_manager.add("truck_cutscene", TruckCutsceneScene(self, self.fire_truck))

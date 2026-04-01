@@ -4,10 +4,11 @@ from settings import SCREEN_WIDTH , SCREEN_HEIGHT
 from entities.UI_prompt import UIPrompt
 
 class BaseScene:
-    def __init__(self , game , player=None , fire_truck=None):
+    def __init__(self , game , player=None , fire_truck=None, pager=None):
         self.game = game
         self.player = player
         self.fire_truck = fire_truck
+        self.pager = pager
         self.objects = []
         self.prompts = []
         self.transitions = []
@@ -28,7 +29,7 @@ class BaseScene:
         
     def add_pager(self):
         self.has_pager = True
-        self.pager = Pager(1000,500)
+        self.pager = self.game.pager
         
     def update(self , keys , dt):
         if self.player:
@@ -37,7 +38,7 @@ class BaseScene:
         if self.fire_truck:
             self.fire_truck.update(keys)
         
-        if self.has_pager:
+        if self.has_pager and self.pager:
             self.pager.update(dt)
             
         for p in self.prompts:
@@ -79,7 +80,7 @@ class BaseScene:
         for obj in self.objects:
             obj.draw(screen)
             
-        if self.has_pager:
+        if self.has_pager and self.pager:
             self.pager.draw(screen)
         
         if self.player:
@@ -101,14 +102,16 @@ class DataScene(BaseScene):
         draw_ground=False,
         use_shared_fire_truck=False,
         fire_truck_alignment=None,
+        has_pager=False
     ):
-        super().__init__(game, player, game.fire_truck if use_shared_fire_truck else None)
+        super().__init__(game, player, game.fire_truck if use_shared_fire_truck else None, game.pager if has_pager else None)
         self.scene_name = scene_name
         self.spawn_points = spawn_points or {}
         self.draw_background = draw_background
         self.draw_ground = draw_ground
         self.use_shared_fire_truck = use_shared_fire_truck
         self.fire_truck_alignment = fire_truck_alignment
+        self.has_pager = has_pager
 
         if objects:
             for obj in objects:
