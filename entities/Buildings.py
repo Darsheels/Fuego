@@ -1,5 +1,5 @@
 import pygame
-from .Scaler import Entity
+from .Entity import Entity
 
 class FireStation(Entity):
     def __init__(self, x, y):
