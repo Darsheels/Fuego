@@ -36,7 +36,7 @@ def build_scene(scene_def, game):
     objects = [_build_object(obj_def) for obj_def in scene_def.get("objects", [])]
     scene = DataScene(
         game=game,
-        player=game.player if scene_def.get("use_player", True) else None,
+        player=game.fire_fighter if scene_def.get("use_player", True) else None,
         objects=objects,
         scene_name=scene_def["name"],
         spawn_points=scene_def.get("spawn_points", {}),

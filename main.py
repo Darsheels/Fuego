@@ -7,6 +7,7 @@ from entities.scene_factory import build_scenes_from_definitions
 from scenes.animation_scenes import TruckCutsceneScene
 from entities.vehicles import DefaultTruck
 from entities.pager import Pager
+from entities.FireFighter import FireFighter
 
 class Game:
     def __init__(self):
@@ -14,11 +15,11 @@ class Game:
         pygame.display.set_caption("Fuego")
         self.clock = pygame.time.Clock()
         self.running = True
-
         self.next_spawn = None
         self.player = Player(400, 480)
         self.fire_truck = DefaultTruck(100, 250)
         self.pager = Pager(1000,500)
+        self.fire_fighter = FireFighter(400, 450)
 
         self.scene_manager = SceneManager()
         self.scene_manager.add("truck_cutscene", TruckCutsceneScene(self, self.fire_truck))
