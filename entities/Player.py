@@ -6,8 +6,8 @@ class Player(pygame.sprite.Sprite):
     def __init__(self,x,y):
        super().__init__()
        
-       self.walk_frames = load_sprite_sheet("assets/sprites/player/DefaultPlayer.png" , 32 , 32)
-       self.idle_frames = load_sprite_sheet("assets/sprites/player/idleFireFighter.png" , 32 , 32)
+       self.walk_frames = load_sprite_sheet("assets/sprites/player/DefaultPlayer.png" , 32 , 32 , scale=7)
+       self.idle_frames = load_sprite_sheet("assets/sprites/player/idleFireFighter.png" , 32 , 32 , scale=7)
        
        self.walk_anim = Animation(self.walk_frames , speed= 0.1)
        self.idle_anim = Animation(self.idle_frames , speed=0.1)

@@ -1,6 +1,6 @@
 import pygame
 
-def load_sprite_sheet(path , frame_width , frame_height , scale = 3):
+def load_sprite_sheet(path , frame_width , frame_height , scale):
     sheet = pygame.image.load(path).convert_alpha()
     sheet_width , sheet_height = sheet.get_size()
     

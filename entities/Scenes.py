@@ -4,9 +4,10 @@ from settings import SCREEN_WIDTH , SCREEN_HEIGHT
 from entities.UI_prompt import UIPrompt
 
 class BaseScene:
-    def __init__(self , game , player=None , fire_truck=None, pager=None):
+    def __init__(self , game , player=None , fire_fighter=None , fire_truck=None, pager=None):
         self.game = game
         self.player = player
+        self.fire_fighter = fire_fighter
         self.fire_truck = fire_truck
         self.pager = pager
         self.objects = []
@@ -34,6 +35,9 @@ class BaseScene:
     def update(self , keys , dt):
         if self.player:
             self.player.update(keys)
+            
+        if self.fire_fighter:
+            self.fire_fighter.update(keys)
         
         if self.fire_truck:
             self.fire_truck.update(keys)
@@ -42,7 +46,7 @@ class BaseScene:
             self.pager.update(dt)
             
         for p in self.prompts:
-            inside_zone = p["zone"].colliderect(self.player.rect) if self.player else False
+            inside_zone = p["zone"].colliderect(self.player.rect) if self.player else False 
             
             if inside_zone:
                 p["prompt"].show()
@@ -61,6 +65,8 @@ class BaseScene:
             actor_rect = self.player.rect
         elif self.fire_truck:
             actor_rect = self.fire_truck.rect
+        elif self.fire_fighter:
+            actor_rect = self.fire_fighter.rect
 
         for t in self.transitions:
             if actor_rect:
@@ -85,6 +91,9 @@ class BaseScene:
         
         if self.player:
             self.player.draw(screen)
+            
+        if self.fire_fighter:
+            self.fire_fighter.draw(screen)
         
         for p in self.prompts:
             p["prompt"].draw(screen)
@@ -95,6 +104,7 @@ class DataScene(BaseScene):
         self,
         game,
         player=None,
+        fire_fighter = None,
         objects=None,
         scene_name=None,
         spawn_points=None,
@@ -104,7 +114,7 @@ class DataScene(BaseScene):
         fire_truck_alignment=None,
         has_pager=False
     ):
-        super().__init__(game, player, game.fire_truck if use_shared_fire_truck else None, game.pager if has_pager else None)
+        super().__init__(game, player ,fire_fighter, game.fire_truck if use_shared_fire_truck else None, game.pager if has_pager else None)
         self.scene_name = scene_name
         self.spawn_points = spawn_points or {}
         self.draw_background = draw_background
@@ -140,6 +150,14 @@ class DataScene(BaseScene):
                 else:
                     self.fire_truck.rect.topleft = tuple(spawn_position)
 
+        
+        if self.fire_fighter and self.scene_name in self.spawn_points:
+            scene_spawns = self.spawn_points[self.scene_name]
+            spawn_position = scene_spawns.get(spawn_name, scene_spawns.get("default"))
+            if spawn_position:
+                self.fire_fighter.rect.topleft = tuple(spawn_position)
+        
+        
         self.game.next_spawn = None
 
     def draw(self, screen):

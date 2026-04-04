@@ -36,7 +36,7 @@ def build_scene(scene_def, game):
     objects = [_build_object(obj_def) for obj_def in scene_def.get("objects", [])]
     scene = DataScene(
         game=game,
-        player=game.fire_fighter if scene_def.get("use_player", True) else None,
+        player=game.player if scene_def.get("use_player", True) else None,
         objects=objects,
         scene_name=scene_def["name"],
         spawn_points=scene_def.get("spawn_points", {}),
@@ -44,8 +44,9 @@ def build_scene(scene_def, game):
         draw_ground=scene_def.get("draw_ground", False),
         use_shared_fire_truck=scene_def.get("use_shared_fire_truck", False),
         fire_truck_alignment=scene_def.get("fire_truck_alignment"),
-        has_pager= scene_def.get("has_pager", False)
-    )
+        has_pager= scene_def.get("has_pager", False),
+        fire_fighter = game.fire_fighter if scene_def.get("use_fire_fighter", True) else None
+        )
 
     for transition in scene_def.get("transitions", []):
         scene.add_transition(

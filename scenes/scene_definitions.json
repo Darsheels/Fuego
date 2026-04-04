@@ -25,6 +25,7 @@
     {
       "name": "fire_station_interior",
       "use_player": true,
+      "use_fire_fighter":false,
       "draw_background": false,
       "draw_ground": false,
       "has_pager": true,
@@ -58,6 +59,7 @@
       "name": "locker_room",
       "use_player": true,
       "draw_background": false,
+      "use_fire_fighter": false,
       "draw_ground": false,
       "has_pager":true,
       "objects": [
@@ -66,13 +68,12 @@
       "interactions": [
           {
             "name": "change into gear and exit",
-            "text": "Press E to exit to truck",
+            "text": "Press E to gear up and exit to fire-scene",
             "zone": { "x": 100, "y": 400, "w": 100, "h": 100 },
             "use_player": false,
-            "use_fire_man": true,
             "key": "K_e",
-            "target_scene": "fire_station_interior",
-            "spawn_point": "exit"
+            "target_scene": "truck_cutscene",
+            "spawn_point": "default"
           }
       ],
       "transitions": [
@@ -81,7 +82,8 @@
     },
     {
       "name": "House1",
-      "use_player": true,
+      "use_player": false,
+      "use_fire_fighter": true,
       "use_shared_fire_truck": true,
       "fire_truck_alignment": "bottom",
       "draw_background": true,
@@ -92,22 +94,6 @@
       "interactions": [],
       "transitions": [
         { "direction": "left", "target": "driving", "spawn": "right_entry" }
-      ]
-    } , 
-
-    {
-      "name": "driving",
-      "use_player": false,
-      "use_shared_fire_truck": true,
-      "fire_truck_alignment": "bottom",
-      "draw_background": true,
-      "draw_ground": true,
-      "objects": [
-        {"class": "FireStation", "x": 0, "y": -370 }
-      ],
-      "interactions": [],
-      "transitions": [
-        { "direction": "cutscene_end", "target": "driving", "spawn": "fire_truck_spawn" }
       ]
     }
 
@@ -129,7 +115,7 @@
       "locker_room_entry": [100, 480]
     },
     "House1": {
-      "default": [400, 480],
+      "default": [400, 520],
       "left_entry": [0, 250],
       "right_entry": [1200, 250]
     }
