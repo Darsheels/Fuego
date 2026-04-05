@@ -8,8 +8,8 @@ class FireFighter(pygame.sprite.Sprite):
        self.walk_frames = load_sprite_sheet("assets/sprites/player/Firefighter.png" , 48 , 96 , scale=2)
        self.idle_frames = load_sprite_sheet("assets/sprites/player/IdleGearedFireFighter.png" , 48 , 96 , scale=2)
        
-       self.walk_anim = Animation(self.walk_frames , speed= 0.1)
-       self.idle_anim = Animation(self.idle_frames , speed=0.1)
+       self.walk_anim = Animation(self.walk_frames , speed= 0.1 , breaker=False)
+       self.idle_anim = Animation(self.idle_frames , speed=0.1 , breaker=False)
        
        self.image = self.idle_anim.image
        self.rect = self.image.get_rect(topleft=(x,y))

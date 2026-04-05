@@ -9,8 +9,8 @@ class Player(pygame.sprite.Sprite):
        self.walk_frames = load_sprite_sheet("assets/sprites/player/DefaultPlayer.png" , 32 , 32 , scale=7)
        self.idle_frames = load_sprite_sheet("assets/sprites/player/idleFireFighter.png" , 32 , 32 , scale=7)
        
-       self.walk_anim = Animation(self.walk_frames , speed= 0.1)
-       self.idle_anim = Animation(self.idle_frames , speed=0.1)
+       self.walk_anim = Animation(self.walk_frames , speed= 0.1 , breaker=False)
+       self.idle_anim = Animation(self.idle_frames , speed=0.1 , breaker=False)
        
        self.image = self.idle_anim.image
        self.rect = self.image.get_rect(topleft=(x,y))

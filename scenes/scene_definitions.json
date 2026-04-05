@@ -47,7 +47,7 @@
           "text": "Press X to enter the fire truck",
           "zone": { "x": 400, "y": 600, "w": 100, "h": 100 },
           "key": "K_x",
-          "target_scene": "truck_cutscene",
+          "target_scene": "truck_leaving",
           "spawn_point": "default"
         }
       ],
@@ -72,7 +72,7 @@
             "zone": { "x": 100, "y": 400, "w": 100, "h": 100 },
             "use_player": false,
             "key": "K_e",
-            "target_scene": "truck_cutscene",
+            "target_scene": "truck_leaving",
             "spawn_point": "default"
           }
       ],
@@ -115,7 +115,7 @@
       "locker_room_entry": [100, 480]
     },
     "House1": {
-      "default": [400, 520],
+      "default": [800, 520],
       "left_entry": [0, 250],
       "right_entry": [1200, 250]
     }

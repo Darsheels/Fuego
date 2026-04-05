@@ -15,18 +15,19 @@ def load_sprite_sheet(path , frame_width , frame_height , scale):
                 (frame_width * scale, frame_height * scale)
             )
             frames.append(frame)
-
+            
     if not frames:
         raise ValueError(f"No frames extracted from sprite sheet {path} using {frame_width}x{frame_height}")
 
     return frames
 
 class Animation:
-    def __init__(self , frames , speed):
+    def __init__(self , frames , speed , breaker):
         self.frames = frames
         self.speed = speed
         self.index = 0
         self.image = frames[0]
+        self.breaker = breaker
         
     def update(self):
         self.index += self.speed
@@ -34,3 +35,4 @@ class Animation:
             self.index = 0
         self.image = self.frames[int(self.index)]
         
+       

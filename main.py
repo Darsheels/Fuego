@@ -4,7 +4,7 @@ from settings import SCREEN_HEIGHT, SCREEN_WIDTH
 from entities.Player import Player
 from entities.scene_manager import SceneManager
 from entities.scene_factory import build_scenes_from_definitions
-from scenes.animation_scenes import TruckCutsceneScene
+from scenes.animation_scenes import TruckCutsceneScene, TruckLeavingScene
 from entities.vehicles import DefaultTruck
 from entities.pager import Pager
 from entities.FireFighter import FireFighter
@@ -23,6 +23,7 @@ class Game:
 
         self.scene_manager = SceneManager()
         self.scene_manager.add("truck_cutscene", TruckCutsceneScene(self, self.fire_truck))
+        self.scene_manager.add("truck_leaving", TruckLeavingScene(self))
 
         definitions_path = Path(__file__).resolve().parent / "scenes" / "scene_definitions.json"
         scenes = build_scenes_from_definitions(definitions_path, self)
