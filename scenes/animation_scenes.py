@@ -61,4 +61,4 @@ class TruckLeavingScene(BaseScene):
     def draw(self, screen): 
         screen.blit(self.game.background, (0, 0))
         screen.blit(self.game.ground, (0, 450))
-        screen.blit(self.animation.image, (0 , -150))
+        screen.blit(self.animation.image, (-200 , -140))
