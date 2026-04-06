@@ -45,19 +45,16 @@ class TruckLeavingScene(BaseScene):
         self.duration = 8.0
         self.elapsed = 0.0
     
-        
     def on_enter(self):
         self.elapsed = 0.0
        
     def update(self, keys, dt):
         self.elapsed += dt
-        
         self.animation.update() 
        
         if self.elapsed >= self.duration:
             self.game.scene_manager.set("truck_cutscene")
           
-
     def draw(self, screen): 
         screen.blit(self.game.background, (0, 0))
         screen.blit(self.game.ground, (0, 450))

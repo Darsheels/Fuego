@@ -33,24 +33,7 @@
         { "class": "TruckApparatus", "x": 0, "y": -100 },
         { "class": "DefaultTruck", "x": 50, "y": 250 }
       ],
-      "interactions": [
-        {
-          "name": "exit",
-          "text": "Press E to exit",
-          "zone": { "x": 1000, "y": 400, "w": 100, "h": 100 },
-          "key": "K_e",
-          "target_scene": "outside",
-          "spawn_point": "default"
-        },
-        {
-          "name": "enter_truck",
-          "text": "Press X to enter the fire truck",
-          "zone": { "x": 400, "y": 600, "w": 100, "h": 100 },
-          "key": "K_x",
-          "target_scene": "truck_leaving",
-          "spawn_point": "default"
-        }
-      ],
+      "interactions": [],
       "transitions": [
         { "direction": "right", "target": "locker_room", "spawn": "locker_room_entry" }
       ]
@@ -90,6 +73,7 @@
       "draw_ground": true,
       "objects": [
         { "class": "House1", "x": 0, "y": -350 }
+        
       ],
       "interactions": [],
       "transitions": [
