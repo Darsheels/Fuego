@@ -10,7 +10,7 @@ class Pager(Entity):
     def update(self, dt):
         if not self.pager_triggered:
             self.time_inside += dt
-            if self.time_inside >= 60:
+            if self.time_inside >= 5:
                 self.trigger()
 
     def trigger(self):

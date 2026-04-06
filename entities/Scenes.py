@@ -44,7 +44,7 @@ class BaseScene:
         
         if self.has_pager and self.pager:
             self.pager.update(dt)
-            
+
         for p in self.prompts:
             inside_zone = p["zone"].colliderect(self.player.rect) if self.player else False 
             
@@ -156,7 +156,6 @@ class DataScene(BaseScene):
             spawn_position = scene_spawns.get(spawn_name, scene_spawns.get("default"))
             if spawn_position:
                 self.fire_fighter.rect.topleft = tuple(spawn_position)
-        
         
         self.game.next_spawn = None
 
