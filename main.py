@@ -30,7 +30,7 @@ class Game:
         for scene_name, scene in scenes.items():
             self.scene_manager.add(scene_name, scene)
 
-        self.scene_manager.set("fire_station_interior")
+        self.scene_manager.set("TruckApparatus")
 
         self.background = pygame.image.load("assets/sprites/buildingblocks/Background.png").convert_alpha()
         self.background = pygame.transform.scale(self.background, (SCREEN_WIDTH, SCREEN_HEIGHT))

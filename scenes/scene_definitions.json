@@ -15,7 +15,7 @@
           "text": "Press E to enter the fire station",
           "zone": { "x": 150, "y": 525, "w": 100, "h": 100 },
           "key": "K_e",
-          "target_scene": "fire_station_interior",
+          "target_scene": "TruckApparatus",
           "spawn_point": "default_interior"
         }
       ],
@@ -24,7 +24,7 @@
       ]
     },
     {
-      "name": "fire_station_interior",
+      "name": "TruckApparatus",
       "use_player": true,
       "use_fire_fighter":false,
       "draw_background": false,
@@ -61,7 +61,7 @@
           }
       ],
       "transitions": [
-        { "direction": "left", "target": "fire_station_interior", "spawn": "left_entry" }
+        { "direction": "left", "target": "TruckApparatus", "spawn": "left_entry" }
       ]
     },
     {
@@ -74,11 +74,37 @@
       "draw_ground": true,
       "objects": [
         { "class": "House1", "x": 0, "y": -350 }
-        
       ],
-      "interactions": [],
+      "interactions": [{
+          "name": "Break in",
+          "text": "Press E to break in through the Door!!",
+          "zone": { "x": 300, "y": 520, "w": 100, "h": 100 },
+          "key": "K_e",
+          "target_scene": "House1Int",
+          "spawn_point": "entrance"
+        }],
       "transitions": [
-        { "direction": "left", "target": "driving", "spawn": "right_entry" }
+      ]
+    } , 
+    {
+      "name": "House1Int" , 
+      "use_player": false , 
+      "use_fire_fighter": true , 
+      "use_shared_fire_truck":false , 
+      "draw_background":false,
+      "draw_ground": false,
+      "objects":[
+        {"class": "House1Int" , "x": 0 , "y": 0}
+      ],
+      "interactions":[ 
+        {
+          "name": "leaving",
+          "text": "Press X to leave",
+          "zone": {"x": 80 , "y": 530 , "w": 100 , "h": 100},
+          "key": "K_x",
+          "target_scene": "House1", 
+          "spawn_point": "default"
+        }
       ]
     }
 
@@ -90,7 +116,7 @@
       "fire_truck_spawn": [100, 250],
       "right_entry": [500, 250]
     },
-    "fire_station_interior": {
+    "TruckApparatus": {
       "default_interior": [400, 480],
       "left_entry": [1000, 480],
       "locker_room_entry": [100, 480],
@@ -103,6 +129,9 @@
       "default": [800, 520],
       "left_entry": [0, 250],
       "right_entry": [1200, 250]
+    },
+    "House1Int": {
+      "entrance": [80 , 530]
     }
   }
 }

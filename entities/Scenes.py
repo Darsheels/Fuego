@@ -44,9 +44,20 @@ class BaseScene:
         
         if self.has_pager and self.pager:
             self.pager.update(dt)
+    
+        actor_rect = None
+        if self.fire_truck and self.player and getattr(self.player, "in_vehicle", False):
+            actor_rect = self.fire_truck.rect
+        elif self.player:
+            actor_rect = self.player.rect
+        elif self.fire_fighter:
+            actor_rect = self.fire_fighter.rect
+        elif self.fire_truck:
+            actor_rect = self.fire_truck.rect
+       
 
         for p in self.prompts:
-            inside_zone = p["zone"].colliderect(self.player.rect) if self.player else False 
+            inside_zone = p["zone"].colliderect(actor_rect)
             
             if inside_zone:
                 p["prompt"].show()
@@ -57,16 +68,6 @@ class BaseScene:
 
             else:
                 p["prompt"].hide()
-                
-        actor_rect = None
-        if self.fire_truck and self.player and getattr(self.player, "in_vehicle", False):
-            actor_rect = self.fire_truck.rect
-        elif self.player:
-            actor_rect = self.player.rect
-        elif self.fire_truck:
-            actor_rect = self.fire_truck.rect
-        elif self.fire_fighter:
-            actor_rect = self.fire_fighter.rect
 
         for t in self.transitions:
             if actor_rect:

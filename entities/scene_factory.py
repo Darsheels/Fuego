@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 import pygame
-from entities.Buildings import FireStation, LockerRoom, House1, TruckApparatus
+from entities.Buildings import FireStation, LockerRoom, House1, TruckApparatus , House1Int
 from entities.Scenes import DataScene
 from entities.vehicles import DefaultTruck
 
@@ -10,7 +10,8 @@ OBJECT_CLASSES = {
     "TruckApparatus": TruckApparatus,
     "LockerRoom": LockerRoom,
     "House1": House1,
-    "DefaultTruck": DefaultTruck
+    "DefaultTruck": DefaultTruck,
+    "House1Int": House1Int
 }
 
 def load_scene_definitions(path):

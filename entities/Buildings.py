@@ -16,3 +16,7 @@ class LockerRoom(Entity):
 class House1(Entity):
     def __init__(self, x, y):
         super().__init__("assets/sprites/buildings/house1.png", (256, 256), x, y, scale=5)
+        
+class House1Int(Entity):
+    def __init__(self, x , y):
+        super().__init__("assets/sprites/buildings/House1Int.png", (256 , 256), x, y, scale = 5)
