@@ -3,7 +3,7 @@ from entities.entity import Entity
 
 class FireHydrant(Entity):
     def __init__(self, x , y):
-        super.__init__("assets/sprites/buildingblocks/FireHydrant.png", (128 , 160) , scale = 1)
+        super.__init__("assets/sprites/buildingblocks/FireHydrant.png", (128 , 160) , scale=1)
         
 class Pager(Entity):
     def __init__(self, x, y):
@@ -34,4 +34,9 @@ class DefaultTruck(Entity):
     def update(self, keys):
         pass
 
-        
+
+class Ladder(Entity):
+    def __init__(self, x, y):
+        super().__init__("assets/sprites/buildingblocks/Ladder.png", (64 , 64), x, y, scale=5)
+    
+       

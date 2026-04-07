@@ -1,6 +1,7 @@
 import pygame
 from settings import SCREEN_WIDTH , SCREEN_HEIGHT
 from entities.UI_prompt import UIPrompt
+from entities.objects import Ladder
 
 class BaseScene:
     def __init__(self , game , player=None , fire_fighter=None , fire_truck=None, pager=None):
@@ -67,6 +68,14 @@ class BaseScene:
 
             else:
                 p["prompt"].hide()
+                
+        
+        for obj in self.objects:
+            if isinstance(obj, Ladder):
+                if obj.zone.colliderect(actor_rect) and keys[p["w"]]:
+                    self.fire_fighter.on_ladder = True
+                    
+                    
 
         for t in self.transitions:
             if actor_rect:
@@ -126,6 +135,7 @@ class DataScene(BaseScene):
         if objects:
             for obj in objects:
                 self.add_objects(obj)
+            
 
         if self.fire_truck and use_shared_fire_truck:
             self.add_objects(self.fire_truck)

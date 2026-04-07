@@ -71,6 +71,9 @@ class FireFighter(pygame.sprite.Sprite):
        self.speed = 2
        self.facing_right = True
        
+       self.on_ladder = False
+       self.climbing = False
+       
     def update(self , keys):
         moving = False
         
