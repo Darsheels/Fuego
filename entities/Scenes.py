@@ -33,7 +33,6 @@ class BaseScene:
         self.pager = self.game.pager
         
     def update(self , keys , dt):
-        
         actor_rect = None
         
         if self.fire_truck and self.player and getattr(self.player, "in_vehicle", False):
@@ -45,14 +44,10 @@ class BaseScene:
             
         elif self.fire_fighter:
             actor_rect = self.fire_fighter.rect
-            
             ladder_found = False
 
             for obj in self.objects:
-                if isinstance(obj, Ladder) and obj.zone.colliderect(actor_rect):
-                    print("FF:", self.fire_fighter.rect)
-                    print("Ladder:", obj.zone)
-                    print("Colliding:", obj.zone.colliderect(self.fire_fighter.rect))
+                if isinstance(obj, Ladder) and obj.zone.colliderect(self.fire_fighter.rect):
                     self.fire_fighter.on_ladder = True
                     self.fire_fighter.ladder = obj
                     ladder_found = True

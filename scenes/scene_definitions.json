@@ -95,7 +95,7 @@
       "draw_ground": false,
       "objects":[
         {"class": "House1Int" , "x": 0 , "y": 0},
-        {"class": "Ladder", "x": 700 , "y": 280 , "height": 90 }
+        {"class": "Ladder", "x": 700 , "y": 530 , "height": 83 }
       ],
       "interactions":[ 
         {
