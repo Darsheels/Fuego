@@ -1,13 +1,12 @@
 import pygame
 from pathlib import Path
 from settings import SCREEN_HEIGHT, SCREEN_WIDTH
-from entities.Player import Player
+from entities.Player import Player , FireFighter
 from entities.scene_manager import SceneManager
 from entities.scene_factory import build_scenes_from_definitions
 from scenes.animation_scenes import TruckCutsceneScene, TruckLeavingScene
-from entities.vehicles import DefaultTruck
-from entities.pager import Pager
-from entities.FireFighter import FireFighter
+from entities.objects import Pager , FireHydrant , DefaultTruck
+
 
 class Game:
     def __init__(self):

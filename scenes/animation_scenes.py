@@ -2,7 +2,7 @@ import pygame
 from entities.Scenes import BaseScene
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT
 from entities.animation import load_sprite_sheet, Animation
-from entities.Entity import Entity
+from entities.entity import Entity
 
 class TruckCutsceneScene(BaseScene):
     def __init__(self, game, truck):

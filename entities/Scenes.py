@@ -1,5 +1,4 @@
 import pygame
-from entities.pager import Pager
 from settings import SCREEN_WIDTH , SCREEN_HEIGHT
 from entities.UI_prompt import UIPrompt
 

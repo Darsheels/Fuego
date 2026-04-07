@@ -103,7 +103,7 @@
           "zone": {"x": 80 , "y": 530 , "w": 100 , "h": 100},
           "key": "K_x",
           "target_scene": "House1", 
-          "spawn_point": "default"
+          "spawn_point": "door"
         }
       ]
     }
@@ -127,6 +127,7 @@
     },
     "House1": {
       "default": [800, 520],
+      "door": [500 , 520],
       "left_entry": [0, 250],
       "right_entry": [1200, 250]
     },
