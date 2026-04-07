@@ -36,7 +36,7 @@ class DefaultTruck(Entity):
 
 
 class Ladder(Entity):
-    def __init__(self, x, y):
-        super().__init__("assets/sprites/buildingblocks/Ladder.png", (64 , 64), x, y, scale=5)
-    
+    def __init__(self, x, y, height):
+        super().__init__("assets/sprites/buildingblocks/Ladder.png", (64 , height), x, y, scale=5)
+        self.zone = pygame.Rect(x,y,64,height)
        

@@ -25,6 +25,14 @@ def _build_object(obj_def):
     obj_type = obj_def.get("class")
     if obj_type not in OBJECT_CLASSES:
         raise ValueError(f"Unknown object class in scene definition: {obj_type}")
+    
+    if obj_type == "Ladder":
+        return Ladder(
+            obj_def.get("x",0),
+            obj_def.get("y",0),
+            obj_def.get("height", 200)
+        )
+    
     return OBJECT_CLASSES[obj_type](obj_def.get("x", 0), obj_def.get("y", 0))
 
 def _build_zone(zone_def):

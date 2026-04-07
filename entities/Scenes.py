@@ -33,29 +33,43 @@ class BaseScene:
         self.pager = self.game.pager
         
     def update(self , keys , dt):
-        if self.player:
-            self.player.update(keys)
-            
-        if self.fire_fighter:
-            self.fire_fighter.update(keys)
         
-        if self.fire_truck:
-            self.fire_truck.update(keys)
-        
-        if self.has_pager and self.pager:
-            self.pager.update(dt)
-    
         actor_rect = None
+        
         if self.fire_truck and self.player and getattr(self.player, "in_vehicle", False):
             actor_rect = self.fire_truck.rect
+        
         elif self.player:
+            self.player.update(keys)
             actor_rect = self.player.rect
+            
         elif self.fire_fighter:
             actor_rect = self.fire_fighter.rect
+            
+            ladder_found = False
+
+            for obj in self.objects:
+                if isinstance(obj, Ladder) and obj.zone.colliderect(actor_rect):
+                    print("FF:", self.fire_fighter.rect)
+                    print("Ladder:", obj.zone)
+                    print("Colliding:", obj.zone.colliderect(self.fire_fighter.rect))
+                    self.fire_fighter.on_ladder = True
+                    self.fire_fighter.ladder = obj
+                    ladder_found = True
+                    print("instance works")
+                    break
+
+            if not ladder_found:
+                self.fire_fighter.on_ladder = False
+                self.fire_fighter.climbing = False
+                self.fire_fighter.ladder = None
+                
+            self.fire_fighter.update(keys)
+           
         elif self.fire_truck:
             actor_rect = self.fire_truck.rect
-       
-
+            self.fire_truck.update(keys)
+                
         for p in self.prompts:
             inside_zone = p["zone"].colliderect(actor_rect)
             
@@ -68,15 +82,7 @@ class BaseScene:
 
             else:
                 p["prompt"].hide()
-                
         
-        for obj in self.objects:
-            if isinstance(obj, Ladder):
-                if obj.zone.colliderect(actor_rect) and keys[p["w"]]:
-                    self.fire_fighter.on_ladder = True
-                    
-                    
-
         for t in self.transitions:
             if actor_rect:
                 if t["direction"] == "right" and actor_rect.right >= SCREEN_WIDTH:

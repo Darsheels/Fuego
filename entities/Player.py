@@ -71,21 +71,46 @@ class FireFighter(pygame.sprite.Sprite):
        self.speed = 2
        self.facing_right = True
        
+       self.ladder = None
        self.on_ladder = False
        self.climbing = False
        
     def update(self , keys):
         moving = False
-        
-        if keys[pygame.K_a]:
-            self.rect.x -= self.speed
-            moving = True
-            self.facing_right = False
-        
-        if keys[pygame.K_d]:
-            self.rect.x += self.speed
-            moving = True
-            self.facing_right = True
+
+        if self.on_ladder:
+            self.climbing = False
+            moving = False
+            self.rect.centerx = self.ladder.zone.centerx
+            if keys[pygame.K_w]:
+                self.rect.y -= self.speed
+                self.climbing = True
+                print("W works")
+               
+            elif keys[pygame.K_s]:
+                self.rect.y += self.speed
+                self.climbing = True
+                print("S works")
+            
+            if self.rect.top < self.ladder.zone.top:
+                self.rect.top = self.ladder.zone.top
+
+            if self.rect.bottom > self.ladder.zone.bottom:
+                self.rect.bottom = self.ladder.zone.bottom
+                
+        else:
+            self.climbing = False     
+              
+        if not self.on_ladder and not self.climbing:
+            if keys[pygame.K_a]:
+                self.rect.x -= self.speed
+                moving = True
+                self.facing_right = False
+            
+            if keys[pygame.K_d]:
+                self.rect.x += self.speed
+                moving = True
+                self.facing_right = True
             
         if moving:
            self.walk_anim.update()
@@ -99,7 +124,6 @@ class FireFighter(pygame.sprite.Sprite):
         else:
             self.image = pygame.transform.flip(frame , True , False)
             
-    
     def draw(self , surface):
         if self.visible:
             surface.blit(self.image , self.rect)
