@@ -16,9 +16,9 @@ class Pager(Entity):
             self.time_inside += dt
             if self.time_inside >= 5:
                 self.trigger()
-
     def trigger(self):
         self.pager_triggered = True
+        print("pager works")
 
     def draw(self, screen):
         if self.pager_triggered:
@@ -33,8 +33,7 @@ class DefaultTruck(Entity):
 
     def update(self, keys):
         pass
-
-
+    
 class Ladder(Entity):
     def __init__(self, x, y, height):
         super().__init__("assets/sprites/buildingblocks/Ladder.png", (64 , height), x, y, scale=5)

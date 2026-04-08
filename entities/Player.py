@@ -94,11 +94,17 @@ class FireFighter(pygame.sprite.Sprite):
                 self.rect.top = self.ladder.zone.top
                 self.on_ladder = False
                 self.climbing = False
+                if keys[pygame.K_s]:
+                    self.on_ladder = True
+                    self.climbing = True
 
             if self.rect.bottom > self.ladder.zone.bottom:
                 self.rect.bottom = self.ladder.zone.bottom
                 self.on_ladder = False
                 self.climbing = False
+                if keys[pygame.K_w]:
+                    self.on_ladder = True
+                    self.climbing = True
                 
         else:
             self.climbing = False     

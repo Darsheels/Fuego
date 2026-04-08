@@ -34,7 +34,9 @@ class BaseScene:
         
     def update(self , keys , dt):
         actor_rect = None
-                
+        
+        self.pager.update(dt)        
+        
         if self.fire_truck and self.player and getattr(self.player, "in_vehicle", False):
             actor_rect = self.fire_truck.rect
         
@@ -51,7 +53,13 @@ class BaseScene:
 
             for obj in self.objects:
                 if isinstance(obj, Ladder) and obj.zone.colliderect(self.fire_fighter.rect):
-                    if keys[pygame.K_w] and self.fire_fighter.on_ladder:
+                    if keys[pygame.K_w]:
+                        self.fire_fighter.on_ladder = True
+                        self.fire_fighter.ladder = obj
+                        ladder_found = True
+                        break
+                    
+                    if keys[pygame.K_s]:
                         self.fire_fighter.on_ladder = True
                         self.fire_fighter.ladder = obj
                         ladder_found = True
@@ -143,7 +151,6 @@ class DataScene(BaseScene):
             for obj in objects:
                 self.add_objects(obj)
             
-
         if self.fire_truck and use_shared_fire_truck:
             self.add_objects(self.fire_truck)
 
