@@ -34,7 +34,7 @@ class BaseScene:
         
     def update(self , keys , dt):
         actor_rect = None
-        
+                
         if self.fire_truck and self.player and getattr(self.player, "in_vehicle", False):
             actor_rect = self.fire_truck.rect
         
@@ -45,14 +45,20 @@ class BaseScene:
         elif self.fire_fighter:
             actor_rect = self.fire_fighter.rect
             ladder_found = False
+            
+            if self.fire_fighter.on_ladder:
+                ladder_found = True
 
             for obj in self.objects:
                 if isinstance(obj, Ladder) and obj.zone.colliderect(self.fire_fighter.rect):
-                    self.fire_fighter.on_ladder = True
-                    self.fire_fighter.ladder = obj
-                    ladder_found = True
-                    print("instance works")
-                    break
+                    if keys[pygame.K_w] and self.fire_fighter.on_ladder:
+                        self.fire_fighter.on_ladder = True
+                        self.fire_fighter.ladder = obj
+                        ladder_found = True
+                        break
+                    
+                    if self.fire_fighter.on_ladder:
+                        ladder_found = True
 
             if not ladder_found:
                 self.fire_fighter.on_ladder = False
@@ -104,7 +110,7 @@ class BaseScene:
             
         if self.fire_fighter:
             self.fire_fighter.draw(screen)
-        
+            
         for p in self.prompts:
             p["prompt"].draw(screen)
 

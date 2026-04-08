@@ -77,7 +77,7 @@ class FireFighter(pygame.sprite.Sprite):
        
     def update(self , keys):
         moving = False
-
+        
         if self.on_ladder:
             self.climbing = False
             moving = False
@@ -85,18 +85,20 @@ class FireFighter(pygame.sprite.Sprite):
             if keys[pygame.K_w]:
                 self.rect.y -= self.speed
                 self.climbing = True
-                print("W works")
                
-            elif keys[pygame.K_s]:
+            if keys[pygame.K_s]:
                 self.rect.y += self.speed
                 self.climbing = True
-                print("S works")
             
             if self.rect.top < self.ladder.zone.top:
                 self.rect.top = self.ladder.zone.top
+                self.on_ladder = False
+                self.climbing = False
 
             if self.rect.bottom > self.ladder.zone.bottom:
                 self.rect.bottom = self.ladder.zone.bottom
+                self.on_ladder = False
+                self.climbing = False
                 
         else:
             self.climbing = False     
