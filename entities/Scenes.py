@@ -32,10 +32,18 @@ class BaseScene:
         self.has_pager = True
         self.pager = self.game.pager
         
+    def draw_ladder_prompt(self,screen):
+        font = pygame.font.Font(None,32)
+        text_surface = font.render("press W to climb", True, (255,255,255))
+        x = self.fire_fighter.rect.centerx - text_surface.get_width() // 2
+        y = self.fire_fighter.rect.top - 30
+        screen.blit(text_surface, (x,y))
+    
     def update(self , keys , dt):
         actor_rect = None
         
-        self.pager.update(dt)        
+        if self.pager:
+            self.pager.update(dt)
         
         if self.fire_truck and self.player and getattr(self.player, "in_vehicle", False):
             actor_rect = self.fire_truck.rect
@@ -52,14 +60,20 @@ class BaseScene:
                 ladder_found = True
 
             for obj in self.objects:
-                if isinstance(obj, Ladder) and obj.zone.colliderect(self.fire_fighter.rect):
-                    if keys[pygame.K_w]:
+                if isinstance(obj, Ladder) and obj.zone.colliderect(actor_rect):
+                 
+                    if not self.fire_fighter.on_ladder:
+                        self.fire_fighter.show_ladder_prompt = True
+                    else:
+                        self.fire_fighter.show_ladder_prompt = False   
+                        
+                    if keys[pygame.K_w] and not self.fire_fighter.on_ladder:
                         self.fire_fighter.on_ladder = True
                         self.fire_fighter.ladder = obj
                         ladder_found = True
                         break
                     
-                    if keys[pygame.K_s]:
+                    if keys[pygame.K_s] and not self.fire_fighter.on_ladder:
                         self.fire_fighter.on_ladder = True
                         self.fire_fighter.ladder = obj
                         ladder_found = True
@@ -72,6 +86,7 @@ class BaseScene:
                 self.fire_fighter.on_ladder = False
                 self.fire_fighter.climbing = False
                 self.fire_fighter.ladder = None
+                self.fire_fighter.show_ladder_prompt = False
                 
             self.fire_fighter.update(keys)
            
@@ -106,6 +121,7 @@ class BaseScene:
                     self.game.next_spawn = t["spawn"]
                     self.game.scene_manager.set(t["target"])
     
+    
     def draw(self , screen):
         for obj in self.objects:
             obj.draw(screen)
@@ -118,11 +134,13 @@ class BaseScene:
             
         if self.fire_fighter:
             self.fire_fighter.draw(screen)
+            if self.fire_fighter.show_ladder_prompt:
+                self.draw_ladder_prompt(screen)
             
         for p in self.prompts:
             p["prompt"].draw(screen)
-
-
+            
+     
 class DataScene(BaseScene):
     def __init__(
         self,

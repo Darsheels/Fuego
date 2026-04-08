@@ -75,6 +75,8 @@ class FireFighter(pygame.sprite.Sprite):
        self.on_ladder = False
        self.climbing = False
        
+       self.show_ladder_prompt = False
+       
     def update(self , keys):
         moving = False
         
