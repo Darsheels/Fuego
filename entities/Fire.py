@@ -25,7 +25,6 @@ class Fire(pygame.sprite.Sprite):
         self.extinguished = True
         self.image = pygame.Surface((0,0))
         
-        
 class Fire_manager:
     def __init__(self):
         self.fires = []

@@ -77,6 +77,10 @@ class FireFighter(pygame.sprite.Sprite):
        
        self.show_ladder_prompt = False
        
+       self.has_extinguisher = True
+       self.extinguisher_active = False
+       self.extinguisher_rect = pygame.Rect(0,0,40,20)
+       
     def update(self , keys):
         moving = False
         
@@ -110,7 +114,24 @@ class FireFighter(pygame.sprite.Sprite):
                 
         else:
             self.climbing = False     
-              
+        
+        if keys[pygame.K_f]:
+            self.extinguisher_active = True
+            print("f Works")
+        else:
+            self.extinguisher_active = False
+        
+        if not self.on_ladder:
+            self.extinguisher_active = keys[pygame.K_f]
+          
+        else:
+            self.extinguisher_active = False
+        
+        if self.facing_right:
+            self.extinguisher_rect = pygame.Rect(self.rect.right, self.rect.centery - 10, 60, 20)
+        else:
+            self.extinguisher_rect = pygame.Rect(self.rect.left - 60, self.rect.centery - 10, 60, 20)
+        
         if not self.on_ladder and not self.climbing:
             if keys[pygame.K_a]:
                 self.rect.x -= self.speed
