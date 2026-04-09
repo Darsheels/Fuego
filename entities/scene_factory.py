@@ -4,6 +4,7 @@ import pygame
 from entities.Buildings import FireStation, LockerRoom, House1, TruckApparatus , House1Int
 from entities.Scenes import DataScene
 from entities.objects import DefaultTruck , FireHydrant , Ladder , Pager
+from entities.Fire import Fire , Fire_manager
 
 OBJECT_CLASSES = {
     "FireStation": FireStation,
@@ -13,7 +14,8 @@ OBJECT_CLASSES = {
     "DefaultTruck": DefaultTruck,
     "House1Int": House1Int,
     "FireHydrant": FireHydrant,
-    "Ladder": Ladder
+    "Ladder": Ladder,
+    "Fire": Fire
 }
 
 def load_scene_definitions(path):
@@ -57,7 +59,7 @@ def build_scene(scene_def, game):
         fire_truck_alignment=scene_def.get("fire_truck_alignment"),
         has_pager= scene_def.get("has_pager", False),
         fire_fighter = game.fire_fighter if scene_def.get("use_fire_fighter", True) else None
-        )
+    )
 
     for transition in scene_def.get("transitions", []):
         scene.add_transition(

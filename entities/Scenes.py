@@ -2,6 +2,7 @@ import pygame
 from settings import SCREEN_WIDTH , SCREEN_HEIGHT
 from entities.UI_prompt import UIPrompt
 from entities.objects import Ladder
+from entities.Fire import Fire,Fire_manager
 
 class BaseScene:
     def __init__(self , game , player=None , fire_fighter=None , fire_truck=None, pager=None):
@@ -14,12 +15,17 @@ class BaseScene:
         self.prompts = []
         self.transitions = []
         self.has_pager = False
+        self.fire_manager = Fire_manager()
 
     def on_enter(self):
         return
 
     def add_objects(self, obj):
-        self.objects.append(obj)
+        # self.objects.append(obj)
+        if isinstance(obj , Fire):
+            self.fire_manager.fires.append(obj)
+        else:
+            self.objects.append(obj)
     
     def add_transition(self, target_scene , direction , spawn_point):
         self.transitions.append({"target": target_scene , "direction": direction , "spawn": spawn_point})
@@ -41,6 +47,8 @@ class BaseScene:
     
     def update(self , keys , dt):
         actor_rect = None
+        
+        self.fire_manager.update(dt)
         
         if self.pager:
             self.pager.update(dt)
@@ -81,7 +89,7 @@ class BaseScene:
                     
                     if self.fire_fighter.on_ladder:
                         ladder_found = True
-
+                
             if not ladder_found:
                 self.fire_fighter.on_ladder = False
                 self.fire_fighter.climbing = False
@@ -125,13 +133,15 @@ class BaseScene:
     def draw(self , screen):
         for obj in self.objects:
             obj.draw(screen)
+        
+        self.fire_manager.draw(screen)
             
         if self.has_pager and self.pager:
             self.pager.draw(screen)
         
         if self.player:
             self.player.draw(screen)
-            
+        
         if self.fire_fighter:
             self.fire_fighter.draw(screen)
             if self.fire_fighter.show_ladder_prompt:
