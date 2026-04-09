@@ -28,7 +28,6 @@ class TruckCutsceneScene(BaseScene):
 
         if self.elapsed >= self.duration:
             self.game.scene_manager.set("House1")
-          
 
     def draw(self, screen):
         x = int(self.scroll_x) % SCREEN_WIDTH

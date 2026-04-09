@@ -21,7 +21,6 @@ class BaseScene:
         return
 
     def add_objects(self, obj):
-        # self.objects.append(obj)
         if isinstance(obj , Fire):
             self.fire_manager.fires.append(obj)
         else:

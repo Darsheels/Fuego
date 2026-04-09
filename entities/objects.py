@@ -39,4 +39,4 @@ class Ladder(Entity):
         super().__init__("assets/sprites/buildingblocks/Ladder.png", (64 , height), x, y, scale=5)
         self.zone = self.rect.copy()
 
-       
+
