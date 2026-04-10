@@ -18,7 +18,6 @@ class Pager(Entity):
                 self.trigger()
     def trigger(self):
         self.pager_triggered = True
-        print("pager works")
 
     def draw(self, screen):
         if self.pager_triggered:

@@ -61,14 +61,15 @@ class BaseScene:
             
         elif self.fire_fighter:
             actor_rect = self.fire_fighter.rect
-            ladder_found = False
+            ladder_found = False    
             
-            if self.fire_fighter.extinguisher_active:
-                for fire in self.fire_manager.fires:
-                    if self.fire_fighter.extinguisher_rect.colliderect(fire.rect):
-                        fire.extinguish()
+            if self.fire_manager.fires:
+                self.fire_fighter.extinguisher_appear = True
+                if self.fire_fighter.extinguisher_active:
+                    for fire in self.fire_manager.fires:
+                        if self.fire_fighter.extinguisher_rect.colliderect(fire.rect):
+                            fire.extinguish()
 
-            
             if self.fire_fighter.on_ladder:
                 ladder_found = True
 
@@ -94,7 +95,7 @@ class BaseScene:
                     
                     if self.fire_fighter.on_ladder:
                         ladder_found = True
-                
+                    
             if not ladder_found:
                 self.fire_fighter.on_ladder = False
                 self.fire_fighter.climbing = False

@@ -18,6 +18,7 @@ class Fire(pygame.sprite.Sprite):
     def update(self,dt):
         if self.extinguished:
             return
+        
         self.FireAnimation.update()
         self.spread_timer += dt
         
