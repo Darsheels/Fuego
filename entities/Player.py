@@ -103,9 +103,6 @@ class FireFighter(pygame.sprite.Sprite):
                 self.rect.bottom = self.ladder.zone.bottom
                 self.on_ladder = False
                 self.climbing = False
-                if keys[pygame.K_w]:
-                    self.on_ladder = True
-                    self.climbing = True
         else:
             self.climbing = False     
         
@@ -136,7 +133,6 @@ class FireFighter(pygame.sprite.Sprite):
         
         #Extinguisher movement and contol
         if self.extinguisher_appear:
-            print("appear works")
             mouse_x , mouse_y = pygame.mouse.get_pos()  
             self.facing_right = mouse_x >= self.rect.centerx
             
@@ -160,12 +156,7 @@ class FireFighter(pygame.sprite.Sprite):
             spray_x = self.rect.centerx + nx * 40
             spray_y = self.rect.centery + ny * 40
                 
-            self.extinguisher_rect = pygame.Rect(
-                    spray_x ,
-                    spray_y, 
-                    spray_length,
-                    spray_width
-                )
+            self.extinguisher_rect = pygame.Rect(spray_x ,spray_y, spray_length,spray_width)
             
     def draw(self , surface):
         surface.blit(self.image , self.rect)

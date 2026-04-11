@@ -1,12 +1,11 @@
 import pygame
 from pathlib import Path
 from settings import SCREEN_HEIGHT, SCREEN_WIDTH
-from entities.Player import Player , FireFighter
 from entities.scene_manager import SceneManager
 from entities.scene_factory import build_scenes_from_definitions
 from scenes.animation_scenes import TruckCutsceneScene, TruckLeavingScene
 from entities.objects import Pager , FireHydrant , DefaultTruck
-
+from entities.PlayerSys import BasePlayer
 
 class Game:
     def __init__(self):
@@ -15,10 +14,12 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
         self.next_spawn = None
-        self.player = Player(400, 480)
+        
         self.fire_truck = DefaultTruck(100, 250)
         self.pager = Pager(1000,500)
-        self.fire_fighter = FireFighter(400, 450)
+     
+        self.player = BasePlayer(400,480,"firefighter_no_gear")
+        self.fire_fighter = BasePlayer(400,450,"firefighter_geared")
 
         self.scene_manager = SceneManager()
         self.scene_manager.add("truck_cutscene", TruckCutsceneScene(self, self.fire_truck))
