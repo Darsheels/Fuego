@@ -15,9 +15,6 @@ class Player(pygame.sprite.Sprite):
        self.image = self.idle_anim.image
        self.rect = self.image.get_rect(topleft=(x,y))
        
-       self.in_vehicle = False
-       self.visible = True
-       
        self.speed = 2
        self.facing_right = True
        
@@ -48,8 +45,7 @@ class Player(pygame.sprite.Sprite):
             
     
     def draw(self , surface):
-        if self.visible:
-            surface.blit(self.image , self.rect)  
+        surface.blit(self.image , self.rect)  
        
     
 class FireFighter(pygame.sprite.Sprite):
@@ -64,9 +60,6 @@ class FireFighter(pygame.sprite.Sprite):
        
        self.image = self.idle_anim.image
        self.rect = self.image.get_rect(topleft=(x,y))
-       
-       self.in_vehicle = False
-       self.visible = True
        
        self.speed = 2
        self.facing_right = True
@@ -175,5 +168,4 @@ class FireFighter(pygame.sprite.Sprite):
                 )
             
     def draw(self , surface):
-        if self.visible:
-            surface.blit(self.image , self.rect)
+        surface.blit(self.image , self.rect)
