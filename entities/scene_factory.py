@@ -5,6 +5,8 @@ from entities.Buildings import FireStation, LockerRoom, House1, TruckApparatus ,
 from entities.Scenes import DataScene
 from entities.objects import DefaultTruck , FireHydrant , Ladder , Pager
 from entities.Fire import Fire , Fire_manager
+from entities.PlayerSys import BasePlayer
+
 
 OBJECT_CLASSES = {
     "FireStation": FireStation,

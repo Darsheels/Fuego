@@ -1,6 +1,5 @@
 import pygame
 from entities.animation import load_sprite_sheet , Animation
-
 from entities.animation import load_sprite_sheet
 
 PLAYER_PROFILES = {
@@ -13,12 +12,12 @@ PLAYER_PROFILES = {
     "firefighter_geared": {
         "walk_frames": ("assets/sprites/player/Firefighter.png", 48, 96, 2),
         "idle_frames": ("assets/sprites/player/IdleGearedFireFighter.png", 48,96,2),
-        "has_extinguisher": True
+        "has_extinguisher": False
     },
 
     "firefighter_with_extinguisher": {
         "walk_frames": ("assets/sprites/player/FirefighterExtinguisher.png", 48, 96, 2),
-        "idle_frames": ("assets/sprites/jsidjisjdisd", 48,96,2),
+        "idle_frames": ("assets/sprites/player/IdleFireFighterExtinguisher.png", 48,96,2),
         "has_extinguisher": True
     }
 }
@@ -106,6 +105,7 @@ class BasePlayer(pygame.sprite.Sprite):
             return
         self.climbing = False
         self.rect.centerx = self.ladder.zone.centerx
+        self.moving = False
         
         if keys[pygame.K_w]:
             self.rect.y -= self.speed

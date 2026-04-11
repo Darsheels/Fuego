@@ -4,6 +4,7 @@
     {
       "name": "outside",
       "use_player": true,
+      "player": "firefighter_no_gear",
       "draw_background": true,
       "draw_ground": true,
       "objects": [
@@ -26,6 +27,7 @@
     {
       "name": "TruckApparatus",
       "use_player": true,
+      "player": "firefighter_no_gear",
       "use_fire_fighter":false,
       "draw_background": false,
       "draw_ground": false,
@@ -42,6 +44,7 @@
     {
       "name": "locker_room",
       "use_player": true,
+      "player": "firefighter_no_gear",
       "draw_background": false,
       "use_fire_fighter": false,
       "draw_ground": false,
@@ -67,6 +70,7 @@
     {
       "name": "House1",
       "use_player": false,
+      "player": "firefighter_geared",
       "use_fire_fighter": true,
       "use_shared_fire_truck": true,
       "fire_truck_alignment": "bottom",
@@ -89,6 +93,7 @@
     {
       "name": "House1Int" , 
       "use_player": false , 
+      "player": "firefighter_with_extinguisher",
       "use_fire_fighter": true , 
       "use_shared_fire_truck":false , 
       "draw_background":false,

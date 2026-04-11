@@ -4,7 +4,7 @@ from settings import SCREEN_HEIGHT, SCREEN_WIDTH
 from entities.scene_manager import SceneManager
 from entities.scene_factory import build_scenes_from_definitions
 from scenes.animation_scenes import TruckCutsceneScene, TruckLeavingScene
-from entities.objects import Pager , FireHydrant , DefaultTruck
+from entities.objects import Pager , DefaultTruck
 from entities.PlayerSys import BasePlayer
 
 class Game:
@@ -20,7 +20,8 @@ class Game:
      
         self.player = BasePlayer(400,480,"firefighter_no_gear")
         self.fire_fighter = BasePlayer(400,450,"firefighter_geared")
-
+        self.fire_fighter_extinguisher = BasePlayer(400,450, "firefighter_with_extinguisher")
+        
         self.scene_manager = SceneManager()
         self.scene_manager.add("truck_cutscene", TruckCutsceneScene(self, self.fire_truck))
         self.scene_manager.add("truck_leaving", TruckLeavingScene(self))
