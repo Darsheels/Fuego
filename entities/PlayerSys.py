@@ -1,6 +1,6 @@
 import pygame
 from entities.animation import load_sprite_sheet , Animation
-from entities.animation import load_sprite_sheet
+
 
 PLAYER_PROFILES = {
     "firefighter_no_gear": {
@@ -64,10 +64,14 @@ class BasePlayer(pygame.sprite.Sprite):
         
     def update(self,keys):
         if self.on_ladder:
+            self.moving = False
             self.update_ladder_logic(keys)
-            
-        self.update_movement(keys)
-        self.update_animation()
+            self.update_animation()
+            return
+        
+        if not self.on_ladder:    
+            self.update_movement(keys)
+            self.update_animation()
 
         if self.has_extinguisher:
             self.update_extinguisher_logic()
@@ -103,6 +107,7 @@ class BasePlayer(pygame.sprite.Sprite):
     def update_ladder_logic(self,keys):
         if not self.on_ladder:
             return
+        
         self.climbing = False
         self.rect.centerx = self.ladder.zone.centerx
         self.moving = False
@@ -110,25 +115,27 @@ class BasePlayer(pygame.sprite.Sprite):
         if keys[pygame.K_w]:
             self.rect.y -= self.speed
             self.climbing = True
+            self.moving = False
             
         if keys[pygame.K_s]:
             self.rect.y += self.speed
             self.climbing = True
+            self.moving = False
     #Top Exit    
         if self.rect.top < self.ladder.zone.top:
             self.rect.top = self.ladder.zone.top
             self.on_ladder = False
             self.climbing = False
-            if keys[pygame.K_s]:
-                self.on_ladder = True
-                self.climbing = True
+            self.moving = False
     #Bottom Exit
         if self.rect.bottom > self.ladder.zone.bottom:
             self.rect.bottom = self.ladder.zone.bottom
             self.on_ladder = False
             self.climbing = False
+            self.moving = False
     
     def update_extinguisher_logic(self):
+        
         if not self.extinguisher_appear:
             self.extinguisher_active = False
             return
@@ -139,7 +146,7 @@ class BasePlayer(pygame.sprite.Sprite):
         mouse_buttons = pygame.mouse.get_pressed()
             
         if not self.on_ladder:
-                self.extinguisher_active = mouse_buttons[0]
+            self.extinguisher_active = mouse_buttons[0]
         else:
             self.extinguisher_active = False
             

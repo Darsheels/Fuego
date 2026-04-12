@@ -7,10 +7,9 @@ from entities.PlayerSys import BasePlayer
 
 
 class BaseScene:
-    def __init__(self , game , player=None, fire_truck=None, pager=None): #FIreFighter removed
+    def __init__(self , game , player=None, fire_truck=None, pager=None):
         self.game = game
         self.player = player
-        # self.fire_fighter = fire_fighter
         self.fire_truck = fire_truck
         self.pager = pager
         self.objects = []
@@ -59,12 +58,16 @@ class BaseScene:
         
         elif self.player:
             actor_rect = self.player.rect
-            
             ladder_found = False
             
             for obj in self.objects:
                 if isinstance(obj,Ladder) and obj.zone.colliderect(actor_rect):
                     self.player.show_ladder_prompt = not self.player.on_ladder
+                    
+                    if self.player.on_ladder:
+                        ladder_found = True
+                        self.player.ladder = obj
+                        break
                     
                     if keys[pygame.K_w] and not self.player.on_ladder:
                         self.player.on_ladder = True
@@ -91,8 +94,6 @@ class BaseScene:
                     if self.player.extinguisher_rect.colliderect(fire.rect):
                         fire.extinguish()
             
-            
-           
         elif self.fire_truck:
             actor_rect = self.fire_truck.rect
             self.fire_truck.update(keys)
