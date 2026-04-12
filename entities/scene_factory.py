@@ -60,7 +60,7 @@ def build_scene(scene_def, game):
         use_shared_fire_truck=scene_def.get("use_shared_fire_truck", False),
         fire_truck_alignment=scene_def.get("fire_truck_alignment"),
         has_pager= scene_def.get("has_pager", False),
-        fire_fighter = game.fire_fighter if scene_def.get("use_fire_fighter", True) else None
+        player_profile=scene_def.get("player")
     )
 
     for transition in scene_def.get("transitions", []):

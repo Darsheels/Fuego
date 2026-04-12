@@ -19,8 +19,6 @@ class Game:
         self.pager = Pager(1000,500)
      
         self.player = BasePlayer(400,480,"firefighter_no_gear")
-        self.fire_fighter = BasePlayer(400,450,"firefighter_geared")
-        self.fire_fighter_extinguisher = BasePlayer(400,450, "firefighter_with_extinguisher")
         
         self.scene_manager = SceneManager()
         self.scene_manager.add("truck_cutscene", TruckCutsceneScene(self, self.fire_truck))

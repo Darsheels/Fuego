@@ -3,12 +3,14 @@ from settings import SCREEN_WIDTH , SCREEN_HEIGHT
 from entities.UI_prompt import UIPrompt
 from entities.objects import Ladder
 from entities.Fire import Fire,Fire_manager
+from entities.PlayerSys import BasePlayer
+
 
 class BaseScene:
-    def __init__(self , game , player=None , fire_fighter=None , fire_truck=None, pager=None):
+    def __init__(self , game , player=None, fire_truck=None, pager=None): #FIreFighter removed
         self.game = game
         self.player = player
-        self.fire_fighter = fire_fighter
+        # self.fire_fighter = fire_fighter
         self.fire_truck = fire_truck
         self.pager = pager
         self.objects = []
@@ -40,8 +42,8 @@ class BaseScene:
     def draw_ladder_prompt(self,screen):
         font = pygame.font.Font(None,32)
         text_surface = font.render("press W to climb", True, (255,255,255))
-        x = self.fire_fighter.rect.centerx - text_surface.get_width() // 2
-        y = self.fire_fighter.rect.top - 30
+        x = self.player.rect.centerx - text_surface.get_width() // 2
+        y = self.player.rect.top - 30
         screen.blit(text_surface, (x,y))
     
     def update(self , keys , dt):
@@ -56,53 +58,40 @@ class BaseScene:
             actor_rect = self.fire_truck.rect
         
         elif self.player:
-            self.player.update(keys)
             actor_rect = self.player.rect
             
-        elif self.fire_fighter:
-            actor_rect = self.fire_fighter.rect
-            ladder_found = False    
+            ladder_found = False
             
-            if self.fire_manager.fires:
-                self.fire_fighter.extinguisher_appear = True
-                if self.fire_fighter.extinguisher_active:
-                    for fire in self.fire_manager.fires:
-                        if self.fire_fighter.extinguisher_rect.colliderect(fire.rect):
-                            fire.extinguish()
-
-            if self.fire_fighter.on_ladder:
-                ladder_found = True
-
             for obj in self.objects:
-                if isinstance(obj, Ladder) and obj.zone.colliderect(actor_rect):
-                 
-                    if not self.fire_fighter.on_ladder:
-                        self.fire_fighter.show_ladder_prompt = True
-                    else:
-                        self.fire_fighter.show_ladder_prompt = False   
+                if isinstance(obj,Ladder) and obj.zone.colliderect(actor_rect):
+                    self.player.show_ladder_prompt = not self.player.on_ladder
+                    
+                    if keys[pygame.K_w] and not self.player.on_ladder:
+                        self.player.on_ladder = True
+                        self.player.ladder = obj
+                        ladder_found = True
                         
-                    if keys[pygame.K_w] and not self.fire_fighter.on_ladder:
-                        self.fire_fighter.on_ladder = True
-                        self.fire_fighter.ladder = obj
+                    if keys[pygame.K_s] and not self.player.on_ladder:
+                        self.player.on_ladder = True
+                        self.player.ladder = obj
                         ladder_found = True
-                        break
-                    
-                    if keys[pygame.K_s] and not self.fire_fighter.on_ladder:
-                        self.fire_fighter.on_ladder = True
-                        self.fire_fighter.ladder = obj
-                        ladder_found = True
-                        break
-                    
-                    if self.fire_fighter.on_ladder:
-                        ladder_found = True
-                    
+            
             if not ladder_found:
-                self.fire_fighter.on_ladder = False
-                self.fire_fighter.climbing = False
-                self.fire_fighter.ladder = None
-                self.fire_fighter.show_ladder_prompt = False
-                
-            self.fire_fighter.update(keys)
+                self.player.on_ladder = False
+                self.player.climbing = False
+                self.player.ladder = None
+                self.player.show_ladder_prompt = False
+            
+            self.player.update(keys)
+            
+            self.player.extinguisher_appear = len(self.fire_manager.fires) > 0
+            
+            if self.player.extinguisher_active and self.player.extinguisher_rect:
+                for fire in self.fire_manager.fires:
+                    if self.player.extinguisher_rect.colliderect(fire.rect):
+                        fire.extinguish()
+            
+            
            
         elif self.fire_truck:
             actor_rect = self.fire_truck.rect
@@ -147,10 +136,7 @@ class BaseScene:
         
         if self.player:
             self.player.draw(screen)
-        
-        if self.fire_fighter:
-            self.fire_fighter.draw(screen)
-            if self.fire_fighter.show_ladder_prompt:
+            if self.player.show_ladder_prompt:
                 self.draw_ladder_prompt(screen)
             
         for p in self.prompts:
@@ -162,7 +148,6 @@ class DataScene(BaseScene):
         self,
         game,
         player=None,
-        fire_fighter = None,
         objects=None,
         scene_name=None,
         spawn_points=None,
@@ -170,9 +155,10 @@ class DataScene(BaseScene):
         draw_ground=False,
         use_shared_fire_truck=False,
         fire_truck_alignment=None,
-        has_pager=False
+        has_pager=False,
+        player_profile = None
     ):
-        super().__init__(game, player ,fire_fighter, game.fire_truck if use_shared_fire_truck else None, game.pager if has_pager else None)
+        super().__init__(game, player, game.fire_truck if use_shared_fire_truck else None, game.pager if has_pager else None)
         self.scene_name = scene_name
         self.spawn_points = spawn_points or {}
         self.draw_background = draw_background
@@ -180,6 +166,7 @@ class DataScene(BaseScene):
         self.use_shared_fire_truck = use_shared_fire_truck
         self.fire_truck_alignment = fire_truck_alignment
         self.has_pager = has_pager
+        self.player_profile = player_profile
 
         if objects:
             for obj in objects:
@@ -191,6 +178,9 @@ class DataScene(BaseScene):
     def on_enter(self):
         spawn_name = self.game.next_spawn if self.game.next_spawn is not None else "default"
 
+        if self.player and self.player_profile:
+            self.player.apply_profile(self.player_profile)
+        
         if self.player and self.scene_name in self.spawn_points:
             scene_spawns = self.spawn_points[self.scene_name]
             spawn_position = scene_spawns.get(spawn_name, scene_spawns.get("default"))
@@ -208,12 +198,11 @@ class DataScene(BaseScene):
                 else:
                     self.fire_truck.rect.topleft = tuple(spawn_position)
 
-        
-        if self.fire_fighter and self.scene_name in self.spawn_points:
+        if self.player and self.scene_name in self.spawn_points:
             scene_spawns = self.spawn_points[self.scene_name]
             spawn_position = scene_spawns.get(spawn_name, scene_spawns.get("default"))
             if spawn_position:
-                self.fire_fighter.rect.topleft = tuple(spawn_position)
+                self.player.rect.topleft = tuple(spawn_position)
         
         self.game.next_spawn = None
 
