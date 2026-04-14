@@ -1,5 +1,7 @@
 import pygame
 from entities.animation import load_sprite_sheet , Animation
+from entities.entity import Entity
+import math
 
 
 PLAYER_PROFILES = {
@@ -16,8 +18,8 @@ PLAYER_PROFILES = {
     },
 
     "firefighter_with_extinguisher": {
-        "walk_frames": ("assets/sprites/player/FirefighterExtinguisher.png", 48, 96, 2),
-        "idle_frames": ("assets/sprites/player/IdleFireFighterExtinguisher.png", 48,96,2),
+        "walk_frames": ("assets/sprites/player/Firefighter.png", 48, 96, 2),
+        "idle_frames": ("assets/sprites/player/IdleGearedFireFighter.png", 48,96,2),
         "has_extinguisher": True
     }
 }
@@ -41,6 +43,9 @@ class BasePlayer(pygame.sprite.Sprite):
         self.extinguisher_rect = None
         self.extinguisher_appear = False
         self.has_extinguisher = False
+        self.extinguisher = Entity("assets/sprites/buildingblocks/FireExtinguisher.png", (32,32) ,x,y, scale=3)
+        self.extinguisher_rotated = self.extinguisher.image
+        self.extinguisher_pos = (0, 0)
         
         self.apply_profile(profile_name)
         
@@ -67,6 +72,8 @@ class BasePlayer(pygame.sprite.Sprite):
             self.moving = False
             self.update_ladder_logic(keys)
             self.update_animation()
+            if self.has_extinguisher:
+                self.update_extinguisher_logic()
             return
         
         if not self.on_ladder:    
@@ -135,7 +142,6 @@ class BasePlayer(pygame.sprite.Sprite):
             self.moving = False
     
     def update_extinguisher_logic(self):
-        
         if not self.extinguisher_appear:
             self.extinguisher_active = False
             return
@@ -152,19 +158,43 @@ class BasePlayer(pygame.sprite.Sprite):
             
         dx = mouse_x - self.rect.centerx
         dy = mouse_y - self.rect.centery
-            
+        
         length = max(1,(dx*dx + dy*dy) ** 0.5)
         nx = dx / length
-        ny = dy/length
-            
-        spray_length = 60
-        spray_width = 20
-            
-        spray_x = self.rect.centerx + nx * 40
-        spray_y = self.rect.centery + ny * 40
-            
-        self.extinguisher_rect = pygame.Rect(spray_x ,spray_y, spray_length,spray_width)
-    
+        ny = dy /length
+        
+        angle = math.degrees(math.atan2(-dy,dx))
+        self.extinguisher_rotated = pygame.transform.rotate(self.extinguisher.image, angle)
+        
+        offset = self.rect.height * 0.35
+        hand_x = self.rect.centerx + nx * offset
+        hand_y = self.rect.centery + ny * offset
+        self.extinguisher_pos = (hand_x, hand_y)
+        
+        beam_length = 300
+        beam_width = 20
+        
+        start_x = hand_x
+        start_y = hand_y
+        end_x = hand_x + nx * beam_length
+        end_y = hand_y + ny * beam_length
+        
+        mid_x = (start_x + end_x) / 2
+        mid_y = (start_y + end_y) / 2
+        
+        beam_surface = pygame.Surface((beam_length, beam_width), pygame.SRCALPHA)
+        beam_surface.fill((0,255,255,128))
+        
+        self.beam_rotated = pygame.transform.rotate(beam_surface, angle)
+        self.extinguisher_rect = self.beam_rotated.get_rect(center=(mid_x, mid_y))
+        
+        self.extinguisher_active = mouse_buttons[0] and not self.on_ladder
+        
     def draw(self,surface):
         if self.visible:
             surface.blit(self.image, self.rect)
+            if self.extinguisher_active:
+                surface.blit(self.beam_rotated,self.extinguisher_rect)
+            if self.has_extinguisher:
+                rect = self.extinguisher_rotated.get_rect(center=self.extinguisher_pos)
+                surface.blit(self.extinguisher_rotated,rect)
