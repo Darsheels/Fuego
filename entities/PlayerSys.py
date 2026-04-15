@@ -164,14 +164,19 @@ class BasePlayer(pygame.sprite.Sprite):
         ny = dy /length
         
         angle = math.degrees(math.atan2(-dy,dx))
-        self.extinguisher_rotated = pygame.transform.rotate(self.extinguisher.image, angle)
+        
+        if self.facing_right:
+            self.extinguisher_rotated = pygame.transform.rotate(self.extinguisher.image, angle)
+        else:
+            flipped = pygame.transform.flip(self.extinguisher.image, True, False)
+            self.extinguisher_rotated = pygame.transform.rotate(flipped, angle + 180)
         
         offset = self.rect.height * 0.35
         hand_x = self.rect.centerx + nx * offset
         hand_y = self.rect.centery + ny * offset
         self.extinguisher_pos = (hand_x, hand_y)
         
-        beam_length = 300
+        beam_length = 200
         beam_width = 20
         
         start_x = hand_x
