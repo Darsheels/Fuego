@@ -36,6 +36,8 @@ class Fire_manager:
     def update(self,dt):
         for fire in self.fires:
             fire.update(dt)
+            
+        self.fires = [fire for fire in self.fires if not fire.extinguished]
         
         new_fires = []
         for fire in self.fires:

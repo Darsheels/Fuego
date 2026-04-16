@@ -2,6 +2,7 @@ import pygame
 from entities.animation import load_sprite_sheet , Animation
 from entities.entity import Entity
 import math
+from settings import SCREEN_WIDTH , SCREEN_HEIGHT
 
 
 PLAYER_PROFILES = {
@@ -98,7 +99,19 @@ class BasePlayer(pygame.sprite.Sprite):
             self.rect.x += self.speed
             self.moving = True
             self.facing_right = True
-        
+            
+        if self.rect.left < 0:
+            self.rect.left = 0
+            
+        if self.rect.right > SCREEN_WIDTH:
+            self.rect.right = SCREEN_WIDTH
+            
+        if self.rect.top < 0:
+            self.rect.top = 0
+            
+        if self.rect.bottom > SCREEN_HEIGHT:
+            self.rect.bottom = SCREEN_HEIGHT
+    
     def update_animation(self):
         if self.moving:
             self.walk_animation.update()
