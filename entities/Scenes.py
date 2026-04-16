@@ -137,6 +137,7 @@ class BaseScene:
             if self.mission_popup_timer <= 0:
                 self.game.next_spawn = "default_interior"
                 self.game.scene_manager.set("TruckApparatus")
+                
         
     def draw(self , screen):
         for obj in self.objects:

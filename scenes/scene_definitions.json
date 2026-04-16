@@ -2,30 +2,6 @@
 {
   "scenes": [
     {
-      "name": "outside",
-      "use_player": true,
-      "player": "firefighter_no_gear",
-      "is_mission_scene": false,
-      "draw_background": true,
-      "draw_ground": true,
-      "objects": [
-        { "class": "FireStation", "x": 0, "y": -375 }
-      ],
-      "interactions": [
-        {
-          "name": "enter_fire_station",
-          "text": "Press E to enter the fire station",
-          "zone": { "x": 150, "y": 525, "w": 100, "h": 100 },
-          "key": "K_e",
-          "target_scene": "TruckApparatus",
-          "spawn_point": "default_interior"
-        }
-      ],
-      "transitions": [
-        { "direction": "right", "target": "House1", "spawn": "left_entry" }
-      ]
-    },
-    {
       "name": "TruckApparatus",
       "use_player": true,
       "player": "firefighter_no_gear",

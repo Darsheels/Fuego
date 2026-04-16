@@ -2,7 +2,7 @@ class SceneManager:
     def __init__(self):
         self.scenes = {}
         self.current = None
-    
+        
     def add(self,name,scene):
         self.scenes[name] = scene
     
