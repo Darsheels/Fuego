@@ -74,7 +74,8 @@
       "draw_background": true,
       "draw_ground": true,
       "objects": [
-        { "class": "House1", "x": 0, "y": -350 }
+        { "class": "House1", "x": 0, "y": -350 },
+        { "class": "FireHydrant", "x": 100, "y": 530 }
       ],
       "interactions": [{
           "name": "Break in",

@@ -17,7 +17,9 @@ class BaseScene:
         self.transitions = []
         self.has_pager = False
         self.fire_manager = Fire_manager()
-
+        self.mission_accomplished = False
+        self.mission_popup_timer = 0
+        
     def on_enter(self):
         return
 
@@ -93,7 +95,11 @@ class BaseScene:
                 for fire in self.fire_manager.fires:
                     if self.player.extinguisher_rect.colliderect(fire.rect):
                         fire.extinguish()
-            
+        
+            # if not self.mission_accomplished and len(self.fire_manager.fires) == 0:
+            #     self.mission_accomplished = True
+            #     self.mission_popup_timer = 2.5
+        
         elif self.fire_truck:
             actor_rect = self.fire_truck.rect
             self.fire_truck.update(keys)
@@ -125,7 +131,11 @@ class BaseScene:
                     self.game.next_spawn = t["spawn"]
                     self.game.scene_manager.set(t["target"])
     
-    
+        if self.mission_accomplished:
+            self.mission_popup_timer -= dt
+            if self.mission_popup_timer <= 0:
+                self.game.scene_manager.set("TruckApparatus")
+        
     def draw(self , screen):
         for obj in self.objects:
             obj.draw(screen)
@@ -143,6 +153,11 @@ class BaseScene:
         for p in self.prompts:
             p["prompt"].draw(screen)
             
+        # if self.mission_accomplished:
+        #     font = pygame.font.Font(None, 64)
+        #     text  = font.render("Mission Accomplished!", True, (255, 215, 0))
+        #     rect = text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+        #     screen.blit(text, rect)
      
 class DataScene(BaseScene):
     def __init__(

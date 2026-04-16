@@ -36,7 +36,7 @@ class Fire_manager:
     def update(self,dt):
         for fire in self.fires:
             fire.update(dt)
-            
+        
         new_fires = []
         for fire in self.fires:
             if not fire.extinguished and fire.spread_timer >= fire.spread_delay:
