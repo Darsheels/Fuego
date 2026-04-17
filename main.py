@@ -14,13 +14,14 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
         self.next_spawn = None
+        self.last_scene = None 
         
         self.fire_truck = DefaultTruck(100, 250)
         self.pager = Pager(1000,500)
      
         self.player = BasePlayer(400,480,"firefighter_no_gear")
         
-        self.scene_manager = SceneManager()
+        self.scene_manager = SceneManager(self)
         self.scene_manager.add("truck_cutscene", TruckCutsceneScene(self, self.fire_truck))
         self.scene_manager.add("truck_leaving", TruckLeavingScene(self))
 
