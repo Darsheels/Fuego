@@ -108,7 +108,7 @@ class BaseScene:
         for p in self.prompts:
             inside_zone = p["zone"].colliderect(actor_rect)
             
-            if inside_zone:
+            if inside_zone and (p["name"] != "change into gear and exit" or self.game.pager.pager_triggered):
                 p["prompt"].show()
                 if p.get("type") == "interaction":
                     if keys[p["key"]]:  
@@ -199,12 +199,24 @@ class DataScene(BaseScene):
     def on_enter(self):
         spawn_name = self.game.next_spawn if self.game.next_spawn is not None else "default"
 
-        if self.scene_name == "TruckApparatus" and self.game.last_scene:
-            last = self.game.scene_manager.scenes[self.game.last_scene]
-            
-            if last.is_mission_scene and last.mission_accomplished:
-                print("Mission accomplished! Starting pager cooldown.")
-                self.game.pager.start_cooldown()
+        if self.scene_name == "TruckApparatus":
+            if self.game.last_scene == "locker_room":
+                # don't reset pager
+                pass
+            elif self.game.last_scene:
+                last = self.game.scene_manager.scenes[self.game.last_scene]
+                
+                if last.is_mission_scene and last.mission_accomplished:
+                    print("Mission accomplished! Starting pager cooldown.")
+                    self.game.pager.start_cooldown()
+                else:
+                    # normal reset
+                    self.game.pager.time_inside = 5
+                    self.game.pager.pager_triggered = False
+            else:
+                # initial
+                self.game.pager.time_inside = 5
+                self.game.pager.pager_triggered = False
         
         if self.player and self.player_profile:
             self.player.apply_profile(self.player_profile)
