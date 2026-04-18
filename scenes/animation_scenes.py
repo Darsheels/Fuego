@@ -58,3 +58,13 @@ class TruckLeavingScene(BaseScene):
         screen.blit(self.game.background, (0, 0))
         screen.blit(self.game.ground, (0, 450))
         screen.blit(self.animation.image, (-200 , -140))
+
+
+class CarCrashScene(BaseScene):
+    def __init__(self, game):
+        super().__init__(game, None)
+        self.duration = 5.0
+        self.elapsed = 0.0
+    
+    def on_enter(self):
+        self.elapsed = 0.0

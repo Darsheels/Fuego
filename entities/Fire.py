@@ -12,9 +12,11 @@ class Fire(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft=(x,y))
         
         self.extinguished = False
+        self.extinguish_timer = 0.0
+        self.extinguish_delay = 2.0
         self.spread_timer = 0
         self.spread_delay = 2
-        
+    
     def update(self,dt):
         if self.extinguished:
             return
@@ -25,6 +27,16 @@ class Fire(pygame.sprite.Sprite):
     def extinguish(self):
         self.extinguished = True
         self.image = pygame.Surface((0,0))
+    
+    def apply_extinguisher(self, dt, contacting):
+        if self.extinguished:
+            return
+        if contacting:
+            self.extinguish_timer += dt
+            if self.extinguish_timer >= self.extinguish_delay:
+                self.extinguish()
+        else:
+            self.extinguish_timer = 0.0
         
 class Fire_manager:
     def __init__(self):

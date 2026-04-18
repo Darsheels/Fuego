@@ -204,6 +204,8 @@ class BasePlayer(pygame.sprite.Sprite):
         beam_surface = pygame.Surface((beam_length, beam_width), pygame.SRCALPHA)
         beam_surface.fill((0,255,255,128))
         
+        # beam_surface = Entity("assets/sprites/buildingblocks/WaterBeam.png", (32,32), 0, 0, scale=4).image
+        
         self.beam_rotated = pygame.transform.rotate(beam_surface, angle)
         self.extinguisher_rect = self.beam_rotated.get_rect(center=(mid_x, mid_y))
         

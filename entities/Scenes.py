@@ -93,10 +93,9 @@ class BaseScene:
             
             self.player.extinguisher_appear = len(self.fire_manager.fires) > 0 and self.is_mission_scene
             
-            if self.player.extinguisher_active and self.player.extinguisher_rect:
-                for fire in self.fire_manager.fires:
-                    if self.player.extinguisher_rect.colliderect(fire.rect):
-                        fire.extinguish()
+            for fire in self.fire_manager.fires:
+                contacting = self.player.extinguisher_active and self.player.extinguisher_rect and self.player.extinguisher_rect.colliderect(fire.rect)
+                fire.apply_extinguisher(dt, contacting)
         
             if not self.mission_accomplished and self.is_mission_scene and len(self.fire_manager.fires) == 0:
                 self.mission_accomplished = True
