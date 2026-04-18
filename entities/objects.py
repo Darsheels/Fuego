@@ -44,3 +44,6 @@ class Ladder(Entity):
         self.zone = self.rect.copy()
 
 
+class Car1(Entity):
+    def __init__(self, x, y):
+        super().__init__("assets/sprites/vehicles/Car1.png", (64, 32), x, y, scale=1)

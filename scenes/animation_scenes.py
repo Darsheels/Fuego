@@ -3,6 +3,7 @@ from entities.Scenes import BaseScene
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT
 from entities.animation import load_sprite_sheet, Animation
 from entities.entity import Entity
+from entities.Fire import Fire
 
 class TruckCutsceneScene(BaseScene):
     def __init__(self, game, truck):
@@ -58,13 +59,44 @@ class TruckLeavingScene(BaseScene):
         screen.blit(self.game.background, (0, 0))
         screen.blit(self.game.ground, (0, 450))
         screen.blit(self.animation.image, (-200 , -140))
-
-
+        
 class CarCrashScene(BaseScene):
     def __init__(self, game):
-        super().__init__(game, None)
-        self.duration = 5.0
+        super().__init__(game, game.player, None, game.pager)
+        self.opening_scene = load_sprite_sheet("assets/sprites/vehicles/CarCrash.png", 128, 64, scale=11)
+        self.animation = Animation(self.opening_scene, speed=0.01 , breaker=True)
+        self.duration = 8.0
         self.elapsed = 0.0
+        self.exploded = False
+        self.is_mission_scene = True  
     
     def on_enter(self):
         self.elapsed = 0.0
+        self.exploded = False
+        
+        self.add_objects(Fire(400, 300)) 
+        self.add_objects(Fire(450, 320))
+       
+        if self.player:
+            self.player.apply_profile("firefighter_with_extinguisher")
+       
+    def update(self, keys, dt):
+        self.elapsed += dt
+        self.animation.update()
+        
+        super().update(keys, dt)
+        
+        if not self.exploded and self.elapsed >= self.duration and len(self.fire_manager.fires) > 0:
+            self.exploded = True
+            self.game.scene_manager.set("truck_cutscene")  # Or next scene
+
+        else:
+            for fire in self.fire_manager.fires:
+                contacting = self.player.extinguisher_rect and fire.rect.colliderect(self.player.extinguisher_rect)
+                fire.apply_extinguisher(dt, contacting)
+        
+    def draw(self, screen): 
+        screen.blit(self.game.background, (0, 0))
+        screen.blit(self.game.ground, (0, 450))
+        screen.blit(self.animation.image, (-200 , -140))
+        super().draw(screen)  # Draw fires, player, etc.

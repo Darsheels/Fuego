@@ -207,6 +207,14 @@ class DataScene(BaseScene):
             self.player.extinguisher_pos = (0, 0)
 
         if self.scene_name == "TruckApparatus":
+            if self.game.pager.pager_triggered:
+                import random
+                if hasattr(self.game, 'mission_scenes') and self.game.mission_scenes:
+                    random_mission = random.choice(self.game.mission_scenes)
+                    for p in self.prompts:
+                        if p["name"] == "change into gear and exit":
+                            p["target_scene"] = random_mission
+                            break
             if self.game.last_scene == "locker_room":
                 # don't reset pager
                 pass

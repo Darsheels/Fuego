@@ -13,7 +13,7 @@ class Fire(pygame.sprite.Sprite):
         
         self.extinguished = False
         self.extinguish_timer = 0.0
-        self.extinguish_delay = 2.0
+        self.extinguish_delay = 1.0
         self.spread_timer = 0
         self.spread_delay = 2
     
