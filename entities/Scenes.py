@@ -87,10 +87,11 @@ class BaseScene:
                 self.player.climbing = False
                 self.player.ladder = None
                 self.player.show_ladder_prompt = False
+                
+            if not self.mission_accomplished:
+                self.player.update(keys)
             
-            self.player.update(keys)
-            
-            self.player.extinguisher_appear = len(self.fire_manager.fires) > 0
+            self.player.extinguisher_appear = len(self.fire_manager.fires) > 0 and self.is_mission_scene
             
             if self.player.extinguisher_active and self.player.extinguisher_rect:
                 for fire in self.fire_manager.fires:
@@ -135,6 +136,7 @@ class BaseScene:
         if self.mission_accomplished:
             self.mission_popup_timer -= dt
             if self.mission_popup_timer <= 0:
+                # self.mission_accomplished = False
                 self.game.next_spawn = "default_interior"
                 self.game.scene_manager.set("TruckApparatus")
                 
@@ -199,6 +201,12 @@ class DataScene(BaseScene):
     def on_enter(self):
         spawn_name = self.game.next_spawn if self.game.next_spawn is not None else "default"
 
+        if self.player:
+            self.player.extinguisher_active = False
+            self.player.extinguisher_rect = None
+            self.player.extinguisher_appear = False
+            self.player.extinguisher_pos = (0, 0)
+
         if self.scene_name == "TruckApparatus":
             if self.game.last_scene == "locker_room":
                 # don't reset pager
@@ -217,7 +225,12 @@ class DataScene(BaseScene):
                 # initial
                 self.game.pager.time_inside = 5
                 self.game.pager.pager_triggered = False
-        
+
+        if self.is_mission_scene:
+            self.mission_accomplished = False
+            self.mission_popup_timer = 0
+            self.fire_manager.fires = [Fire(f["x"], f["y"]) for f in self.fire_defs]
+                
         if self.player and self.player_profile:
             self.player.apply_profile(self.player_profile)
         

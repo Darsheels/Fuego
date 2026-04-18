@@ -64,6 +64,8 @@ def build_scene(scene_def, game):
         is_mission_scene=scene_def.get("is_mission_scene", False)
     )
 
+    scene.fire_defs = [obj_def for obj_def in scene_def.get("objects", []) if obj_def.get("class") == "Fire"]
+
     for transition in scene_def.get("transitions", []):
         scene.add_transition(
             transition["target"],

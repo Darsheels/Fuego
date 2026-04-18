@@ -209,6 +209,10 @@ class BasePlayer(pygame.sprite.Sprite):
         
         self.extinguisher_active = mouse_buttons[0] and not self.on_ladder
         
+        if not self.extinguisher_appear:
+            self.extinguisher_active = False
+            self.extinguisher_rect = None
+        
     def draw(self,surface):
         if self.visible:
             surface.blit(self.image, self.rect)
