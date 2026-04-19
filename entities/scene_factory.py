@@ -3,7 +3,7 @@ from pathlib import Path
 import pygame
 from entities.Buildings import FireStation, LockerRoom, House1, TruckApparatus , House1Int
 from entities.Scenes import DataScene
-from entities.objects import DefaultTruck , FireHydrant , Ladder , Pager
+from entities.objects import Car1, DefaultTruck , FireHydrant , Ladder , Pager
 from entities.Fire import Fire , Fire_manager
 from entities.PlayerSys import BasePlayer
 
@@ -17,7 +17,8 @@ OBJECT_CLASSES = {
     "House1Int": House1Int,
     "FireHydrant": FireHydrant,
     "Ladder": Ladder,
-    "Fire": Fire
+    "Fire": Fire,
+    "Car1": Car1,
 }
 
 def load_scene_definitions(path):

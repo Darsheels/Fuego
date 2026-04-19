@@ -3,7 +3,7 @@ from pathlib import Path
 from settings import SCREEN_HEIGHT, SCREEN_WIDTH
 from entities.scene_manager import SceneManager
 from entities.scene_factory import build_scenes_from_definitions
-from scenes.animation_scenes import  TruckCutsceneScene, TruckLeavingScene, CarCrashScene
+from scenes.animation_scenes import  TruckCutsceneScene, TruckLeavingScene 
 from entities.objects import Pager , DefaultTruck
 from entities.PlayerSys import BasePlayer
 
@@ -24,8 +24,6 @@ class Game:
         self.scene_manager = SceneManager(self)
         self.scene_manager.add("truck_cutscene", TruckCutsceneScene(self, self.fire_truck))
         self.scene_manager.add("truck_leaving", TruckLeavingScene(self))
-        self.scene_manager.add("car_crash", CarCrashScene(self))
-
 
         definitions_path = Path(__file__).resolve().parent / "scenes" / "scene_definitions.json"
         scenes = build_scenes_from_definitions(definitions_path, self)

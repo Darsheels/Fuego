@@ -91,9 +91,22 @@
           "spawn_point": "door"
         }
       ]
-    }
-
+    },
+      {
+        "name": "CarCrashScene",
+        "use_player": true,
+        "player": "firefighter_with_extinguisher",
+        "is_mission_scene": true,
+        "draw_background": true,
+        "draw_ground": true,
+        "objects": [
+          { "class": "Car1", "x": 100, "y": 250 }
+        ],
+        "interactions":[],
+        "transitions":[]
+    }  
   ],
+
   "spawn_points": {
     "outside": {
       "default": [400, 480],
