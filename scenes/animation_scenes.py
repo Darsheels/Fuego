@@ -28,7 +28,9 @@ class TruckCutsceneScene(BaseScene):
         self.fire_truck.rect.topleft = (100, 250)
 
         if self.elapsed >= self.duration:
-            self.game.scene_manager.set("House1")
+            if self.game.selected_mission:
+                self.game.scene_manager.set(self.game.selected_mission)
+                
 
     def draw(self, screen):
         x = int(self.scroll_x) % SCREEN_WIDTH

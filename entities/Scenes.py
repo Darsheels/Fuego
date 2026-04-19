@@ -56,6 +56,22 @@ class BaseScene:
         if self.pager:
             self.pager.update(dt)
         
+        if self.scene_name == "TruckApparatus" and self.game.pager.pager_triggered and (not hasattr(self.game, 'selected_mission') or self.game.selected_mission is None):
+            import random
+            if hasattr(self.game, 'mission_scenes') and self.game.mission_scenes:
+                random_mission = random.choice(self.game.mission_scenes)
+                self.game.selected_mission = random_mission
+                if random_mission == "House1":
+                    print("Selected mission: House1 - A residential fire scenario with multiple rooms and a basement.")
+                else:
+                    print("Selected mission: CarCrashScene - An outdoor scenario involving a vehicle fire after a crash.")
+                locker_room_scene = self.game.scene_manager.scenes.get("locker_room")
+                if locker_room_scene:
+                    for p in locker_room_scene.prompts:
+                        if p["name"] == "change into gear and exit":
+                            p["target_scene"] = random_mission
+                            break
+        
         if self.fire_truck and self.player and getattr(self.player, "in_vehicle", False):
             actor_rect = self.fire_truck.rect
         
@@ -207,16 +223,8 @@ class DataScene(BaseScene):
             self.player.extinguisher_pos = (0, 0)
 
         if self.scene_name == "TruckApparatus":
-            if self.game.pager.pager_triggered:
-                import random
-                if hasattr(self.game, 'mission_scenes') and self.game.mission_scenes:
-                    random_mission = random.choice(self.game.mission_scenes)
-                    for p in self.prompts:
-                        if p["name"] == "change into gear and exit":
-                            p["target_scene"] = random_mission
-                            break
+            
             if self.game.last_scene == "locker_room":
-                # don't reset pager
                 pass
             elif self.game.last_scene:
                 last = self.game.scene_manager.scenes[self.game.last_scene]
@@ -224,12 +232,13 @@ class DataScene(BaseScene):
                 if last.is_mission_scene and last.mission_accomplished:
                     print("Mission accomplished! Starting pager cooldown.")
                     self.game.pager.start_cooldown()
+                    self.game.selected_mission = None
+                
                 else:
-                    # normal reset
                     self.game.pager.time_inside = 5
                     self.game.pager.pager_triggered = False
+            
             else:
-                # initial
                 self.game.pager.time_inside = 5
                 self.game.pager.pager_triggered = False
 

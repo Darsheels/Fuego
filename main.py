@@ -15,6 +15,7 @@ class Game:
         self.running = True
         self.next_spawn = None
         self.last_scene = None 
+        self.selected_mission = None 
         
         self.fire_truck = DefaultTruck(100, 250)
         self.pager = Pager(1000,500)
@@ -30,7 +31,7 @@ class Game:
         for scene_name, scene in scenes.items():
             self.scene_manager.add(scene_name, scene)
 
-        self.mission_scenes = [name for name, scene in scenes.items() if scene.is_mission_scene]
+        self.mission_scenes = ['House1', 'CarCrashScene']
 
         self.scene_manager.set("TruckApparatus")
 

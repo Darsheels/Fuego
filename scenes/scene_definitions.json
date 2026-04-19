@@ -81,29 +81,19 @@
         {"class": "Ladder", "x": 530 , "y": 220 , "height": 102 },
         {"class": "Fire", "x": 400 , "y": 200}
       ],
-      "interactions":[ 
-        {
-          "name": "leaving",
-          "text": "Press X to leave",
-          "zone": {"x": 80 , "y": 530 , "w": 100 , "h": 100},
-          "key": "K_x",
-          "target_scene": "House1", 
-          "spawn_point": "door"
-        }
-      ]
+      "interactions":[]
     },
       {
         "name": "CarCrashScene",
         "use_player": true,
         "player": "firefighter_with_extinguisher",
         "is_mission_scene": true,
+        "use_shared_fire_truck":true,
         "draw_background": true,
         "draw_ground": true,
         "objects": [
           { "class": "Car1", "x": 100, "y": 250 }
-        ],
-        "interactions":[],
-        "transitions":[]
+        ]
     }  
   ],
 
