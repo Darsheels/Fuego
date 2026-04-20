@@ -87,12 +87,12 @@
         "name": "CarCrashScene",
         "use_player": true,
         "player": "firefighter_with_extinguisher",
-        "is_mission_scene": true,
+        "is_mission_scene": false,
         "use_shared_fire_truck":true,
         "draw_background": true,
         "draw_ground": true,
         "objects": [
-          { "class": "Car1", "x": 100, "y": 250 }
+          { "class": "Car1", "x": 800, "y": 520 }
         ]
     }  
   ],
@@ -121,6 +121,9 @@
     },
     "House1Int": {
       "entrance": [80 , 530]
-    }
+    },
+      "CarCrashScene": {
+        "default": [200, 480]
+      }
   }
 }

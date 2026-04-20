@@ -46,4 +46,4 @@ class Ladder(Entity):
 
 class Car1(Entity):
     def __init__(self, x, y):
-        super().__init__("assets/sprites/vehicles/Car1.png", (160, 96), x, y, scale=1)
+        super().__init__("assets/sprites/vehicles/Car1.png", (160, 96), x, y, scale=3)
