@@ -18,6 +18,7 @@ class BaseScene:
         self.has_pager = False
         self.fire_manager = Fire_manager()
         self.mission_accomplished = False
+        self.mission_failed = False
         self.mission_popup_timer = 0
         self.is_mission_scene = False
         
@@ -52,6 +53,21 @@ class BaseScene:
         actor_rect = None
         
         self.fire_manager.update(dt)
+        
+        if self.is_mission_scene and not self.mission_accomplished and not self.mission_failed:
+            for fire in self.fire_manager.fires:
+                if not fire.can_spread and fire.has_failed():
+                    self.mission_failed = True
+                    self.mission_popup_timer = 2.5
+                    self.game.selected_mission = None
+                    break
+        
+        if self.mission_failed:
+            self.mission_popup_timer -= dt
+            if self.mission_popup_timer <= 0:
+                self.game.next_spawn = "default_interior"
+                self.game.scene_manager.set("TruckApparatus")
+            return
         
         if self.pager:
             self.pager.update(dt)
@@ -180,6 +196,11 @@ class BaseScene:
             text  = font.render("Mission Accomplished!", True, (255, 215, 0))
             rect = text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
             screen.blit(text, rect)
+        elif self.mission_failed:
+            font = pygame.font.Font(None, 64)
+            text  = font.render("Mission Failed", True, (255, 0, 0))
+            rect = text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+            screen.blit(text, rect)
      
 class DataScene(BaseScene):
     def __init__(
@@ -258,6 +279,8 @@ class DataScene(BaseScene):
 
         if self.is_mission_scene:
             self.mission_accomplished = False
+            self.mission_failed = False
+            self.mission_popup_timer = 0
             self.mission_popup_timer = 0
             self.fire_manager.fires = [Fire(f["x"], f["y"], self.fire_spreading) for f in self.fire_defs]
                 

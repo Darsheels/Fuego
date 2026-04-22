@@ -15,6 +15,8 @@ class Fire(pygame.sprite.Sprite):
         self.extinguished = False
         self.extinguish_timer = 0.0
         self.extinguish_delay = 10.0 if not can_spread else 0.5
+        self.failure_timer = 0.0
+        self.failure_limit = 20.0 if not can_spread else None
         self.spread_timer = 0
         self.spread_delay = 2
         self.can_spread = can_spread
@@ -23,12 +25,17 @@ class Fire(pygame.sprite.Sprite):
         if self.extinguished:
             return
         
+        if not self.can_spread:
+            self.failure_timer += dt
         self.FireAnimation.update()
         self.spread_timer += dt
         
     def extinguish(self):
         self.extinguished = True
         self.image = pygame.Surface((0,0))
+    
+    def has_failed(self):
+        return self.failure_limit is not None and self.failure_timer >= self.failure_limit and not self.extinguished
     
     def apply_extinguisher(self, dt, contacting):
         if self.extinguished:
