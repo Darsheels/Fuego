@@ -59,7 +59,9 @@ class BaseScene:
         if self.scene_name == "TruckApparatus" and self.game.pager.pager_triggered and (not hasattr(self.game, 'selected_mission') or self.game.selected_mission is None):
             import random
             if hasattr(self.game, 'mission_scenes') and self.game.mission_scenes:
-                random_mission = random.choice(self.game.mission_scenes)
+                available_missions = [m for m in self.game.mission_scenes if m != self.game.previous_mission]
+                random_mission = random.choice(available_missions)
+                self.game.previous_mission = random_mission
                 self.game.selected_mission = random_mission
                 if random_mission == "House1":
                     print("Selected mission: House1 - A residential fire scenario with multiple rooms and a basement.")
@@ -193,7 +195,8 @@ class DataScene(BaseScene):
         fire_truck_alignment=None,
         has_pager=False,
         player_profile = None,
-        is_mission_scene=False
+        is_mission_scene=False,
+        fire_spreading=False
     ):
         super().__init__(game, player, game.fire_truck if use_shared_fire_truck else None, game.pager if has_pager else None)
         self.scene_name = scene_name
@@ -205,6 +208,7 @@ class DataScene(BaseScene):
         self.has_pager = has_pager
         self.player_profile = player_profile
         self.is_mission_scene = is_mission_scene
+        self.fire_spreading = fire_spreading
         
         if objects:
             for obj in objects:
@@ -212,6 +216,16 @@ class DataScene(BaseScene):
             
         if self.fire_truck and use_shared_fire_truck:
             self.add_objects(self.fire_truck)
+            
+        # Create fires based on fire_spreading setting
+        self._create_fires_from_defs()
+    
+    def _create_fires_from_defs(self):
+        if hasattr(self, 'fire_defs') and self.fire_defs:
+            for fire_def in self.fire_defs:
+                x = fire_def.get("x", 0)
+                y = fire_def.get("y", 0)
+                self.fire_manager.add_fire(x, y, can_spread=self.fire_spreading)
 
     def on_enter(self):
         spawn_name = self.game.next_spawn if self.game.next_spawn is not None else "default"
@@ -245,7 +259,7 @@ class DataScene(BaseScene):
         if self.is_mission_scene:
             self.mission_accomplished = False
             self.mission_popup_timer = 0
-            self.fire_manager.fires = [Fire(f["x"], f["y"]) for f in self.fire_defs]
+            self.fire_manager.fires = [Fire(f["x"], f["y"], self.fire_spreading) for f in self.fire_defs]
                 
         if self.player and self.player_profile:
             self.player.apply_profile(self.player_profile)

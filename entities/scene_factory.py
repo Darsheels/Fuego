@@ -49,7 +49,9 @@ def _get_key(key_name):
     return getattr(pygame, key_name)
 
 def build_scene(scene_def, game):
-    objects = [_build_object(obj_def) for obj_def in scene_def.get("objects", [])]
+    # Filter out Fire objects from regular objects since they're handled separately
+    regular_objects = [obj_def for obj_def in scene_def.get("objects", []) if obj_def.get("class") != "Fire"]
+    objects = [_build_object(obj_def) for obj_def in regular_objects]
     scene = DataScene(
         game=game,
         player=game.player if scene_def.get("use_player", True) else None,
@@ -62,7 +64,8 @@ def build_scene(scene_def, game):
         fire_truck_alignment=scene_def.get("fire_truck_alignment"),
         has_pager= scene_def.get("has_pager", False),
         player_profile=scene_def.get("player"),
-        is_mission_scene=scene_def.get("is_mission_scene", False)
+        is_mission_scene=scene_def.get("is_mission_scene", False),
+        fire_spreading=scene_def.get("Fire_Spreading", False)
     )
 
     scene.fire_defs = [obj_def for obj_def in scene_def.get("objects", []) if obj_def.get("class") == "Fire"]

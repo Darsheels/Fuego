@@ -3,7 +3,7 @@ from entities.animation import load_sprite_sheet , Animation
 import random
 
 class Fire(pygame.sprite.Sprite):
-    def __init__(self,x,y):
+    def __init__(self,x,y, can_spread=True):
         super().__init__()
         self.fireFrames = load_sprite_sheet("assets/sprites/buildingblocks/Fire_animation.png", 48 , 64, scale=1)
         self.FireAnimation = Animation(self.fireFrames, speed=0.1, breaker=False)
@@ -16,6 +16,7 @@ class Fire(pygame.sprite.Sprite):
         self.extinguish_delay = 0.5
         self.spread_timer = 0
         self.spread_delay = 2
+        self.can_spread = can_spread
     
     def update(self,dt):
         if self.extinguished:
@@ -42,8 +43,8 @@ class Fire_manager:
     def __init__(self):
         self.fires = []
         
-    def add_fire(self,x,y):
-        self.fires.append(Fire(x,y))
+    def add_fire(self,x,y, can_spread=False):
+        self.fires.append(Fire(x,y, can_spread))
     
     def update(self,dt):
         for fire in self.fires:
@@ -53,11 +54,11 @@ class Fire_manager:
         
         new_fires = []
         for fire in self.fires:
-            if not fire.extinguished and fire.spread_timer >= fire.spread_delay:
+            if not fire.extinguished and fire.can_spread and fire.spread_timer >= fire.spread_delay:
                if random.random() < 0.02:
                     nx = fire.rect.x + random.choice([-40,40])
                     ny = fire.rect.y + random.choice([-40,40])
-                    new_fires.append(Fire(nx,ny))
+                    new_fires.append(Fire(nx,ny, can_spread=True))
                     fire.spread_timer = 0
                 
         self.fires.extend(new_fires)

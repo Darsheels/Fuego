@@ -12,7 +12,7 @@ class Pager(Entity):
         self.pager_triggered = False
 
     def start_cooldown(self):
-        self.time_inside = 60
+        self.time_inside = 5
         self.pager_triggered = False
         print("Pager cooldown started. Time inside reset to 60 seconds.")
 

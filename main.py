@@ -15,7 +15,8 @@ class Game:
         self.running = True
         self.next_spawn = None
         self.last_scene = None 
-        self.selected_mission = None 
+        self.selected_mission = None
+        self.previous_mission = None 
         
         self.fire_truck = DefaultTruck(100, 250)
         self.pager = Pager(1000,500)

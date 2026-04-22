@@ -72,6 +72,7 @@
       "name": "House1Int" , 
       "use_player": true , 
       "player": "firefighter_with_extinguisher",
+      "Fire_Spreading": true,
       "is_mission_scene": true,
       "use_shared_fire_truck":false , 
       "draw_background":false,
@@ -87,12 +88,15 @@
         "name": "CarCrashScene",
         "use_player": true,
         "player": "firefighter_with_extinguisher",
-        "is_mission_scene": false,
+        "Fire_Spreading": false,
+        "is_mission_scene": true,
         "use_shared_fire_truck":true,
+        "fire_truck_alignment": "bottom",
         "draw_background": true,
         "draw_ground": true,
         "objects": [
-          { "class": "Car1", "x": 800, "y": 520 }
+          { "class": "Car1", "x": 800, "y": 450},
+          { "class": "Fire", "x": 800, "y": 450}
         ]
     }  
   ],
@@ -123,7 +127,7 @@
       "entrance": [80 , 530]
     },
       "CarCrashScene": {
-        "default": [200, 480]
+        "default": [20, 530]
       }
   }
 }
