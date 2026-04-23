@@ -96,7 +96,7 @@
         "draw_ground": true,
         "objects": [
           { "class": "Car1", "x": 800, "y": 450},
-          { "class": "Fire", "x": 800, "y": 450}
+          { "class": "Fire", "x": 800, "y": 500}
         ]
     }  
   ],

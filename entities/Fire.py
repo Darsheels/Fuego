@@ -6,7 +6,7 @@ from settings import SCREEN_WIDTH, SCREEN_HEIGHT
 class Fire(pygame.sprite.Sprite):
     def __init__(self,x,y, can_spread=True):
         super().__init__()
-        self.fireFrames = load_sprite_sheet("assets/sprites/buildingblocks/Fire_animation.png", 256 , 64, scale=1)
+        self.fireFrames = load_sprite_sheet("assets/sprites/buildingblocks/Fire_animation.png", 48 , 64, scale=1)
         self.FireAnimation = Animation(self.fireFrames, speed=0.1, breaker=False)
         
         self.image = self.FireAnimation.image

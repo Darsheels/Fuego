@@ -169,7 +169,6 @@ class BaseScene:
         if self.mission_accomplished:
             self.mission_popup_timer -= dt
             if self.mission_popup_timer <= 0:
-                # self.mission_accomplished = False
                 self.game.next_spawn = "default_interior"
                 self.game.scene_manager.set("TruckApparatus")
                 
@@ -237,16 +236,6 @@ class DataScene(BaseScene):
             
         if self.fire_truck and use_shared_fire_truck:
             self.add_objects(self.fire_truck)
-            
-        # Create fires based on fire_spreading setting
-        self._create_fires_from_defs()
-    
-    def _create_fires_from_defs(self):
-        if hasattr(self, 'fire_defs') and self.fire_defs:
-            for fire_def in self.fire_defs:
-                x = fire_def.get("x", 0)
-                y = fire_def.get("y", 0)
-                self.fire_manager.add_fire(x, y, can_spread=self.fire_spreading)
 
     def on_enter(self):
         spawn_name = self.game.next_spawn if self.game.next_spawn is not None else "default"
