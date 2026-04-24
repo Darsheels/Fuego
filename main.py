@@ -18,6 +18,14 @@ class Game:
         self.selected_mission = None
         self.previous_mission = None 
         
+        # Fade transition system
+        self.fade_state = "none"  # none, fading_out, fading_in
+        self.fade_alpha = 0
+        self.fade_speed = 255  # Alpha change per second
+        self.fade_target_scene = None
+        self.fade_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.fade_surface.fill((0, 0, 0))
+        
         self.fire_truck = DefaultTruck(100, 250)
         self.pager = Pager(1000,500)
      
@@ -49,6 +57,27 @@ class Game:
             dt = self.clock.tick(60) / 1000
             self.scene_manager.update(keys, dt)
             self.scene_manager.draw(self.screen)
+            
+            if self.fade_state == "fading_out":
+                self.fade_alpha += self.fade_speed * dt
+                if self.fade_alpha >= 255:
+                    self.fade_alpha = 255
+                    self.fade_state = "fading_in"
+                    
+                    if self.fade_target_scene:
+                        self.scene_manager.set(self.fade_target_scene)
+                        self.fade_target_scene = None
+            elif self.fade_state == "fading_in":
+                self.fade_alpha -= self.fade_speed * dt
+                if self.fade_alpha <= 0:
+                    self.fade_alpha = 0
+                    self.fade_state = "none"
+            
+            
+            if self.fade_state != "none":
+                self.fade_surface.set_alpha(int(self.fade_alpha))
+                self.screen.blit(self.fade_surface, (0, 0))
+            
             pygame.display.flip()
             
     def handle_events(self):
