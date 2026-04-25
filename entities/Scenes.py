@@ -79,6 +79,7 @@ class BaseScene:
                 random_mission = random.choice(available_missions)
                 self.game.previous_mission = random_mission
                 self.game.selected_mission = random_mission
+                self.fire_manager.update(dt)
                 if random_mission == "House1":
                     print("Selected mission: House1 - A residential fire scenario with multiple rooms and a basement.")
                 else:

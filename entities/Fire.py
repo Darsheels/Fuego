@@ -6,7 +6,7 @@ from settings import SCREEN_WIDTH, SCREEN_HEIGHT
 class Fire(pygame.sprite.Sprite):
     def __init__(self,x,y, can_spread=True):
         super().__init__()
-        self.fireFrames = load_sprite_sheet("assets/sprites/buildingblocks/Fire_animation.png", 48 , 64, scale=1)
+        self.fireFrames = load_sprite_sheet("assets/sprites/buildingblocks/NewFire_animation.png", 48 , 64, scale=2)
         self.FireAnimation = Animation(self.fireFrames, speed=0.1, breaker=False)
         
         self.image = self.FireAnimation.image
@@ -55,6 +55,7 @@ class Fire_manager:
         self.fires.append(Fire(x,y, can_spread))
     
     def update(self,dt):
+        
         for fire in self.fires:
             fire.update(dt)
             
@@ -69,7 +70,7 @@ class Fire_manager:
                     if 0 <= nx <= SCREEN_WIDTH - 48 and 0 <= ny <= SCREEN_HEIGHT - 64:
                         new_fires.append(Fire(nx,ny, can_spread=True))
                         fire.spread_timer = 0
-                
+                    
         self.fires.extend(new_fires)
         
     def draw(self,screen):
