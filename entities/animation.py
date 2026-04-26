@@ -22,12 +22,11 @@ def load_sprite_sheet(path , frame_width , frame_height , scale):
     return frames
 
 class Animation:
-    def __init__(self , frames , speed , breaker):
+    def __init__(self , frames , speed ):
         self.frames = frames
         self.speed = speed
         self.index = 0
         self.image = frames[0]
-        self.breaker = breaker
         
     def update(self):
         self.index += self.speed

@@ -43,7 +43,7 @@ class TruckLeavingScene(BaseScene):
     def __init__(self, game):
         super().__init__(game, None)
         self.opening_scene = load_sprite_sheet("assets/sprites/vehicles/FireLeaving.png", 128, 98, scale=11)
-        self.animation = Animation(self.opening_scene, speed=0.01 , breaker=True)
+        self.animation = Animation(self.opening_scene, speed=0.01)
         self.duration = 8.0
         self.elapsed = 0.0
     

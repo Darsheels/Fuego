@@ -7,7 +7,7 @@ class Fire(pygame.sprite.Sprite):
     def __init__(self,x,y, can_spread=True):
         super().__init__()
         self.fireFrames = load_sprite_sheet("assets/sprites/buildingblocks/NewFire_animation.png", 48 , 64, scale=2)
-        self.FireAnimation = Animation(self.fireFrames, speed=0.1, breaker=False)
+        self.FireAnimation = Animation(self.fireFrames, speed=0.1)
         
         self.image = self.FireAnimation.image
         self.rect = self.image.get_rect(topleft=(x,y))
@@ -25,9 +25,12 @@ class Fire(pygame.sprite.Sprite):
         if self.extinguished:
             return
         
+        self.FireAnimation.update()
+        self.image = self.FireAnimation.image
+       
         if not self.can_spread:
             self.failure_timer += dt
-        self.FireAnimation.update()
+            
         self.spread_timer += dt
         
     def extinguish(self):

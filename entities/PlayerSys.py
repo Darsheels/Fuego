@@ -59,8 +59,8 @@ class BasePlayer(pygame.sprite.Sprite):
         self.walk_frames = load_sprite_sheet(wpath,ww,wh,scale=wscale)
         self.idle_frames = load_sprite_sheet(ipath,iw,ih,scale=iscale)
         
-        self.walk_animation = Animation(self.walk_frames,speed=0.1,breaker=False)
-        self.idle_animation = Animation(self.idle_frames,speed=0.1,breaker=False)
+        self.walk_animation = Animation(self.walk_frames,speed=0.1)
+        self.idle_animation = Animation(self.idle_frames,speed=0.1)
         
         self.image = self.idle_animation.image
         
@@ -176,8 +176,14 @@ class BasePlayer(pygame.sprite.Sprite):
         length = max(1,(dx*dx + dy*dy) ** 0.5)
         nx = dx / length
         ny = dy /length
+       
+        offset = self.rect.height * 0.35
+        hand_x = self.rect.centerx + nx * offset
+        hand_y = self.rect.centery + ny * offset
+        self.extinguisher_pos = (hand_x, hand_y)
         
-        angle = math.degrees(math.atan2(-dy,dx))
+        direction = pygame.Vector2(dx,dy).normalize()
+        angle = direction.angle_to((1,0))
         
         if self.facing_right:
             self.extinguisher_rotated = pygame.transform.rotate(self.extinguisher.image, angle)
@@ -185,29 +191,19 @@ class BasePlayer(pygame.sprite.Sprite):
             flipped = pygame.transform.flip(self.extinguisher.image, True, False)
             self.extinguisher_rotated = pygame.transform.rotate(flipped, angle + 180)
         
-        offset = self.rect.height * 0.35
-        hand_x = self.rect.centerx + nx * offset
-        hand_y = self.rect.centery + ny * offset
-        self.extinguisher_pos = (hand_x, hand_y)
+        nozzle_offset = 5
+        start_x = hand_x + nx * nozzle_offset
+        start_y = hand_y + ny * nozzle_offset
         
-        beam_length = 200
-        beam_width = 20
-        
-        start_x = hand_x
-        start_y = hand_y
-        end_x = hand_x + nx * beam_length
-        end_y = hand_y + ny * beam_length
-        
-        mid_x = (start_x + end_x) / 2
-        mid_y = (start_y + end_y) / 2
-        
-        beam_surface = pygame.Surface((beam_length, beam_width), pygame.SRCALPHA)
+        beam_length = length
+        beam_width = 30
              
-        beam_surface = Entity("assets/sprites/buildingblocks/WaterBeam.png", (32,32), 0, 0, scale=4).image
+        self.beam_image = pygame.image.load("assets/sprites/buildingblocks/WaterBeam.png").convert_alpha()
+        beam_surface = pygame.transform.scale(self.beam_image, (int(beam_length), beam_width))
         
         self.beam_rotated = pygame.transform.rotate(beam_surface, angle)
       
-        self.extinguisher_rect = self.beam_rotated.get_rect(center=(mid_x, mid_y))
+        self.extinguisher_rect = self.beam_rotated.get_rect(center=(start_x,start_y))
         
         self.extinguisher_active = mouse_buttons[0] and not self.on_ladder
         
