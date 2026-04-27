@@ -147,7 +147,7 @@ class BaseScene:
                 p["prompt"].show()
                 if p.get("type") == "interaction":
                     if keys[p["key"]]:  
-                        if p["name"] == "change into gear and exit":
+                        if p["name"] == "change into gear and exit" or p["name"] == "Break in":
                             self.game.fade_target_scene = p["target"]
                             self.game.next_spawn = p["spawn"]
                             self.game.fade_state = "fading_out"
