@@ -27,7 +27,7 @@ class Fire(pygame.sprite.Sprite):
         
         self.FireAnimation.update()
         self.image = self.FireAnimation.image
-       
+        
         if not self.can_spread:
             self.failure_timer += dt
             

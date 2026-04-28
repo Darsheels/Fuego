@@ -30,6 +30,7 @@ class BasePlayer(pygame.sprite.Sprite):
         super().__init__()
         self.rect = pygame.Rect(x,y,32,32)
         
+        self.health = 100
         self.speed = 2
         self.facing_right = True
         self.moving = False
@@ -47,7 +48,7 @@ class BasePlayer(pygame.sprite.Sprite):
         self.extinguisher = Entity("assets/sprites/buildingblocks/FireExtinguisher.png", (32,32) ,x,y, scale=3)
         self.extinguisher_rotated = self.extinguisher.image
         self.extinguisher_pos = (0, 0)
-        self.beam_image = Entity("assets/sprites/buildingblocks/WaterBeam.png", (64,64), x, y, scale=3).image
+        self.beam_image = Entity("assets/sprites/buildingblocks/ExtinguisherBeamIdle.png", (64,64), x, y, scale=3).image
         
         self.apply_profile(profile_name)
         
@@ -190,12 +191,12 @@ class BasePlayer(pygame.sprite.Sprite):
         hand_y = self.rect.centery + ny * offset
         self.extinguisher_pos = (hand_x, hand_y)
         
-        nozzle_offset = 8
+        nozzle_offset = 10
         start_x = hand_x + nx * nozzle_offset
         start_y = hand_y + ny * nozzle_offset
         
         beam_length = 200
-        beam_width = 90
+        beam_width = 100
              
         beam_surface = pygame.transform.scale(self.beam_image, (int(beam_length), beam_width))
         
@@ -211,7 +212,7 @@ class BasePlayer(pygame.sprite.Sprite):
         if not self.extinguisher_appear:
             self.extinguisher_active = False
             self.extinguisher_rect = None
-        
+    
     def draw(self,surface):
         if self.visible:
             surface.blit(self.image, self.rect)
