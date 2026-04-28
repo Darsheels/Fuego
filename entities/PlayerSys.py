@@ -1,7 +1,7 @@
 import pygame
+import math
 from entities.animation import load_sprite_sheet , Animation
 from entities.entity import Entity
-import math
 from settings import SCREEN_WIDTH , SCREEN_HEIGHT
 
 
@@ -49,6 +49,8 @@ class BasePlayer(pygame.sprite.Sprite):
         self.extinguisher_rotated = self.extinguisher.image
         self.extinguisher_pos = (0, 0)
         self.beam_image = Entity("assets/sprites/buildingblocks/ExtinguisherBeamIdle.png", (64,64), x, y, scale=3).image
+        self.beam_frames = load_sprite_sheet("assets/sprites/buildingblocks/ExtinguisherBeamAnim.png", 64, 64, scale=3)
+        self.beam_animation = Animation(self.beam_frames, speed=0.05, loop=False)
         
         self.apply_profile(profile_name)
         
@@ -198,7 +200,7 @@ class BasePlayer(pygame.sprite.Sprite):
         beam_length = 200
         beam_width = 100
              
-        beam_surface = pygame.transform.scale(self.beam_image, (int(beam_length), beam_width))
+        beam_surface = pygame.transform.scale(self.beam_animation.image, (int(beam_length), beam_width))
         
         self.beam_rotated = pygame.transform.rotate(beam_surface, angle)
         
@@ -208,6 +210,9 @@ class BasePlayer(pygame.sprite.Sprite):
         self.extinguisher_rect = self.beam_rotated.get_rect(center=(center_x, center_y))
         
         self.extinguisher_active = mouse_buttons[0] and not self.on_ladder
+        
+        if self.extinguisher_active:
+            self.beam_animation.update()    
         
         if not self.extinguisher_appear:
             self.extinguisher_active = False

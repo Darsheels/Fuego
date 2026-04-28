@@ -1,10 +1,8 @@
 import pygame
 from settings import SCREEN_WIDTH , SCREEN_HEIGHT
 from entities.UI_prompt import UIPrompt
-from entities.objects import Ladder
+from entities.objects import Object
 from entities.Fire import Fire,Fire_manager
-from entities.PlayerSys import BasePlayer
-
 
 class BaseScene:
     def __init__(self , game , player=None, fire_truck=None, pager=None):
@@ -102,7 +100,7 @@ class BaseScene:
                 # if isinstance(obj, Fire) and obj.zone.colliderect(actor_rect):
                 #     self.player.health -= 10 * dt
                 
-                if isinstance(obj,Ladder) and obj.zone.colliderect(actor_rect):
+                if isinstance(obj,Object.Ladder) and obj.zone.colliderect(actor_rect):
                     self.player.show_ladder_prompt = not self.player.on_ladder
                     
                     if self.player.on_ladder:

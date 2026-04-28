@@ -1,24 +1,24 @@
+import pygame
 import json
 from pathlib import Path
-import pygame
-from entities.Buildings import FireStation, LockerRoom, House1, TruckApparatus , House1Int
+from entities.Buildings import Building
 from entities.Scenes import DataScene
-from entities.objects import Car1, DefaultTruck , FireHydrant , Ladder , Pager
-from entities.Fire import Fire , Fire_manager
-from entities.PlayerSys import BasePlayer
+from entities.objects import Object
+from entities.Fire import Fire
+
 
 
 OBJECT_CLASSES = {
-    "FireStation": FireStation,
-    "TruckApparatus": TruckApparatus,
-    "LockerRoom": LockerRoom,
-    "House1": House1,
-    "DefaultTruck": DefaultTruck,
-    "House1Int": House1Int,
-    "FireHydrant": FireHydrant,
-    "Ladder": Ladder,
+    "FireStation": Building.FireStation,
+    "TruckApparatus": Building.TruckApparatus,
+    "LockerRoom": Building.LockerRoom,
+    "House1": Building.House1,
+    "DefaultTruck": Object.DefaultTruck,
+    "House1Int":    Building.House1Int,
+    "FireHydrant": Object.FireHydrant,
+    "Ladder": Object.Ladder,
     "Fire": Fire,
-    "Car1": Car1,
+    "Car1": Object.Car1,
 }
 
 def load_scene_definitions(path):
@@ -32,7 +32,7 @@ def _build_object(obj_def):
         raise ValueError(f"Unknown object class in scene definition: {obj_type}")
     
     if obj_type == "Ladder":
-        return Ladder(
+        return OBJECT_CLASSES[obj_type](
             obj_def.get("x",0),
             obj_def.get("y",0),
             obj_def.get("height", 200)

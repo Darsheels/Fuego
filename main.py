@@ -4,7 +4,7 @@ from settings import SCREEN_HEIGHT, SCREEN_WIDTH
 from entities.scene_manager import SceneManager
 from entities.scene_factory import build_scenes_from_definitions
 from scenes.animation_scenes import  TruckCutsceneScene, TruckLeavingScene 
-from entities.objects import Pager , DefaultTruck
+from entities.objects import Object
 from entities.PlayerSys import BasePlayer
 
 class Game:
@@ -26,8 +26,8 @@ class Game:
         self.fade_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.fade_surface.fill((0, 0, 0))
         
-        self.fire_truck = DefaultTruck(100, 250)
-        self.pager = Pager(1000,500)
+        self.fire_truck = Object.DefaultTruck(100, 250)
+        self.pager = Object.Pager(1000,500)
      
         self.player = BasePlayer(400,480,"firefighter_no_gear")
         

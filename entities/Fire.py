@@ -1,6 +1,6 @@
 import pygame
-from entities.animation import load_sprite_sheet , Animation
 import random
+from entities.animation import load_sprite_sheet , Animation
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT
 
 class Fire(pygame.sprite.Sprite):
