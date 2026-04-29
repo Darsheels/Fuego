@@ -55,6 +55,10 @@ class Object(Entity):
             self.player = player
             self.rect = pygame.Rect(x, y, width, height)
         
+        def update(self):
+            self.rect.x = self.player.rect.x
+            self.rect.y = self.player.rect.y - 20
+        
         def draw(self, surface):
             ratio = self.player.health / 100
     

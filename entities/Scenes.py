@@ -59,6 +59,11 @@ class BaseScene:
                     self.mission_popup_timer = 2.5
                     self.game.selected_mission = None
                     break
+                if self.player.health == 0:
+                    self.mission_failed = True
+                    self.mission_popup_timer = 2.5
+                    self.game.selected_mission = None
+                    break
         
         if self.mission_failed:
             self.mission_popup_timer -= dt
@@ -96,11 +101,15 @@ class BaseScene:
             actor_rect = self.player.rect
             ladder_found = False
             
+            for fire in self.fire_manager.fires:
+                if actor_rect.colliderect(fire.rect):
+                    self.player.health -= 20 * dt
+                    if self.player.health <= 0:
+                        self.player.health = 0
+                        self.player.alive = False
+
+            
             for obj in self.objects:
-                if isinstance(obj, Fire) and obj.zone.colliderect(actor_rect):
-                    self.player.health -= 10 * dt
-                    print(f"Player health: {self.player.health:.1f}")
-                
                 if isinstance(obj,Object.Ladder) and obj.zone.colliderect(actor_rect):
                     self.player.show_ladder_prompt = not self.player.on_ladder
                     

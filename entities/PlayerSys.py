@@ -2,6 +2,7 @@ import pygame
 import math
 from entities.animation import load_sprite_sheet , Animation
 from entities.entity import Entity
+from entities.objects import Object
 from settings import SCREEN_WIDTH , SCREEN_HEIGHT
 
 
@@ -32,6 +33,8 @@ class BasePlayer(pygame.sprite.Sprite):
         
         self.health = 100
         self.alive = True
+        self.healthbar = Object.HealthBar(self,x,y)
+        
         self.speed = 2
         self.facing_right = True
         self.moving = False
@@ -74,6 +77,7 @@ class BasePlayer(pygame.sprite.Sprite):
         self.has_extinguisher = profile["has_extinguisher"]
         
     def update(self,keys):
+        self.healthbar.update()
         if self.on_ladder:
             self.moving = False
             self.update_ladder_logic(keys)
@@ -88,6 +92,8 @@ class BasePlayer(pygame.sprite.Sprite):
 
         if self.has_extinguisher:
             self.update_extinguisher_logic()
+        
+        
         
     def update_movement(self,keys):
         if self.on_ladder:
@@ -219,16 +225,6 @@ class BasePlayer(pygame.sprite.Sprite):
             self.extinguisher_active = False
             self.extinguisher_rect = None
     
-    
-    def Draw_HealthBar(self,screen,x,y):
-        Bar_width = 100
-        Bar_height = 10
-        
-        ratio =   self.health / 100
-        
-        pygame.draw.rect(screen, (255,0,0), (x,y,Bar_width,Bar_height))
-        pygame.draw.rect(screen, (0,255,0), (x,y,Bar_width * ratio, Bar_height))
-    
     def draw(self,surface):
         if self.visible:
             surface.blit(self.image, self.rect)
@@ -237,4 +233,4 @@ class BasePlayer(pygame.sprite.Sprite):
             if self.has_extinguisher:
                 rect = self.extinguisher_rotated.get_rect(center=self.extinguisher_pos)
                 surface.blit(self.extinguisher_rotated,rect)
-            self.Draw_HealthBar(surface,self.rect.x, self.rect.y - 15)
+            self.healthbar.draw(surface)
