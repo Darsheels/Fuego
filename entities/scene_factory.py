@@ -6,8 +6,6 @@ from entities.Scenes import DataScene
 from entities.objects import Object
 from entities.Fire import Fire
 
-
-
 OBJECT_CLASSES = {
     "FireStation": Building.FireStation,
     "TruckApparatus": Building.TruckApparatus,

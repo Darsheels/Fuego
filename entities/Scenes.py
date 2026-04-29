@@ -97,8 +97,9 @@ class BaseScene:
             ladder_found = False
             
             for obj in self.objects:
-                # if isinstance(obj, Fire) and obj.zone.colliderect(actor_rect):
-                #     self.player.health -= 10 * dt
+                if isinstance(obj, Fire) and obj.zone.colliderect(actor_rect):
+                    self.player.health -= 10 * dt
+                    print(f"Player health: {self.player.health:.1f}")
                 
                 if isinstance(obj,Object.Ladder) and obj.zone.colliderect(actor_rect):
                     self.player.show_ladder_prompt = not self.player.on_ladder

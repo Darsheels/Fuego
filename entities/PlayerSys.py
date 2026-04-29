@@ -31,6 +31,7 @@ class BasePlayer(pygame.sprite.Sprite):
         self.rect = pygame.Rect(x,y,32,32)
         
         self.health = 100
+        self.alive = True
         self.speed = 2
         self.facing_right = True
         self.moving = False
@@ -218,6 +219,16 @@ class BasePlayer(pygame.sprite.Sprite):
             self.extinguisher_active = False
             self.extinguisher_rect = None
     
+    
+    def Draw_HealthBar(self,screen,x,y):
+        Bar_width = 100
+        Bar_height = 10
+        
+        ratio =   self.health / 100
+        
+        pygame.draw.rect(screen, (255,0,0), (x,y,Bar_width,Bar_height))
+        pygame.draw.rect(screen, (0,255,0), (x,y,Bar_width * ratio, Bar_height))
+    
     def draw(self,surface):
         if self.visible:
             surface.blit(self.image, self.rect)
@@ -226,3 +237,4 @@ class BasePlayer(pygame.sprite.Sprite):
             if self.has_extinguisher:
                 rect = self.extinguisher_rotated.get_rect(center=self.extinguisher_pos)
                 surface.blit(self.extinguisher_rotated,rect)
+            self.Draw_HealthBar(surface,self.rect.x, self.rect.y - 15)

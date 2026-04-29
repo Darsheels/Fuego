@@ -48,3 +48,17 @@ class Object(Entity):
     class Car1(Entity):
         def __init__(self, x, y):
             super().__init__("assets/sprites/vehicles/Car1.png", (160, 96), x, y, scale=3)
+            
+            
+    class HealthBar():
+        def __init__(self, player,x, y, width=100, height=10):
+            self.player = player
+            self.rect = pygame.Rect(x, y, width, height)
+        
+        def draw(self, surface):
+            ratio = self.player.health / 100
+    
+            pygame.draw.rect(surface, (255,0,0), self.rect)
+            pygame.draw.rect(surface, (0,255,0), (self.rect.x, self.rect.y, self.rect.width * ratio, self.rect.height))
+
+            
