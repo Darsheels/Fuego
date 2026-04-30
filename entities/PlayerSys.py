@@ -31,7 +31,8 @@ class BasePlayer(pygame.sprite.Sprite):
         super().__init__()
         self.rect = pygame.Rect(x,y,32,32)
         
-        self.health = 100
+        self.max_health = 100
+        self.health = self.max_health
         self.alive = True
         self.healthbar = Object.HealthBar(self,x,y)
         
