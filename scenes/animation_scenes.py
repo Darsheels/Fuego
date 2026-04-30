@@ -21,6 +21,8 @@ class TruckCutsceneScene(BaseScene):
         self.fire_truck.image = self.fire_truck.image_right
         self.fire_truck.rect.topleft = (100, 250)
 
+        print("Truck LEaving works")
+        
     def update(self, keys, dt):
         self.elapsed += dt
         self.scroll_x += self.scroll_speed * dt
@@ -30,7 +32,7 @@ class TruckCutsceneScene(BaseScene):
         if self.elapsed >= self.duration:
             if self.game.selected_mission:
                 self.game.scene_manager.set(self.game.selected_mission)
-                
+        
 
     def draw(self, screen):
         x = int(self.scroll_x) % SCREEN_WIDTH

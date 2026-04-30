@@ -29,7 +29,7 @@ class Game:
         self.fire_truck = Object.DefaultTruck(100, 250)
         self.pager = Object.Pager(1000,500)
      
-        self.player = BasePlayer(400,480,"firefighter_no_gear")
+        self.player = BasePlayer(self,400,480,"firefighter_no_gear")
         
         self.scene_manager = SceneManager(self)
         self.scene_manager.add("truck_cutscene", TruckCutsceneScene(self, self.fire_truck))

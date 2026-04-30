@@ -129,6 +129,6 @@
     },
       "CarCrashScene": {
         "default": [20, 530]
-      }
+    } 
   }
 }

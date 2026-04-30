@@ -27,15 +27,15 @@ PLAYER_PROFILES = {
 }
 
 class BasePlayer(pygame.sprite.Sprite):
-    def __init__(self,x,y,profile_name):
+    def __init__(self,game,x,y,profile_name):
         super().__init__()
         self.rect = pygame.Rect(x,y,32,32)
-        
         self.max_health = 100
         self.health = self.max_health
         self.alive = True
         self.healthbar = Object.HealthBar(self,x,y)
         
+        self.game = game
         self.speed = 2
         self.facing_right = True
         self.moving = False
@@ -78,7 +78,9 @@ class BasePlayer(pygame.sprite.Sprite):
         self.has_extinguisher = profile["has_extinguisher"]
         
     def update(self,keys):
+        
         self.healthbar.update()
+            
         if self.on_ladder:
             self.moving = False
             self.update_ladder_logic(keys)
@@ -93,8 +95,6 @@ class BasePlayer(pygame.sprite.Sprite):
 
         if self.has_extinguisher:
             self.update_extinguisher_logic()
-        
-        
         
     def update_movement(self,keys):
         if self.on_ladder:
@@ -234,4 +234,5 @@ class BasePlayer(pygame.sprite.Sprite):
             if self.has_extinguisher:
                 rect = self.extinguisher_rotated.get_rect(center=self.extinguisher_pos)
                 surface.blit(self.extinguisher_rotated,rect)
-            self.healthbar.draw(surface)
+            if self.game.selected_mission:
+                self.healthbar.draw(surface)
