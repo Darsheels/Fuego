@@ -22,3 +22,6 @@ class Building(Entity):
     class House1Int(Entity):
         def __init__(self, x , y):
             super().__init__("assets/sprites/buildings/House1Int.png", (256 , 256), x, y, scale = 5)
+    class Museum(Entity):
+        def __init__(self,x,y):
+            super().__init__("assets/sprites/buildings/Museum.png", (256,256), x ,y, scale=5)

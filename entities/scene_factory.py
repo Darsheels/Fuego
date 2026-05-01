@@ -17,6 +17,7 @@ OBJECT_CLASSES = {
     "Ladder": Object.Ladder,
     "Fire": Fire,
     "Car1": Object.Car1,
+    "Museum": Building.Museum
 }
 
 def load_scene_definitions(path):
