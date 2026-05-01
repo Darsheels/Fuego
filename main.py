@@ -6,6 +6,7 @@ from entities.scene_factory import build_scenes_from_definitions
 from scenes.animation_scenes import  TruckCutsceneScene, TruckLeavingScene 
 from entities.objects import Object
 from entities.PlayerSys import BasePlayer
+from entities.camera import Camera
 
 class Game:
     def __init__(self):
@@ -40,7 +41,7 @@ class Game:
         for scene_name, scene in scenes.items():
             self.scene_manager.add(scene_name, scene)
 
-        self.mission_scenes = ['House1', 'CarCrashScene']
+        self.mission_scenes = ['House1', 'CarCrashScene', 'Museum']
 
         self.scene_manager.set("TruckApparatus")
 

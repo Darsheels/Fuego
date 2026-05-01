@@ -76,6 +76,7 @@ class Fire_manager:
                     
         self.fires.extend(new_fires)
         
-    def draw(self,screen):
+    def draw(self,screen,camera=None):
         for fire in self.fires:
-            screen.blit(fire.image,fire.rect)
+               pos = camera.apply(fire.rect) if camera else fire.rect
+               screen.blit(fire.image, pos)

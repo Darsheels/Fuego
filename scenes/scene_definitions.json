@@ -65,8 +65,7 @@
           "target_scene": "House1Int",
           "spawn_point": "entrance"
         }],
-      "transitions": [
-      ]
+      "transitions": []
     } , 
     {
       "name": "House1Int" , 
@@ -81,7 +80,8 @@
         {"class": "House1Int" , "x": 0 , "y": 0},
         {"class": "Ladder", "x": 530 , "y": 220 , "height": 102 },
         {"class": "Fire", "x": 400 , "y": 200},
-        {"class": "Fire", "x": 900 , "y": 200}
+        {"class": "Fire", "x": 900 , "y": 200},
+        {"class": "Fire", "x": 900 , "y": 500}
       ],
       "interactions":[]
     },
@@ -99,6 +99,30 @@
           { "class": "Car1", "x": 800, "y": 450},
           { "class": "Fire", "x": 800, "y": 500}
         ]
+    },
+    {
+      "name": "Museum",
+      "use_player": true,
+      "player": "firefighter_geared",
+      "is_mission_scene": false,
+      "use_shared_fire_truck": true,
+      "fire_truck_alignment": "bottom",
+      "draw_background": true,
+      "draw_ground": true,
+      "objects": [
+        { "class": "Museum", "x": 0, "y": -350 },
+        { "class": "FireHydrant", "x": 100, "y": 530 }
+      ],
+       "interactions": [
+        {
+          "name": "Break in",
+          "text": "Press E to break in through the Door!!",
+          "zone": { "x": 300, "y": 520, "w": 100, "h": 100 },
+          "key": "K_e",
+          "target_scene": "House1Int",
+          "spawn_point": "entrance"
+        }
+      ]
     }  
   ],
 
@@ -129,6 +153,9 @@
     },
       "CarCrashScene": {
         "default": [20, 530]
+    },
+    "Museum": {
+      "default": [800,520]
     } 
   }
 }

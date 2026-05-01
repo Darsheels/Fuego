@@ -4,6 +4,7 @@ from settings import SCREEN_WIDTH, SCREEN_HEIGHT
 from entities.UI_prompt import UIPrompt
 from entities.objects import Object
 from entities.Fire import Fire, Fire_manager
+from entities.camera import Camera
 
 class Interaction:
     """Replaces the raw prompt dict — easier to inspect in a debugger."""
@@ -30,7 +31,8 @@ class BaseScene:
         self.transitions  = []
         self.has_pager    = False
         self.fire_manager = Fire_manager()
-
+        self.camera = Camera.single_screen() 
+        
         self.is_mission_scene    = False
         self.mission_accomplished = False
         self.mission_failed       = False
@@ -63,7 +65,10 @@ class BaseScene:
 
     def update(self, keys, dt):
         self.fire_manager.update(dt)
-
+        
+        if self.player:
+            self.camera.update(self.player.rect,dt)
+        
         self._check_mission_failure(dt)
         if self.mission_failed:
             self._tick_mission_popup(dt, failed=True)
@@ -84,18 +89,25 @@ class BaseScene:
 
     def draw(self, screen):
         for obj in self.objects:
-            obj.draw(screen)
+            if obj.image:
+                screen.blit(obj.image, self.camera.apply(obj.rect))
+            else:
+               obj.draw(screen)
 
-        self.fire_manager.draw(screen)
+        self.fire_manager.draw(screen, self.camera)
 
         if self.has_pager and self.pager:
             self.pager.draw(screen)
 
         if self.player:
-            self.player.draw(screen)
-            if self.player.show_ladder_prompt:
-                self._draw_ladder_prompt(screen)
-
+               original_topleft = self.player.rect.topleft
+               self.player.rect.topleft = self.camera.apply(self.player.rect).topleft
+               self.player.draw(screen)
+               self.player.rect.topleft = original_topleft
+           
+               if self.player.show_ladder_prompt:
+                 self._draw_ladder_prompt(screen)
+                
         for ix in self.interactions:
             ix.prompt.draw(screen)
 
@@ -331,7 +343,8 @@ class DataScene(BaseScene):
         self.is_mission_scene     = is_mission_scene
         self.fire_spreading       = fire_spreading
         self.fire_defs            = []   # populated by scene_factory
-
+        self.camera = Camera.locked_follow(1280,720) 
+        
         for obj in (objects or []):
             self.add_objects(obj)
 
