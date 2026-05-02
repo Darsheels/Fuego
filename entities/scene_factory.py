@@ -1,56 +1,52 @@
 import pygame
 import json
 from pathlib import Path
-from entities.Buildings import Building
 from entities.Scenes import DataScene
-from entities.objects import Object
 from entities.Fire import Fire
+from entities.entity_factory import OBJECT_CLASSES   # ← replaces the old hardcoded dict
 
-OBJECT_CLASSES = {
-    "FireStation": Building.FireStation,
-    "TruckApparatus": Building.TruckApparatus,
-    "LockerRoom": Building.LockerRoom,
-    "House1": Building.House1,
-    "DefaultTruck": Object.DefaultTruck,
-    "House1Int":    Building.House1Int,
-    "FireHydrant": Object.FireHydrant,
-    "Ladder": Object.Ladder,
-    "Fire": Fire,
-    "Car1": Object.Car1,
-    "Museum": Building.Museum
-}
+# OBJECT_CLASSES is now driven entirely by entity_definitions.json.
+# Add a new building/object there; no Python changes needed.
+
 
 def load_scene_definitions(path):
     with Path(path).open("r", encoding="utf-8") as handle:
         definitions = json.load(handle)
     return definitions
 
+
 def _build_object(obj_def):
     obj_type = obj_def.get("class")
     if obj_type not in OBJECT_CLASSES:
         raise ValueError(f"Unknown object class in scene definition: {obj_type}")
-    
+
     if obj_type == "Ladder":
         return OBJECT_CLASSES[obj_type](
-            obj_def.get("x",0),
-            obj_def.get("y",0),
-            obj_def.get("height", 200)
+            obj_def.get("x", 0),
+            obj_def.get("y", 0),
+            obj_def.get("height", 200),
         )
-    
+
     return OBJECT_CLASSES[obj_type](obj_def.get("x", 0), obj_def.get("y", 0))
+
 
 def _build_zone(zone_def):
     return pygame.Rect(zone_def["x"], zone_def["y"], zone_def["w"], zone_def["h"])
+
 
 def _get_key(key_name):
     if not hasattr(pygame, key_name):
         raise ValueError(f"Unknown pygame key constant: {key_name}")
     return getattr(pygame, key_name)
 
+
 def build_scene(scene_def, game):
-    # Filter out Fire objects from regular objects since they're handled separately
-    regular_objects = [obj_def for obj_def in scene_def.get("objects", []) if obj_def.get("class") != "Fire"]
+    regular_objects = [
+        obj_def for obj_def in scene_def.get("objects", [])
+        if obj_def.get("class") != "Fire"
+    ]
     objects = [_build_object(obj_def) for obj_def in regular_objects]
+
     scene = DataScene(
         game=game,
         player=game.player if scene_def.get("use_player", True) else None,
@@ -61,13 +57,16 @@ def build_scene(scene_def, game):
         draw_ground=scene_def.get("draw_ground", False),
         use_shared_fire_truck=scene_def.get("use_shared_fire_truck", False),
         fire_truck_alignment=scene_def.get("fire_truck_alignment"),
-        has_pager= scene_def.get("has_pager", False),
+        has_pager=scene_def.get("has_pager", False),
         player_profile=scene_def.get("player"),
         is_mission_scene=scene_def.get("is_mission_scene", False),
-        fire_spreading=scene_def.get("Fire_Spreading", False)
+        fire_spreading=scene_def.get("Fire_Spreading", False),
     )
 
-    scene.fire_defs = [obj_def for obj_def in scene_def.get("objects", []) if obj_def.get("class") == "Fire"]
+    scene.fire_defs = [
+        obj_def for obj_def in scene_def.get("objects", [])
+        if obj_def.get("class") == "Fire"
+    ]
 
     for transition in scene_def.get("transitions", []):
         scene.add_transition(
@@ -85,7 +84,9 @@ def build_scene(scene_def, game):
             target_scene=interaction["target_scene"],
             spawn_point=interaction["spawn_point"],
         )
+
     return scene
+
 
 def build_scenes_from_definitions(path, game):
     definitions = load_scene_definitions(path)

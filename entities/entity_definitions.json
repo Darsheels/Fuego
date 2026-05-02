@@ -1,0 +1,80 @@
+{
+  "entities": [
+    {
+      "name": "FireStation",
+      "image_path": "assets/sprites/buildings/Fire Department.png",
+      "base_size": [128, 128],
+      "scale": 11
+    },
+    {
+      "name": "TruckApparatus",
+      "image_path": "assets/sprites/buildings/RealInnerFireDepartment.png",
+      "base_size": [256, 256],
+      "scale": 5
+    },
+    {
+      "name": "LockerRoom",
+      "image_path": "assets/sprites/buildings/LockerRoom.png",
+      "base_size": [256, 256],
+      "scale": 5
+    },
+    {
+      "name": "House1",
+      "image_path": "assets/sprites/buildings/house1.png",
+      "base_size": [256, 256],
+      "scale": 5
+    },
+    {
+      "name": "House1Int",
+      "image_path": "assets/sprites/buildings/House1Int.png",
+      "base_size": [256, 256],
+      "scale": 5
+    },
+    {
+      "name": "Museum",
+      "image_path": "assets/sprites/buildings/Museum.png",
+      "base_size": [256, 256],
+      "scale": 5
+    },
+    {
+      "name": "FireHydrant",
+      "image_path": "assets/sprites/buildingblocks/FireHydrant.png",
+      "base_size": [128, 160],
+      "scale": 1
+    },
+    {
+      "name": "DefaultTruck",
+      "image_path": "assets/sprites/vehicles/FireTruck.png",
+      "base_size": [92, 64],
+      "scale": 8,
+      "extras": {
+        "flip_x": true
+      }
+    },
+    {
+      "name": "Car1",
+      "image_path": "assets/sprites/vehicles/Car1.png",
+      "base_size": [160, 96],
+      "scale": 3
+    },
+    {
+      "name": "Ladder",
+      "image_path": "assets/sprites/buildingblocks/Ladder.png",
+      "base_size": [64, null],
+      "scale": 5,
+      "extras": {
+        "variable_height": true
+      }
+    },
+    {
+      "name": "Pager",
+      "image_path": "assets/sprites/buildingblocks/pager.png",
+      "base_size": [200, 200],
+      "scale": 1,
+      "extras": {
+        "has_cooldown": true,
+        "default_time_inside": 5
+      }
+    }
+  ]
+}

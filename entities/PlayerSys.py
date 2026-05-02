@@ -2,8 +2,9 @@ import pygame
 import math
 from entities.animation import load_sprite_sheet , Animation
 from entities.entity import Entity
-from entities.objects import Object
+from entities.entity_factory import  OBJECT_CLASSES
 from settings import SCREEN_WIDTH , SCREEN_HEIGHT
+from entities.healthbar import HealthBar
 
 
 PLAYER_PROFILES = {
@@ -33,7 +34,7 @@ class BasePlayer(pygame.sprite.Sprite):
         self.max_health = 100
         self.health = self.max_health
         self.alive = True
-        self.healthbar = Object.HealthBar(self,x,y)
+        self.healthbar = HealthBar(self,x,y)
         
         self.game = game
         self.speed = 2

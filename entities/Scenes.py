@@ -2,7 +2,7 @@ import pygame
 import random
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT
 from entities.UI_prompt import UIPrompt
-from entities.objects import Object
+from entities.entity_factory import OBJECT_CLASSES
 from entities.Fire import Fire, Fire_manager
 from entities.camera import Camera
 
@@ -214,7 +214,7 @@ class BaseScene:
         ladder_found = False
 
         for obj in self.objects:
-            if not isinstance(obj, Object.Ladder):
+            if not isinstance(obj, OBJECT_CLASSES["Ladder"]):
                 continue
             if not obj.zone.colliderect(actor_rect):
                 continue
