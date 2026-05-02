@@ -54,7 +54,6 @@ class BasePlayer(pygame.sprite.Sprite):
         self.extinguisher = Entity("assets/sprites/buildingblocks/FireExtinguisher.png", (32,32) ,x,y, scale=3)
         self.extinguisher_rotated = self.extinguisher.image
         self.extinguisher_pos = (0, 0)
-        self.beam_image = Entity("assets/sprites/buildingblocks/ExtinguisherBeamIdle.png", (64,64), x, y, scale=3).image
         self.beam_frames = load_sprite_sheet("assets/sprites/buildingblocks/ExtinguisherBeamAnim.png", 64, 64, scale=3)
         self.beam_animation = Animation(self.beam_frames, speed=0.05, loop=False)
         

@@ -37,6 +37,12 @@
       "scale": 5
     },
     {
+      "name":"MuseumInt",
+      "image_path": "assets/sprites/buildings/Museumint.png",
+      "base_size": [256,256],
+      "scale": 5
+    },
+    {
       "name": "FireHydrant",
       "image_path": "assets/sprites/buildingblocks/FireHydrant.png",
       "base_size": [128, 160],

@@ -15,7 +15,7 @@ def _make_standard_class(defn: dict) -> type:
     """Return a plain Entity subclass for a standard (non-special) entity."""
     image_path = defn["image_path"]
     base_size  = tuple(defn["base_size"]) if defn["base_size"] else None
-    scale      = defn.get("scale")        # None → Entity uses GLOBAL_SCALE
+    scale      = defn.get("scale")        
 
     def __init__(self, x: int, y: int):
         Entity.__init__(self, image_path, base_size, x, y, scale=scale)

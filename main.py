@@ -74,7 +74,6 @@ class Game:
                     self.fade_alpha = 0
                     self.fade_state = "none"
             
-            
             if self.fade_state != "none":
                 self.fade_surface.set_alpha(int(self.fade_alpha))
                 self.screen.blit(self.fade_surface, (0, 0))

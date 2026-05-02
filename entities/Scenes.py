@@ -14,7 +14,7 @@ class Interaction:
         self.key         = key
         self.target      = target_scene
         self.spawn       = spawn_point
-        self.uses_fade   = name in ("change into gear and exit", "Break in")
+        self.uses_fade   = name in ("change into gear and exit", "Break in", "Break")
         self.prompt      = UIPrompt(text, SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.85)
 
     def __repr__(self):

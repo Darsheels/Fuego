@@ -115,14 +115,29 @@
       ],
        "interactions": [
         {
-          "name": "Break in",
+          "name": "Break",
           "text": "Press E to break in through the Door!!",
           "zone": { "x": 300, "y": 520, "w": 100, "h": 100 },
           "key": "K_e",
-          "target_scene": "House1Int",
+          "target_scene": "MuseumInt",
           "spawn_point": "entrance"
         }
       ]
+    },
+    {
+      "name": "MuseumInt",
+      "use_player":true, 
+      "player": "firefighter_with_extinguisher",
+      "is_mission_scene": true,
+      "use_shared_fire_truck":false,
+      "draw_background": false,
+      "draw_ground": false,
+      "objects": [
+        {"class": "MuseumInt", "x":0, "y":0},
+        {"class": "Fire", "x": 800, "y": 500},
+        {"class": "Fire", "x": 300, "y": 500}
+      ]
+
     }  
   ],
 
@@ -156,6 +171,9 @@
     },
     "Museum": {
       "default": [800,520]
-    } 
+    },
+    "MuseumInt": {
+      "entrance": [200,530]
+    }  
   }
 }
