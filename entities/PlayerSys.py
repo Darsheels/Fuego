@@ -9,8 +9,8 @@ from entities.healthbar import HealthBar
 
 PLAYER_PROFILES = {
     "firefighter_no_gear": {
-        "walk_frames": ("assets/sprites/player/DefaultPlayer.png", 32, 32, 7),
-        "idle_frames": ("assets/sprites/player/idleFireFighter.png", 32,32,7),
+        "walk_frames": ("assets/sprites/player/NewPlayer.png", 48, 96, 2),
+        "idle_frames": ("assets/sprites/player/NewIdlePlayer.png", 48,96,2),
         "has_extinguisher": False
     },
 

@@ -1,7 +1,6 @@
 import pygame
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT
 
-
 class Camera:
     def __init__(
         self,
@@ -28,11 +27,8 @@ class Camera:
             self._dz_w,
             self._dz_h,
         )
-
-    # ------------------------------------------------------------------
-    # Core
-    # ------------------------------------------------------------------
-
+        
+    #Core
     def update(self, target_rect: pygame.Rect, dt: float):
         """Move the camera towards *target_rect* each frame."""
         # Desired offset: put the target's centre at the screen centre
@@ -61,10 +57,7 @@ class Camera:
         self.offset.x = max(0, min(self.offset.x, self.world_width  - SCREEN_WIDTH))
         self.offset.y = max(0, min(self.offset.y, self.world_height - SCREEN_HEIGHT))
 
-    # ------------------------------------------------------------------
     # Coordinate helpers
-    # ------------------------------------------------------------------
-
     def apply(self, rect: pygame.Rect) -> pygame.Rect:
         """Return a new Rect shifted into screen space."""
         return pygame.Rect(
@@ -88,10 +81,7 @@ class Camera:
     def screen_to_world(self, pos: pygame.Vector2) -> pygame.Vector2:
         return pos + self.offset
 
-    # ------------------------------------------------------------------
     # Optional deadzone visualiser (debug)
-    # ------------------------------------------------------------------
-
     def draw_debug(self, screen: pygame.Surface):
         """Draw the deadzone rectangle and camera offset — useful during dev."""
         pygame.draw.rect(screen, (0, 255, 100), self.deadzone, 1)
@@ -102,11 +92,8 @@ class Camera:
             (200, 200, 50),
         )
         screen.blit(label, (8, 8))
-
-    # ------------------------------------------------------------------
+        
     # Preset factory methods
-    # ------------------------------------------------------------------
-
     @classmethod
     def single_screen(cls) -> "Camera":
         """Camera that never scrolls (deadzone covers the entire screen)."""

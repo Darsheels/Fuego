@@ -34,7 +34,7 @@
       "name": "Museum",
       "image_path": "assets/sprites/buildings/Museum.png",
       "base_size": [256, 256],
-      "scale": 5
+      "scale": 3
     },
     {
       "name":"MuseumInt",
