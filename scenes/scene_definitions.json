@@ -7,7 +7,6 @@
       "player": "firefighter_no_gear",
       "is_mission_scene": false,
       "draw_background": false,
-      "draw_ground": false,
       "has_pager": true,
       "objects": [
         { "class": "TruckApparatus", "x": 0, "y": -100 },
@@ -24,7 +23,6 @@
       "player": "firefighter_no_gear",
       "is_mission_scene": false,
       "draw_background": false,
-      "draw_ground": false,
       "has_pager":true,
       "objects": [
         { "class": "LockerRoom", "x": 0, "y": -200 }
@@ -52,10 +50,8 @@
       "use_shared_fire_truck": true,
       "fire_truck_alignment": "bottom",
       "draw_background": true,
-      "draw_ground": true,
       "objects": [
-        { "class": "House1", "x": 0, "y": -350 },
-        { "class": "FireHydrant", "x": 100, "y": 530 }
+        { "class": "House1", "x": 0, "y": -220 }
       ],
       "interactions": [{
           "name": "Break in",
@@ -75,7 +71,6 @@
       "is_mission_scene": true,
       "use_shared_fire_truck":false , 
       "draw_background":false,
-      "draw_ground": false,
       "objects":[
         {"class": "House1Int" , "x": 0 , "y": 0},
         {"class": "Ladder", "x": 530 , "y": 220 , "height": 102 },
@@ -94,10 +89,9 @@
         "use_shared_fire_truck":true,
         "fire_truck_alignment": "bottom",
         "draw_background": true,
-        "draw_ground": true,
         "objects": [
-          { "class": "Car1", "x": 800, "y": 450},
-          { "class": "Fire", "x": 800, "y": 500}
+          { "class": "Car1", "x": 800, "y": 495},
+          { "class": "Fire", "x": 800, "y": 540}
         ]
     },
     {
@@ -108,10 +102,8 @@
       "use_shared_fire_truck": true,
       "fire_truck_alignment": "bottom",
       "draw_background": true,
-      "draw_ground": true,
       "objects": [
-        { "class": "Museum", "x": 200, "y": -100 },
-        { "class": "FireHydrant", "x": 100, "y": 530 }
+        { "class": "Museum", "x": 200, "y": -60 }
       ],
        "interactions": [
         {
@@ -132,7 +124,6 @@
       "Fire_Spreading": true,
       "use_shared_fire_truck":false,
       "draw_background": false,
-      "draw_ground": false,
       "objects": [
         {"class": "MuseumInt", "x":0, "y":0},
         {"class": "Fire", "x": 800, "y": 500},
@@ -146,7 +137,7 @@
   "spawn_points": {
     "TruckApparatus": {
       "default":[200,520], 
-      "left_entry": [1000, 480],
+      "left_entry": [1000, 520],
       "locker_room_entry": [100, 480],
       "exit": [200, 480]
     },
@@ -154,22 +145,19 @@
       "locker_room_entry": [100, 520]
     },
     "House1": {
-      "default": [800, 520],
-      "door": [500 , 520],
-      "left_entry": [0, 250],
-      "right_entry": [1200, 250]
+      "default": [800, 620]
     },
     "House1Int": {
-      "entrance": [80 , 530]
+      "entrance": [80 , 620]
     },
-      "CarCrashScene": {
-        "default": [20, 530]
+    "CarCrashScene": {
+      "default": [20, 620]
     },
     "Museum": {
-      "default": [800,520]
+      "default": [800,620]
     },
     "MuseumInt": {
-      "entrance": [400,540]
+      "entrance": [400,620]
     }  
   }
 }

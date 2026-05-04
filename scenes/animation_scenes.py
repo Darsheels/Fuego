@@ -19,13 +19,13 @@ class TruckCutsceneScene(BaseScene):
         self.scroll_x = 0.0
         self.fire_truck.speed = 0
         self.fire_truck.image = self.fire_truck.image_right
-        self.fire_truck.rect.topleft = (100, 250)
+        self.fire_truck.rect.topleft = (100, 270)
         
     def update(self, keys, dt):
         self.elapsed += dt
         self.scroll_x += self.scroll_speed * dt
         self.fire_truck.speed = 0
-        self.fire_truck.rect.topleft = (100, 250)
+        self.fire_truck.rect.topleft = (100, 270)
 
         if self.elapsed >= self.duration:
             if self.game.selected_mission:
@@ -34,7 +34,6 @@ class TruckCutsceneScene(BaseScene):
     def draw(self, screen):
         x = int(self.scroll_x) % SCREEN_WIDTH
         screen.blit(self.game.background, (-x, 0))
-        screen.blit(self.game.ground, (-x, 450))
         self.fire_truck.draw(screen)
         
 
@@ -58,6 +57,5 @@ class TruckLeavingScene(BaseScene):
           
     def draw(self, screen): 
         screen.blit(self.game.background, (0, 0))
-        screen.blit(self.game.ground, (0, 450))
-        screen.blit(self.animation.image, (-200 , -140))
+        screen.blit(self.animation.image, (-100 , -140))
         

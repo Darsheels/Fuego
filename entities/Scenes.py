@@ -115,7 +115,7 @@ class BaseScene:
 
 
     def _check_mission_failure(self, dt):
-        """Trigger mission failure when a fire burns out OR the player dies."""
+        #Trigger mission failure when a fire burns out OR the player dies.
         if not self.is_mission_scene:
             return
         if self.mission_accomplished or self.mission_failed:
@@ -135,14 +135,14 @@ class BaseScene:
         self.game.selected_mission = None
 
     def _tick_mission_popup(self, dt, *, failed: bool):
-        """Count down the result banner then return to base."""
+        #Count down the result banner then return to base.
         self.mission_popup_timer -= dt
         if self.mission_popup_timer <= 0:
             self.game.next_spawn = "default_interior"
             self.game.scene_manager.set("TruckApparatus")
 
     def _select_mission(self):
-        """Pick a random mission when the pager fires on the TruckApparatus scene."""
+        #Pick a random mission when the pager fires on the TruckApparatus scene.
         if self.scene_name != "TruckApparatus":
             return
         if not self.game.pager.pager_triggered:
@@ -210,7 +210,7 @@ class BaseScene:
         return actor_rect
 
     def _update_ladder(self, keys, actor_rect):
-        """Check whether the player should be on/off a ladder."""
+        #Check whether the player should be on/off a ladder.
         ladder_found = False
 
         for obj in self.objects:
@@ -239,7 +239,7 @@ class BaseScene:
             self.player.show_ladder_prompt = False
 
     def _update_interactions(self, keys, actor_rect):
-        """Show/hide prompts and handle interaction key presses."""
+        #Show/hide prompts and handle interaction key presses.
         if actor_rect is None:
             return
 
@@ -260,7 +260,7 @@ class BaseScene:
                 ix.prompt.hide()
 
     def _trigger_interaction(self, ix: "Interaction"):
-        """Perform the scene change for a triggered interaction."""
+        #Perform the scene change for a triggered interaction.
         if ix.uses_fade:
             self.game.fade_target_scene = ix.target
             self.game.next_spawn        = ix.spawn
@@ -271,7 +271,7 @@ class BaseScene:
             
 
     def _update_transitions(self, actor_rect):
-        """Switch scenes when the actor walks off a screen edge."""
+        #Switch scenes when the actor walks off a screen edge.
         if actor_rect is None:
             return
 
@@ -318,7 +318,6 @@ class DataScene(BaseScene):
         scene_name=None,
         spawn_points=None,
         draw_background=False,
-        draw_ground=False,
         use_shared_fire_truck=False,
         fire_truck_alignment=None,
         has_pager=False,
@@ -335,7 +334,6 @@ class DataScene(BaseScene):
         self.scene_name           = scene_name
         self.spawn_points         = spawn_points or {}
         self.draw_background      = draw_background
-        self.draw_ground          = draw_ground
         self.use_shared_fire_truck = use_shared_fire_truck
         self.fire_truck_alignment = fire_truck_alignment
         self.has_pager            = has_pager
@@ -381,7 +379,7 @@ class DataScene(BaseScene):
         self.player.extinguisher_pos    = (0, 0)
 
     def _handle_truck_apparatus_entry(self):
-        """Reset or cooldown the pager when returning to the truck bay."""
+        #Reset or cooldown the pager when returning to the truck bay.
         if self.scene_name != "TruckApparatus":
             return
 
@@ -413,7 +411,7 @@ class DataScene(BaseScene):
         ]
 
     def _get_spawn_position(self, spawn_name: str):
-        """Look up a spawn position for this scene, falling back to 'default'."""
+        #Look up a spawn position for this scene, falling back to 'default'.
         scene_spawns = self.spawn_points.get(self.scene_name, {})
         return scene_spawns.get(spawn_name) or scene_spawns.get("default")
 
@@ -441,6 +439,4 @@ class DataScene(BaseScene):
     def draw(self, screen):
         if self.draw_background:
             screen.blit(self.game.background, (0, 0))
-        if self.draw_ground:
-            screen.blit(self.game.ground, (0, 450))
         super().draw(screen)

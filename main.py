@@ -40,15 +40,12 @@ class Game:
         for scene_name, scene in scenes.items():
             self.scene_manager.add(scene_name, scene)
 
-        self.mission_scenes = ['Museum',"House1","CarCrashScene"]
+        self.mission_scenes = ["House1","CarCrashScene","Museum"]
 
         self.scene_manager.set("TruckApparatus")
 
         self.background = pygame.image.load("assets/sprites/buildingblocks/Background.png").convert_alpha()
         self.background = pygame.transform.scale(self.background, (SCREEN_WIDTH, SCREEN_HEIGHT))
-
-        self.ground = pygame.image.load("assets/sprites/buildingblocks/Ground.png").convert_alpha()
-        self.ground = pygame.transform.scale(self.ground, (SCREEN_WIDTH, 300))
 
     def run(self):
         while self.running:

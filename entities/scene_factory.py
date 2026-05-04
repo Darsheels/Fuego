@@ -3,10 +3,7 @@ import json
 from pathlib import Path
 from entities.Scenes import DataScene
 from entities.Fire import Fire
-from entities.entity_factory import OBJECT_CLASSES   # ← replaces the old hardcoded dict
-
-# OBJECT_CLASSES is now driven entirely by entity_definitions.json.
-# Add a new building/object there; no Python changes needed.
+from entities.entity_factory import OBJECT_CLASSES   
 
 
 def load_scene_definitions(path):
@@ -54,7 +51,6 @@ def build_scene(scene_def, game):
         scene_name=scene_def["name"],
         spawn_points=scene_def.get("spawn_points", {}),
         draw_background=scene_def.get("draw_background", False),
-        draw_ground=scene_def.get("draw_ground", False),
         use_shared_fire_truck=scene_def.get("use_shared_fire_truck", False),
         fire_truck_alignment=scene_def.get("fire_truck_alignment"),
         has_pager=scene_def.get("has_pager", False),

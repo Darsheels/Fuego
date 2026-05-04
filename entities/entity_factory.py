@@ -24,10 +24,7 @@ def _make_standard_class(defn: dict) -> type:
 
 
 def _make_flip_class(defn: dict) -> type:
-    """
-    Entity that also stores a left-facing flipped image.
-    Used by DefaultTruck (and anything else with extras.flip_x == true).
-    """
+   #  Entity that also stores a left-facing flipped image. Used by DefaultTruck (and anything else with extras.flip_x == true).
     image_path = defn["image_path"]
     base_size  = tuple(defn["base_size"]) if defn["base_size"] else None
     scale      = defn.get("scale")
@@ -45,7 +42,7 @@ def _make_flip_class(defn: dict) -> type:
 
 
 def _make_ladder_class(defn: dict) -> type:
-    """Ladder takes an extra `height` argument and exposes a `zone` rect."""
+    #Ladder takes an extra `height` argument and exposes a `zone` rect.
     image_path = defn["image_path"]
     scale      = defn.get("scale", 5)
 
@@ -58,7 +55,7 @@ def _make_ladder_class(defn: dict) -> type:
 
 
 def _make_pager_class(defn: dict) -> type:
-    """Pager has cooldown logic and only draws when triggered."""
+    #Pager has cooldown logic and only draws when triggered.
     image_path        = defn["image_path"]
     base_size         = tuple(defn["base_size"]) if defn["base_size"] else None
     scale             = defn.get("scale", 1)
