@@ -66,6 +66,10 @@ class BaseScene:
     def update(self, keys, dt):
         self.fire_manager.update(dt)
         
+        for obj in self.objects:
+            if hasattr(obj,"update") and callable(obj.update):
+                obj.update(keys)
+        
         if self.player:
             self.camera.update(self.player.rect,dt)
         
@@ -89,7 +93,9 @@ class BaseScene:
 
     def draw(self, screen):
         for obj in self.objects:
-            if obj.image:
+            if hasattr(obj, "draw_with_camera"):
+                obj.draw_with_camera(screen, self.camera)
+            elif obj.image:
                 screen.blit(obj.image, self.camera.apply(obj.rect))
             else:
                obj.draw(screen)

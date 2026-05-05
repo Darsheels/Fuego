@@ -76,7 +76,8 @@
         {"class": "Ladder", "x": 530 , "y": 220 , "height": 102 },
         {"class": "Fire", "x": 400 , "y": 200},
         {"class": "Fire", "x": 900 , "y": 200},
-        {"class": "Fire", "x": 900 , "y": 500}
+        {"class": "Fire", "x": 900 , "y": 500},
+        { "class": "NPC", "x": 500, "y": 400 }
       ],
       "interactions":[]
     },
@@ -91,7 +92,8 @@
         "draw_background": true,
         "objects": [
           { "class": "Car1", "x": 800, "y": 495},
-          { "class": "Fire", "x": 800, "y": 540}
+          { "class": "Fire", "x": 800, "y": 540},
+          { "class": "NPC", "x": 500, "y": 400 }
         ]
     },
     {
@@ -128,7 +130,8 @@
         {"class": "MuseumInt", "x":0, "y":0},
         {"class": "Fire", "x": 800, "y": 500},
         {"class": "Fire", "x": 300, "y": 200},
-        {"class": "Ladder","x": 800 , "y": 150 , "height": 150}
+        {"class": "Ladder","x": 800 , "y": 150 , "height": 150},
+        { "class": "NPC", "x": 500, "y": 400 }
       ]
 
     }  

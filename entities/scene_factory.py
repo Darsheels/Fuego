@@ -11,7 +11,6 @@ def load_scene_definitions(path):
         definitions = json.load(handle)
     return definitions
 
-
 def _build_object(obj_def):
     obj_type = obj_def.get("class")
     if obj_type not in OBJECT_CLASSES:
@@ -26,7 +25,6 @@ def _build_object(obj_def):
 
     return OBJECT_CLASSES[obj_type](obj_def.get("x", 0), obj_def.get("y", 0))
 
-
 def _build_zone(zone_def):
     return pygame.Rect(zone_def["x"], zone_def["y"], zone_def["w"], zone_def["h"])
 
@@ -35,7 +33,6 @@ def _get_key(key_name):
     if not hasattr(pygame, key_name):
         raise ValueError(f"Unknown pygame key constant: {key_name}")
     return getattr(pygame, key_name)
-
 
 def build_scene(scene_def, game):
     regular_objects = [
@@ -56,7 +53,7 @@ def build_scene(scene_def, game):
         has_pager=scene_def.get("has_pager", False),
         player_profile=scene_def.get("player"),
         is_mission_scene=scene_def.get("is_mission_scene", False),
-        fire_spreading=scene_def.get("Fire_Spreading", False),
+        fire_spreading=scene_def.get("Fire_Spreading", False)
     )
 
     scene.fire_defs = [
@@ -82,7 +79,6 @@ def build_scene(scene_def, game):
         )
 
     return scene
-
 
 def build_scenes_from_definitions(path, game):
     definitions = load_scene_definitions(path)
