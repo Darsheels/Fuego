@@ -2,9 +2,7 @@ import pygame
 import json
 from pathlib import Path
 from entities.Scenes import DataScene
-from entities.Fire import Fire
 from entities.entity_factory import OBJECT_CLASSES   
-
 
 def load_scene_definitions(path):
     with Path(path).open("r", encoding="utf-8") as handle:
@@ -38,6 +36,7 @@ def build_scene(scene_def, game):
     regular_objects = [
         obj_def for obj_def in scene_def.get("objects", [])
         if obj_def.get("class") != "Fire"
+        if obj_def.get("class") != "NPC"
     ]
     objects = [_build_object(obj_def) for obj_def in regular_objects]
 
@@ -59,6 +58,11 @@ def build_scene(scene_def, game):
     scene.fire_defs = [
         obj_def for obj_def in scene_def.get("objects", [])
         if obj_def.get("class") == "Fire"
+    ]
+    
+    scene.npc_defs = [
+        obj_def for obj_def in scene_def.get("objects", [])
+        if obj_def.get("class") == "NPC"
     ]
 
     for transition in scene_def.get("transitions", []):

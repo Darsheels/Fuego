@@ -124,4 +124,4 @@ def build_object_classes(path: Path = _DEFINITIONS_PATH) -> dict[str, type]:
 
 
 OBJECT_CLASSES: dict[str, type] = build_object_classes()
-OBJECT_CLASSES["NPC"] = NPC 
+

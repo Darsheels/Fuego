@@ -18,7 +18,7 @@ class Fire(pygame.sprite.Sprite):
         self.failure_timer = 0.0
         self.failure_limit = 20.0 if not can_spread else None
         self.spread_timer = 0
-        self.spread_delay = 3.5
+        self.spread_delay = 4
         self.can_spread = can_spread
     
     def update(self,dt):

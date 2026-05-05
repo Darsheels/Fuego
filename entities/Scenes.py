@@ -4,7 +4,9 @@ from settings import SCREEN_WIDTH, SCREEN_HEIGHT
 from entities.UI_prompt import UIPrompt
 from entities.entity_factory import OBJECT_CLASSES
 from entities.Fire import Fire, Fire_manager
+from entities.npc import NPC , NPC_manager
 from entities.camera import Camera
+
 
 class Interaction:
     """Replaces the raw prompt dict — easier to inspect in a debugger."""
@@ -31,6 +33,7 @@ class BaseScene:
         self.transitions  = []
         self.has_pager    = False
         self.fire_manager = Fire_manager()
+        self.npc_manager = NPC_manager()
         self.camera = Camera.single_screen() 
         
         self.is_mission_scene    = False
@@ -44,6 +47,8 @@ class BaseScene:
     def add_objects(self, obj):
         if isinstance(obj, Fire):
             self.fire_manager.fires.append(obj)
+        elif isinstance(obj, NPC):
+            self.npc_manager.NPCs.append(obj)
         else:
             self.objects.append(obj)
 
@@ -65,6 +70,7 @@ class BaseScene:
 
     def update(self, keys, dt):
         self.fire_manager.update(dt)
+        self.npc_manager.update(dt)
         
         for obj in self.objects:
             if hasattr(obj,"update") and callable(obj.update):
@@ -93,14 +99,13 @@ class BaseScene:
 
     def draw(self, screen):
         for obj in self.objects:
-            if hasattr(obj, "draw_with_camera"):
-                obj.draw_with_camera(screen, self.camera)
-            elif obj.image:
+            if obj.image:
                 screen.blit(obj.image, self.camera.apply(obj.rect))
             else:
                obj.draw(screen)
 
         self.fire_manager.draw(screen, self.camera)
+        self.npc_manager.draw(screen,self.camera)
 
         if self.has_pager and self.pager:
             self.pager.draw(screen)
@@ -347,7 +352,7 @@ class DataScene(BaseScene):
         self.is_mission_scene     = is_mission_scene
         self.fire_spreading       = fire_spreading
         self.fire_defs            = []   # populated by scene_factory
-        self.camera = Camera.locked_follow(1280,720) 
+        self.npc_defs = []
         
         for obj in (objects or []):
             self.add_objects(obj)
@@ -414,6 +419,10 @@ class DataScene(BaseScene):
         self.fire_manager.fires   = [
             Fire(f["x"], f["y"], self.fire_spreading)
             for f in self.fire_defs
+        ]
+        self.npc_manager.NPCs = [
+            NPC(n["x"], n["y"])
+            for n in self.npc_defs
         ]
 
     def _get_spawn_position(self, spawn_name: str):
