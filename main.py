@@ -40,7 +40,7 @@ class Game:
         for scene_name, scene in scenes.items():
             self.scene_manager.add(scene_name, scene)
 
-        self.mission_scenes = ["CarCrashScene", "House1", "Museum"]
+        self.mission_scenes = ["House1","Museum","CarCrashScene"]
 
         self.scene_manager.set("TruckApparatus")
 

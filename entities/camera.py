@@ -30,7 +30,7 @@ class Camera:
         
     #Core
     def update(self, target_rect: pygame.Rect, dt: float):
-        """Move the camera towards *target_rect* each frame."""
+       #Move the camera towards *target_rect* each frame.
         # Desired offset: put the target's centre at the screen centre
         desired_x = target_rect.centerx - SCREEN_WIDTH  // 2
         desired_y = target_rect.centery - SCREEN_HEIGHT // 2
@@ -68,11 +68,11 @@ class Camera:
         )
 
     def apply_entity(self, entity) -> pygame.Rect:
-        """Convenience wrapper for objects that have a .rect attribute."""
+        #Convenience wrapper for objects that have a .rect attribute.
         return self.apply(entity.rect)
 
     def apply_pos(self, x: float, y: float) -> tuple[float, float]:
-        """Convert a raw world (x, y) to screen coordinates."""
+        #Convert a raw world (x, y) to screen coordinates
         return x - self.offset.x, y - self.offset.y
 
     def world_to_screen(self, pos: pygame.Vector2) -> pygame.Vector2:
@@ -83,7 +83,7 @@ class Camera:
 
     # Optional deadzone visualiser (debug)
     def draw_debug(self, screen: pygame.Surface):
-        """Draw the deadzone rectangle and camera offset — useful during dev."""
+        #Draw the deadzone rectangle and camera offset — useful during dev.
         pygame.draw.rect(screen, (0, 255, 100), self.deadzone, 1)
         font = pygame.font.Font(None, 24)
         label = font.render(
@@ -96,7 +96,7 @@ class Camera:
     # Preset factory methods
     @classmethod
     def single_screen(cls) -> "Camera":
-        """Camera that never scrolls (deadzone covers the entire screen)."""
+        #Camera that never scrolls (deadzone covers the entire screen).
         return cls(
             world_width=SCREEN_WIDTH,
             world_height=SCREEN_HEIGHT,
@@ -107,7 +107,7 @@ class Camera:
 
     @classmethod
     def smooth_follow(cls, world_width: int, world_height: int) -> "Camera":
-        """Standard smooth-follow for a scrolling level."""
+        #Standard smooth-follow for a scrolling level.
         return cls(
             world_width=world_width,
             world_height=world_height,
@@ -118,7 +118,7 @@ class Camera:
 
     @classmethod
     def locked_follow(cls, world_width: int, world_height: int) -> "Camera":
-        """Camera that snaps instantly to the player with no lag."""
+        #Camera that snaps instantly to the player with no lag.
         return cls(
             world_width=world_width,
             world_height=world_height,
