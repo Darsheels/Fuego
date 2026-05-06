@@ -4,7 +4,7 @@ from settings import SCREEN_WIDTH, SCREEN_HEIGHT
 from entities.UI_prompt import UIPrompt
 from entities.entity_factory import OBJECT_CLASSES
 from entities.Fire import Fire, Fire_manager
-from entities.npc import NPC , NPC_manager
+from entities.npc import NPC, NPC_manager
 from entities.camera import Camera
 
 
@@ -22,6 +22,7 @@ class Interaction:
     def __repr__(self):
         return f"<Interaction '{self.name}' → '{self.target}'>"
 
+
 class BaseScene:
     def __init__(self, game, player=None, fire_truck=None, pager=None):
         self.game         = game
@@ -33,10 +34,10 @@ class BaseScene:
         self.transitions  = []
         self.has_pager    = False
         self.fire_manager = Fire_manager()
-        self.npc_manager = NPC_manager()
-        self.camera = Camera.single_screen() 
-        
-        self.is_mission_scene    = False
+        self.npc_manager  = NPC_manager()
+        self.camera       = Camera.single_screen()
+
+        self.is_mission_scene     = False
         self.mission_accomplished = False
         self.mission_failed       = False
         self.mission_popup_timer  = 0.0
@@ -68,17 +69,21 @@ class BaseScene:
         self.has_pager = True
         self.pager = self.game.pager
 
+
     def update(self, keys, dt):
         self.fire_manager.update(dt)
-        self.npc_manager.update(dt)
-        
+
+        # NPC manager: pass fires, player, and keys so it can handle
+        # fire damage, rescue prompts, and the R-key rescue all in one place.
+        self.npc_manager.update(dt,screen_w=SCREEN_WIDTH,screen_h=SCREEN_HEIGHT,fires=self.fire_manager.fires,player=self.player if self.player and self.player.alive else None,keys=keys,)
+
         for obj in self.objects:
-            if hasattr(obj,"update") and callable(obj.update):
+            if hasattr(obj, "update") and callable(obj.update):
                 obj.update(keys)
-        
+
         if self.player:
-            self.camera.update(self.player.rect,dt)
-        
+            self.camera.update(self.player.rect, dt)
+
         self._check_mission_failure(dt)
         if self.mission_failed:
             self._tick_mission_popup(dt, failed=True)
@@ -97,51 +102,61 @@ class BaseScene:
         if self.mission_accomplished:
             self._tick_mission_popup(dt, failed=False)
 
+
     def draw(self, screen):
         for obj in self.objects:
             if obj.image:
                 screen.blit(obj.image, self.camera.apply(obj.rect))
             else:
-               obj.draw(screen)
+                obj.draw(screen)
 
         self.fire_manager.draw(screen, self.camera)
-        self.npc_manager.draw(screen,self.camera)
+        self.npc_manager.draw(screen, self.camera)
 
         if self.has_pager and self.pager:
             self.pager.draw(screen)
 
         if self.player:
-               original_topleft = self.player.rect.topleft
-               self.player.rect.topleft = self.camera.apply(self.player.rect).topleft
-               self.player.draw(screen)
-               self.player.rect.topleft = original_topleft
-           
-               if self.player.show_ladder_prompt:
-                 self._draw_ladder_prompt(screen)
-                
+            original_topleft = self.player.rect.topleft
+            self.player.rect.topleft = self.camera.apply(self.player.rect).topleft
+            self.player.draw(screen)
+            self.player.rect.topleft = original_topleft
+
+            if self.player.show_ladder_prompt:
+                self._draw_ladder_prompt(screen)
+
         for ix in self.interactions:
             ix.prompt.draw(screen)
 
         self._draw_mission_overlay(screen)
 
-
+  
+    # Mission failure / success
     def _check_mission_failure(self, dt):
-        #Trigger mission failure when a fire burns out OR the player dies.
+     #Trigger mission failure when a fire burns out, an NPC dies, or the player dies.
         if not self.is_mission_scene:
             return
         if self.mission_accomplished or self.mission_failed:
             return
 
+        # Fire failure (non-spreading fires that timed out)
         for fire in self.fire_manager.fires:
             if not fire.can_spread and fire.has_failed():
                 self._fail_mission()
                 return
 
+        # NPC failure — any NPC that is dead (health == 0) and not rescued
+        for npc in self.npc_manager.NPCs:
+            if not npc.alive:
+                self._fail_mission()
+                return
+
+        # Player death
         if self.player and self.player.health <= 0:
             self._fail_mission()
 
     def _fail_mission(self):
-        self.mission_failed = True
+        self.mission_failed      = True
         self.mission_popup_timer = 2.5
         self.game.selected_mission = None
 
@@ -152,6 +167,24 @@ class BaseScene:
             self.game.next_spawn = "default_interior"
             self.game.scene_manager.set("TruckApparatus")
 
+    def _check_mission_accomplished(self):
+        #       Mission is complete when:
+        #   - All fires are extinguished, AND
+        #   - All NPCs have been rescued (npc_manager list is empty because
+        #     rescued NPCs are pruned immediately).
+        
+        if not self.is_mission_scene:
+            return
+        if self.mission_accomplished or self.mission_failed:
+            return
+        fires_clear = len(self.fire_manager.fires) == 0
+        npcs_clear  = len(self.npc_manager.NPCs) == 0
+        if fires_clear and npcs_clear:
+            self.mission_accomplished = True
+            self.mission_popup_timer  = 2.5
+
+    
+    # Mission selection
     def _select_mission(self):
         #Pick a random mission when the pager fires on the TruckApparatus scene.
         if self.scene_name != "TruckApparatus":
@@ -162,16 +195,17 @@ class BaseScene:
             return
         if not getattr(self.game, "mission_scenes", None):
             return
-        
-        available = [m for m in self.game.mission_scenes if m != self.game.previous_mission]
-        chosen = random.choice(available)
 
+        available = [m for m in self.game.mission_scenes
+                     if m != self.game.previous_mission]
+        chosen = random.choice(available)
         self.game.previous_mission = chosen
         self.game.selected_mission = chosen
         print(f"[mission] Selected: {chosen}")
 
+
+    # Actor update
     def _update_actor(self, keys, dt) -> pygame.Rect | None:
-       
         if self.fire_truck and self.player and getattr(self.player, "in_vehicle", False):
             return self.fire_truck.rect
 
@@ -187,7 +221,7 @@ class BaseScene:
     def _update_player(self, keys, dt) -> pygame.Rect:
         actor_rect = self.player.rect
 
-        # Fire damage
+        # Fire damage to player
         for fire in self.fire_manager.fires:
             if actor_rect.colliderect(fire.rect):
                 self.player.health = max(0, self.player.health - 20 * dt)
@@ -213,15 +247,14 @@ class BaseScene:
             )
             fire.apply_extinguisher(dt, hitting)
 
-        # All fires out → mission complete
-        if self.is_mission_scene and not self.mission_accomplished and not self.fire_manager.fires:
-            self.mission_accomplished = True
-            self.mission_popup_timer  = 2.5
+        # Check mission complete (fires AND npcs)
+        self._check_mission_accomplished()
 
         return actor_rect
 
+  
+    # Ladder
     def _update_ladder(self, keys, actor_rect):
-        #Check whether the player should be on/off a ladder.
         ladder_found = False
 
         for obj in self.objects:
@@ -244,20 +277,19 @@ class BaseScene:
                 break
 
         if not ladder_found:
-            self.player.on_ladder        = False
-            self.player.climbing         = False
-            self.player.ladder           = None
+            self.player.on_ladder         = False
+            self.player.climbing          = False
+            self.player.ladder            = None
             self.player.show_ladder_prompt = False
 
+    
+    # Interactions / transitions
     def _update_interactions(self, keys, actor_rect):
-        #Show/hide prompts and handle interaction key presses.
         if actor_rect is None:
             return
 
         for ix in self.interactions:
             inside = ix.zone.colliderect(actor_rect)
-
-            # Gate pager-locked interactions
             visible = inside and (
                 ix.name != "change into gear and exit"
                 or self.game.pager.pager_triggered
@@ -271,7 +303,6 @@ class BaseScene:
                 ix.prompt.hide()
 
     def _trigger_interaction(self, ix: "Interaction"):
-        #Perform the scene change for a triggered interaction.
         if ix.uses_fade:
             self.game.fade_target_scene = ix.target
             self.game.next_spawn        = ix.spawn
@@ -279,10 +310,8 @@ class BaseScene:
         else:
             self.game.next_spawn = ix.spawn
             self.game.scene_manager.set(ix.target)
-            
 
     def _update_transitions(self, actor_rect):
-        #Switch scenes when the actor walks off a screen edge.
         if actor_rect is None:
             return
 
@@ -299,9 +328,12 @@ class BaseScene:
         self.game.next_spawn = transition["spawn"]
         self.game.scene_manager.set(transition["target"])
 
+    
+    # Drawing helpers
+    
     def _draw_ladder_prompt(self, screen):
         font = pygame.font.Font(None, 32)
-        surf = font.render("press W to climb", True, (255, 255, 255))
+        surf = font.render("Press W to climb", True, (255, 255, 255))
         x = self.player.rect.centerx - surf.get_width() // 2
         y = self.player.rect.top - 30
         screen.blit(surf, (x, y))
@@ -342,23 +374,24 @@ class DataScene(BaseScene):
             game.fire_truck if use_shared_fire_truck else None,
             game.pager      if has_pager             else None,
         )
-        self.scene_name           = scene_name
-        self.spawn_points         = spawn_points or {}
-        self.draw_background      = draw_background
+        self.scene_name            = scene_name
+        self.spawn_points          = spawn_points or {}
+        self.draw_background       = draw_background
         self.use_shared_fire_truck = use_shared_fire_truck
-        self.fire_truck_alignment = fire_truck_alignment
-        self.has_pager            = has_pager
-        self.player_profile       = player_profile
-        self.is_mission_scene     = is_mission_scene
-        self.fire_spreading       = fire_spreading
-        self.fire_defs            = []   # populated by scene_factory
-        self.npc_defs = []
-        
+        self.fire_truck_alignment  = fire_truck_alignment
+        self.has_pager             = has_pager
+        self.player_profile        = player_profile
+        self.is_mission_scene      = is_mission_scene
+        self.fire_spreading        = fire_spreading
+        self.fire_defs             = []   # populated by scene_factory
+        self.npc_defs              = []   # populated by scene_factory
+
         for obj in (objects or []):
             self.add_objects(obj)
 
         if self.fire_truck and use_shared_fire_truck:
             self.add_objects(self.fire_truck)
+
 
     def on_enter(self):
         spawn_name = self.game.next_spawn or "default"
@@ -371,8 +404,8 @@ class DataScene(BaseScene):
 
         if self.player and not self.is_mission_scene:
             self.player.health = self.player.max_health
-            self.player.alive = True
-        
+            self.player.alive  = True
+
         if self.player and self.player_profile:
             self.player.apply_profile(self.player_profile)
 
@@ -380,6 +413,7 @@ class DataScene(BaseScene):
         self._place_fire_truck(spawn_name)
 
         self.game.next_spawn = None
+
 
     def _reset_player_extinguisher(self):
         if not self.player:
@@ -390,13 +424,12 @@ class DataScene(BaseScene):
         self.player.extinguisher_pos    = (0, 0)
 
     def _handle_truck_apparatus_entry(self):
-        #Reset or cooldown the pager when returning to the truck bay.
         if self.scene_name != "TruckApparatus":
             return
 
         last_name = self.game.last_scene
         if last_name == "locker_room":
-            return   # keep pager state as-is
+            return
 
         pager = self.game.pager
         if last_name:
@@ -407,16 +440,17 @@ class DataScene(BaseScene):
                 self.game.selected_mission = None
                 return
 
-        # Either no last scene, or mission was not accomplished — hard reset.
-        pager.time_inside      = 5
-        pager.pager_triggered  = False
+        pager.time_inside     = 5
+        pager.pager_triggered = False
 
     def _reset_mission(self):
-        self.player.health = 100
+        #Rebuild fires and NPCs from their definitions every time the scene is entered.
+        self.player.health        = 100
         self.mission_accomplished = False
         self.mission_failed       = False
         self.mission_popup_timer  = 0.0
-        self.fire_manager.fires   = [
+
+        self.fire_manager.fires = [
             Fire(f["x"], f["y"], self.fire_spreading)
             for f in self.fire_defs
         ]
@@ -426,14 +460,12 @@ class DataScene(BaseScene):
         ]
 
     def _get_spawn_position(self, spawn_name: str):
-        #Look up a spawn position for this scene, falling back to 'default'.
         scene_spawns = self.spawn_points.get(self.scene_name, {})
         return scene_spawns.get(spawn_name) or scene_spawns.get("default")
 
     def _place_player(self, spawn_name: str):
         if not self.player:
             return
-        
         pos = self._get_spawn_position(spawn_name)
         if pos:
             self.player.rect.topleft = tuple(pos)

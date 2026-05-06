@@ -77,7 +77,7 @@
         {"class": "Fire", "x": 400 , "y": 200},
         {"class": "Fire", "x": 900 , "y": 200},
         {"class": "Fire", "x": 900 , "y": 500},
-        { "class": "NPC", "x": 500, "y": 400 }
+        { "class": "NPC", "x": 500, "y": 200 }
       ],
       "interactions":[]
     },
@@ -92,8 +92,7 @@
         "draw_background": true,
         "objects": [
           { "class": "Car1", "x": 800, "y": 495},
-          { "class": "Fire", "x": 800, "y": 540},
-          { "class": "NPC", "x": 500, "y": 400 }
+          { "class": "Fire", "x": 800, "y": 540}
         ]
     },
     {
