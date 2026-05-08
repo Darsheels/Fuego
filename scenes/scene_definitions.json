@@ -51,12 +51,12 @@
       "fire_truck_alignment": "bottom",
       "draw_background": true,
       "objects": [
-        { "class": "House1", "x": 0, "y": -220 }
+        { "class": "House1", "x": 150, "y": -220 }
       ],
       "interactions": [{
           "name": "Break in",
           "text": "Press E to break in through the Door!!",
-          "zone": { "x": 300, "y": 520, "w": 100, "h": 100 },
+          "zone": { "x": 450, "y": 520, "w": 100, "h": 100 },
           "key": "K_e",
           "target_scene": "House1Int",
           "spawn_point": "entrance"
@@ -73,7 +73,7 @@
       "draw_background":false,
       "objects":[
         {"class": "House1Int" , "x": 0 , "y": 0},
-        {"class": "Ladder", "x": 530 , "y": 220 , "height": 102 },
+        {"class": "Ladder", "x": 530 , "y": 140 , "height": 90 },
         {"class": "Fire", "x": 400 , "y": 200},
         {"class": "Fire", "x": 900 , "y": 200},
         {"class": "Fire", "x": 900 , "y": 500},
@@ -104,13 +104,13 @@
       "fire_truck_alignment": "bottom",
       "draw_background": true,
       "objects": [
-        { "class": "Museum", "x": 200, "y": -60 }
+        { "class": "Museum", "x": 250, "y": -380 }
       ],
        "interactions": [
         {
           "name": "Break",
           "text": "Press E to break in through the Door!!",
-          "zone": { "x": 430, "y": 520, "w": 100, "h": 100 },
+          "zone": { "x": 800, "y": 520, "w": 100, "h": 100 },
           "key": "K_e",
           "target_scene": "MuseumInt",
           "spawn_point": "entrance"
@@ -129,11 +129,50 @@
         {"class": "MuseumInt", "x":0, "y":0},
         {"class": "Fire", "x": 800, "y": 500},
         {"class": "Fire", "x": 300, "y": 200},
+        {"class": "Fire", "x": 0, "y": 200},
         {"class": "Ladder","x": 800 , "y": 100 , "height": 130},
         { "class": "NPC", "x": 1000, "y": 100 }
       ]
-
+    },
+    {
+      "name": "FurnitureStore",
+      "use_player":true,
+      "player":"firefighter_geared",
+      "is_mission_scene": false,
+      "use_shared_fire_truck": true,
+      "fire_truck_alignment": "bottom",
+      "draw_background": true,
+      "objects": [
+        { "class": "FurnitureStore", "x": 400, "y": -280}
+      ],
+      "interactions": [
+        {
+          "name": "Break",
+          "text": "Press E to break in through the Door!!",
+          "zone": { "x": 900, "y": 520, "w": 100, "h": 100 },
+          "key": "K_e",
+          "target_scene": "FurnitureStoreInt",
+          "spawn_point": "default"
+        }
+      ]
+    },
+    {
+      "name": "FurnitureStoreInt",
+      "use_player": true,
+      "player":"firefighter_with_extinguisher",
+      "is_mission_scene": true,
+      "Fire_Spreading": true,
+      "use_shared_fire_truck":false,
+      "draw_background": false,
+      "objects": [
+        {"class": "FurnitureStoreInterior", "x":0, "y":0},
+        {"class": "Fire", "x": 800, "y": 500},
+        {"class": "Fire", "x": 300, "y": 200},
+        {"class": "Ladder","x": 800 , "y": 200 , "height": 80},
+        {"class": "NPC", "x": 100, "y": 170 }
+      ]
     }  
+
   ],
 
   "spawn_points": {
@@ -147,7 +186,7 @@
       "locker_room_entry": [100, 520]
     },
     "House1": {
-      "default": [800, 620]
+      "default": [-400, 620]
     },
     "House1Int": {
       "entrance": [80 , 620]
@@ -156,10 +195,16 @@
       "default": [20, 620]
     },
     "Museum": {
-      "default": [800,620]
+      "default": [-400,620]
     },
     "MuseumInt": {
       "entrance": [400,620]
+    },
+    "FurnitureStore": {
+      "default": [-400, 620]
+    },
+    "FurnitureStoreInt": {
+      "default": [1000,620]
     }  
   }
 }

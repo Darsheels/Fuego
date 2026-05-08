@@ -9,7 +9,7 @@ from entities.camera import Camera
 
 
 class Interaction:
-    """Replaces the raw prompt dict — easier to inspect in a debugger."""
+    #Replaces the raw prompt dict — easier to inspect in a debugger.
     def __init__(self, name, text, zone, key, target_scene, spawn_point):
         self.name        = name
         self.zone        = zone

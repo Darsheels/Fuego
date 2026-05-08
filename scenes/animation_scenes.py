@@ -15,20 +15,16 @@ class TruckCutsceneScene(BaseScene):
         self.duration = 5.0
         self.elapsed = 0.0
         self.scroll_x = 0.0
-        self.scroll_speed = 1
+        self.scroll_speed = 3
         
     def on_enter(self):
         self.elapsed = 0.0
         self.scroll_x = 0.0
-        # self.fire_truck.speed = 0
-        # self.fire_truck.image = self.fire_truck.image_right
         self.fire_truck.rect.topleft = (100, 270)
         
     def update(self, keys, dt):
         self.elapsed += dt
         self.scroll_x += self.scroll_speed * dt
-        # self.fire_truck.speed = 0
-        # self.fire_truck.rect.topleft = (100, 270)
         self.truck_anim.update()
         
         self.fire_truck.image = self.truck_anim.image

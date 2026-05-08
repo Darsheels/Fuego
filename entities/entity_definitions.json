@@ -32,9 +32,9 @@
     },
     {
       "name": "Museum",
-      "image_path": "assets/sprites/buildings/Museum.png",
+      "image_path": "assets/sprites/buildings/NewMuseum.png",
       "base_size": [256, 256],
-      "scale": 3
+      "scale": 5
     },
     {
       "name":"MuseumInt",
@@ -81,6 +81,18 @@
         "has_cooldown": true,
         "default_time_inside": 5
       }
+    },
+    {
+    "name": "FurnitureStore",
+    "image_path": "assets/sprites/buildings/FurnitureStore.png",
+    "base_size":[256,256],
+    "scale":4
+    },
+    {
+      "name": "FurnitureStoreInterior",
+      "image_path": "assets/sprites/buildings/FurnitureStoreInterior.png",
+      "base_size":[256,256],
+      "scale":5
     }
   ]
 }
