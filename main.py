@@ -7,6 +7,7 @@ from scenes.animation_scenes import  TruckCutsceneScene, TruckLeavingScene
 from entities.entity_factory import OBJECT_CLASSES
 from entities.PlayerSys import BasePlayer
 
+
 class Game:
     def __init__(self):
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -34,13 +35,14 @@ class Game:
         self.scene_manager = SceneManager(self)
         self.scene_manager.add("truck_cutscene", TruckCutsceneScene(self, self.fire_truck))
         self.scene_manager.add("truck_leaving", TruckLeavingScene(self))
+       
 
         definitions_path = Path(__file__).resolve().parent / "scenes" / "scene_definitions.json"
         scenes = build_scenes_from_definitions(definitions_path, self)
         for scene_name, scene in scenes.items():
             self.scene_manager.add(scene_name, scene)
 
-        self.mission_scenes = ["House1"]
+        self.mission_scenes = ["FurnitureStore","House1","Museum","CarCrashScene"]
 
         self.scene_manager.set("TruckApparatus")
 

@@ -7,8 +7,19 @@ RESCUE_RANGE   = 120   # px — how close the player must be to rescue
 PANIC_SPEED    = 1.2   # px/frame while wandering
 DIRECTION_HOLD = 60    # frames before picking a new wander direction
 
+NPC_TYPES = [
+    {
+        "walk": "assets/sprites/player/NewPlayer.png",
+        "idle": "assets/sprites/player/NewIdlePlayer.png"
+    }
+]
+
 class NPC:
     def __init__(self, x, y):
+        selected_NPC = random.choice(NPC_TYPES)
+        self.random_NPC = selected_NPC["walk"]
+        self.idle_NPC = selected_NPC["idle"]
+        
         self.rect = pygame.Rect(x, y, 32, 32)
         self.speed = PANIC_SPEED
         self.visible = True
@@ -28,10 +39,10 @@ class NPC:
         self.show_rescue_prompt = False
 
         self.walk_frames = load_sprite_sheet(
-            "assets/sprites/player/NewPlayer.png", 48, 96, scale=2
+            self.random_NPC, 48, 96, scale=2
         )
         self.idle_frames = load_sprite_sheet(
-            "assets/sprites/player/NewIdlePlayer.png", 48, 96, scale=2
+            self.idle_NPC, 48, 96, scale=2
         )
         self.walk_anim = Animation(self.walk_frames, speed=0.1)
         self.idle_anim = Animation(self.idle_frames, speed=0.1)
@@ -51,14 +62,14 @@ class NPC:
         self.rescued = True
         self.visible = False
 
-    def update(self, dt: float, screen_w: int, screen_h: int):
+    def update(self, dt, screen_w, screen_h):
         if self.rescued or not self.alive:
             return
         self.health_bar.update()
         self._update_wander(screen_w)
         self._update_animation()
 
-    def _update_wander(self, screen_w: int):
+    def _update_wander(self, screen_w):
         #Move left or right only; pick a new direction every DIRECTION_HOLD frames.
         self._dir_timer -= 1
         if self._dir_timer <= 0:
@@ -111,10 +122,10 @@ class NPC_manager:
     def __init__(self):
         self.NPCs: list[NPC] = []
 
-    def add_NPC(self, x: int, y: int):
+    def add_NPC(self, x, y):
         self.NPCs.append(NPC(x, y))
 
-    def update(self, dt: float, screen_w: int, screen_h: int,
+    def update(self, dt, screen_w, screen_h,
                fires=None, player=None, keys=None):
         fires = fires or []
 
@@ -144,7 +155,7 @@ class NPC_manager:
 
         self.NPCs = [n for n in self.NPCs if not n.rescued]
 
-    def draw(self, screen: pygame.Surface, camera=None):
+    def draw(self, screen, camera=None):
         for npc in self.NPCs:
             npc.draw(screen, camera)
 
