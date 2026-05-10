@@ -69,7 +69,6 @@ class BaseScene:
         self.has_pager = True
         self.pager = self.game.pager
 
-
     def update(self, keys, dt):
         self.fire_manager.update(dt)
 
@@ -77,6 +76,8 @@ class BaseScene:
         # fire damage, rescue prompts, and the R-key rescue all in one place.
         self.npc_manager.update(dt,screen_w=SCREEN_WIDTH,screen_h=SCREEN_HEIGHT,fires=self.fire_manager.fires,player=self.player if self.player and self.player.alive else None,keys=keys,)
 
+        self.__update_npc_movement(dt)
+        
         for obj in self.objects:
             if hasattr(obj, "update") and callable(obj.update):
                 obj.update(keys)
@@ -251,8 +252,22 @@ class BaseScene:
         self._check_mission_accomplished()
 
         return actor_rect
+    
+    def __update_npc_movement(self,dt):
+        for fire in self.fire_manager.fires:
+            for npc in self.npc_manager.NPCs:
+                if npc.rect.colliderect(fire.rect):
+                    dx = npc.rect.centerx - fire.rect.centerx
 
-  
+                    speed = 200 * dt
+                    
+                    if dx > 0:
+                        npc.rect.x += speed
+                        
+                    elif dx < 0:
+                        npc.rect.x -= speed
+                    
+            
     # Ladder
     def _update_ladder(self, keys, actor_rect):
         ladder_found = False
@@ -434,7 +449,7 @@ class DataScene(BaseScene):
         pager = self.game.pager
         if last_name:
             last = self.game.scene_manager.scenes[last_name]
-            if last.is_mission_scene and last.mission_accomplished:
+            if getattr(last, "is_mission_scene", False) and getattr(last, "mission_accomplished", False):
                 print("[pager] Mission complete — starting cooldown.")
                 pager.start_cooldown()
                 self.game.selected_mission = None

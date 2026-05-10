@@ -93,6 +93,12 @@
       "image_path": "assets/sprites/buildings/FurnitureStoreInterior.png",
       "base_size":[256,256],
       "scale":5
+    },
+    {
+      "name": "MenuBackground",
+      "image_path": "assets/sprites/buildingblocks/MainBackground.png",
+      "base_size": [256,256],
+      "scale":5
     }
   ]
 }

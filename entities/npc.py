@@ -95,7 +95,7 @@ class NPC:
 
         self.image = frame if self._facing_right else pygame.transform.flip(frame, True, False)
 
-    def draw(self, surface: pygame.Surface, camera=None):
+    def draw(self, surface, camera=None):
         if not self.visible:
             return
 

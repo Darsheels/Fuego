@@ -1,9 +1,6 @@
-import pygame
 from entities.Scenes import BaseScene
-from settings import SCREEN_WIDTH, SCREEN_HEIGHT
+from settings import SCREEN_WIDTH
 from entities.animation import load_sprite_sheet, Animation
-from entities.entity import Entity
-from entities.Fire import Fire
 
 class TruckCutsceneScene(BaseScene):
     def __init__(self, game,truck): 
