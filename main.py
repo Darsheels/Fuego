@@ -7,7 +7,6 @@ from scenes.animation_scenes import  TruckCutsceneScene, TruckLeavingScene
 from entities.entity_factory import OBJECT_CLASSES
 from entities.PlayerSys import BasePlayer
 from UI.MainMenu import MainMenu
-    
 
 class Game:
     def __init__(self):
@@ -51,6 +50,11 @@ class Game:
         self.background = pygame.image.load("assets/sprites/buildingblocks/Background.png").convert_alpha()
         self.background = pygame.transform.scale(self.background, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
+        self.cursor_img = pygame.image.load("assets/sprites/buildingblocks/MousePointer.png")
+        self.cursor_rect = self.cursor_img.get_rect()
+
+        pygame.mouse.set_visible(False)
+        
     def run(self):
         while self.running:
             keys = pygame.key.get_pressed()
@@ -58,6 +62,9 @@ class Game:
             dt = self.clock.tick(60) / 1000
             self.scene_manager.update(keys, dt)
             self.scene_manager.draw(self.screen)
+            
+            self.cursor_rect.center = pygame.mouse.get_pos()
+            self.screen.blit(self.cursor_img, self.cursor_rect)
             
             if self.fade_state == "fading_out":
                 self.fade_alpha += self.fade_speed * dt
