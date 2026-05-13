@@ -2,7 +2,6 @@ import pygame
 import math
 from entities.animation import load_sprite_sheet , Animation
 from entities.entity import Entity
-from entities.entity_factory import  OBJECT_CLASSES
 from settings import SCREEN_WIDTH , SCREEN_HEIGHT
 from entities.healthbar import HealthBar
 
@@ -169,9 +168,8 @@ class BasePlayer(pygame.sprite.Sprite):
     def update_extinguisher_logic(self):
         if not self.extinguisher_appear:
             self.extinguisher_active = False
-            return
         
-        mouse_x , mouse_y = pygame.mouse.get_pos()  
+        mouse_x,mouse_y = self.game.mouse_game_pos()
         self.facing_right = mouse_x >= self.rect.centerx
         
         mouse_buttons = pygame.mouse.get_pressed()

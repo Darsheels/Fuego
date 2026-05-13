@@ -4,17 +4,19 @@ from settings import SCREEN_HEIGHT,SCREEN_WIDTH
 
 class MainMenu:
     def __init__(self,game):
+        self.game = game
+            
         self.play_img = pygame.image.load("assets/sprites/buildingblocks/PlayButton.png").convert_alpha()
         self.exit_img = pygame.image.load("assets/sprites/buildingblocks/ExitButton.png").convert_alpha()
         self.background = pygame.image.load("assets/sprites/buildingblocks/MainBackground.png").convert_alpha()
         self.background = pygame.transform.scale(self.background, (SCREEN_WIDTH, SCREEN_HEIGHT))
         
-        self.game = game
-        self.play_button = Button(100,300,self.play_img,self.start_game,scale=2)
-        self.exit_button = Button(100,400,self.exit_img,self.quit_game,scale=2)
-        
-        self.buttons = [self.play_button,self.exit_button]    
-        
+     
+        self.play_button = Button(SCREEN_WIDTH // 2 - self.play_img.get_width() // 2, 300, self.play_img, self.start_game, scale=2)
+        self.exit_button = Button(SCREEN_WIDTH // 2 - self.exit_img.get_width() // 2, 400, self.exit_img, self.quit_game, scale=2)
+
+        self.buttons = [self.play_button, self.exit_button]
+
     def on_enter(self):
         pass
     
@@ -26,7 +28,7 @@ class MainMenu:
         self.game.running = False
     
     def update(self,keys,dt):
-        mouse_pos = pygame.mouse.get_pos()
+        mouse_pos = self.game.mouse_game_pos()
         mouse_clicked = pygame.mouse.get_pressed()[0]
         
         for button in self.buttons:

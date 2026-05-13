@@ -2,14 +2,7 @@ import pygame
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT
 
 class Camera:
-    def __init__(
-        self,
-        world_width: int  = SCREEN_WIDTH,
-        world_height: int = SCREEN_HEIGHT,
-        lerp_speed: float = 6.0,
-        deadzone_x: int   = 80,
-        deadzone_y: int   = 50,
-    ):
+    def __init__(self,world_width  = SCREEN_WIDTH,world_height = SCREEN_HEIGHT,lerp_speed = 6.0,deadzone_x = 80,deadzone_y = 50):
    
         self.world_width  = world_width
         self.world_height = world_height
@@ -53,13 +46,13 @@ class Camera:
         self._clamp()
 
     def _clamp(self):
-        """Prevent the camera from scrolling outside world bounds."""
+        #Prevent the camera from scrolling outside world bounds.
         self.offset.x = max(0, min(self.offset.x, self.world_width  - SCREEN_WIDTH))
         self.offset.y = max(0, min(self.offset.y, self.world_height - SCREEN_HEIGHT))
 
     # Coordinate helpers
     def apply(self, rect: pygame.Rect) -> pygame.Rect:
-        """Return a new Rect shifted into screen space."""
+        #Return a new Rect shifted into screen space.
         return pygame.Rect(
             rect.x - int(self.offset.x),
             rect.y - int(self.offset.y),

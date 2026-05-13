@@ -169,11 +169,6 @@ class BaseScene:
             self.game.scene_manager.set("TruckApparatus")
 
     def _check_mission_accomplished(self):
-        #       Mission is complete when:
-        #   - All fires are extinguished, AND
-        #   - All NPCs have been rescued (npc_manager list is empty because
-        #     rescued NPCs are pruned immediately).
-        
         if not self.is_mission_scene:
             return
         if self.mission_accomplished or self.mission_failed:
@@ -185,9 +180,7 @@ class BaseScene:
             self.mission_popup_timer  = 2.5
 
     
-    # Mission selection
-    def _select_mission(self):
-        #Pick a random mission when the pager fires on the TruckApparatus scene.
+    def _select_mission(self):  
         if self.scene_name != "TruckApparatus":
             return
         if not self.game.pager.pager_triggered:
