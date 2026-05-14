@@ -1,6 +1,5 @@
 import pygame
 from pathlib import Path
-from settings import SCREEN_HEIGHT, SCREEN_WIDTH
 from entities.scene_manager import SceneManager
 from entities.scene_factory import build_scenes_from_definitions
 from scenes.animation_scenes import TruckCutsceneScene, TruckLeavingScene
@@ -11,7 +10,7 @@ from UI.MainMenu import MainMenu
 
 class Game:
     def __init__(self):
-        self.screen = pygame.display.set_mode((0, 0), pygame.NOFRAME)
+        self.screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
         pygame.display.set_caption("Fuego")
         self.clock   = pygame.time.Clock()
         self.running = True
@@ -37,7 +36,6 @@ class Game:
         self.fade_surface      = pygame.Surface((self.base_w, self.base_h))
         self.fade_surface.fill((0, 0, 0))
 
-    
         self.fire_truck = OBJECT_CLASSES["DefaultTruck"](100, 250)
         self.pager      = OBJECT_CLASSES["Pager"](1000, 500)
         self.player     = BasePlayer(self, 400, 480, "firefighter_no_gear")
@@ -70,7 +68,10 @@ class Game:
         scaled_h       = int(self.base_h * self._scale)
         self._offset_x = (win_w - scaled_w) // 2
         self._offset_y = (win_h - scaled_h) // 2
-
+        print("display", win_w, win_h, "scale", self._scale,
+          "scaled", scaled_w, scaled_h,
+          "offset", self._offset_x, self._offset_y)
+        
     def mouse_game_pos(self) :
         mx, my = pygame.mouse.get_pos()
         gx = int((mx - self._offset_x) / self._scale)
