@@ -61,11 +61,9 @@ class Camera:
         )
 
     def apply_entity(self, entity) -> pygame.Rect:
-        #Convenience wrapper for objects that have a .rect attribute.
         return self.apply(entity.rect)
 
     def apply_pos(self, x: float, y: float) -> tuple[float, float]:
-        #Convert a raw world (x, y) to screen coordinates
         return x - self.offset.x, y - self.offset.y
 
     def world_to_screen(self, pos: pygame.Vector2) -> pygame.Vector2:

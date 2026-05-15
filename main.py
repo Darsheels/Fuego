@@ -6,6 +6,7 @@ from scenes.animation_scenes import TruckCutsceneScene, TruckLeavingScene
 from entities.entity_factory import OBJECT_CLASSES
 from entities.PlayerSys import BasePlayer
 from UI.MainMenu import MainMenu
+from entities.smokeParticles import SmokeManager
 
 
 class Game:
@@ -27,7 +28,7 @@ class Game:
         self._scale    = 1.0
         self._offset_x = 0
         self._offset_y = 0
-        self._recompute_scale()
+        self.recompute_scale()
 
         self.fade_state        = "none"  
         self.fade_alpha        = 0
@@ -39,6 +40,7 @@ class Game:
         self.fire_truck = OBJECT_CLASSES["DefaultTruck"](100, 250)
         self.pager      = OBJECT_CLASSES["Pager"](1000, 500)
         self.player     = BasePlayer(self, 400, 480, "firefighter_no_gear")
+        self.smoke = SmokeManager()
 
         self.scene_manager = SceneManager(self)
         self.scene_manager.add("truck_cutscene", TruckCutsceneScene(self, self.fire_truck))
@@ -61,18 +63,15 @@ class Game:
 
         pygame.mouse.set_visible(False)
 
-    def _recompute_scale(self):
+    def recompute_scale(self):
         win_w, win_h   = self.screen.get_size()
         self._scale    = min(win_w / self.base_w, win_h / self.base_h)
         scaled_w       = int(self.base_w * self._scale)
         scaled_h       = int(self.base_h * self._scale)
         self._offset_x = (win_w - scaled_w) // 2
         self._offset_y = (win_h - scaled_h) // 2
-        print("display", win_w, win_h, "scale", self._scale,
-          "scaled", scaled_w, scaled_h,
-          "offset", self._offset_x, self._offset_y)
         
-    def mouse_game_pos(self) :
+    def mouse_game_pos(self):
         mx, my = pygame.mouse.get_pos()
         gx = int((mx - self._offset_x) / self._scale)
         gy = int((my - self._offset_y) / self._scale)
@@ -91,7 +90,7 @@ class Game:
             self.game_surface.fill((0, 0, 0))
             self.scene_manager.draw(self.game_surface)
         
-            self._update_fade(dt)
+            self.update_fade(dt)
             if self.fade_state != "none":
                 self.fade_surface.set_alpha(int(self.fade_alpha))
                 self.game_surface.blit(self.fade_surface, (0, 0))
@@ -109,7 +108,7 @@ class Game:
 
             pygame.display.flip()
 
-    def _update_fade(self, dt: float):
+    def update_fade(self, dt):
         if self.fade_state == "fading_out":
             self.fade_alpha += self.fade_speed * dt
             if self.fade_alpha >= 255:
@@ -130,7 +129,7 @@ class Game:
             if event.type == pygame.QUIT:
                 self.running = False
             elif event.type == pygame.VIDEORESIZE:
-                self._recompute_scale()
+                self.recompute_scale()
 
 
 def main():

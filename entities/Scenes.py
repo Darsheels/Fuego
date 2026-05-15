@@ -4,12 +4,12 @@ from settings import SCREEN_WIDTH, SCREEN_HEIGHT
 from entities.UI_prompt import UIPrompt
 from entities.entity_factory import OBJECT_CLASSES
 from entities.Fire import Fire, Fire_manager
+from entities.smokeParticles import SmokeManager
 from entities.npc import NPC, NPC_manager
 from entities.camera import Camera
 
 
 class Interaction:
-    #Replaces the raw prompt dict — easier to inspect in a debugger.
     def __init__(self, name, text, zone, key, target_scene, spawn_point):
         self.name        = name
         self.zone        = zone
@@ -71,9 +71,6 @@ class BaseScene:
 
     def update(self, keys, dt):
         self.fire_manager.update(dt)
-
-        # NPC manager: pass fires, player, and keys so it can handle
-        # fire damage, rescue prompts, and the R-key rescue all in one place.
         self.npc_manager.update(dt,screen_w=SCREEN_WIDTH,screen_h=SCREEN_HEIGHT,fires=self.fire_manager.fires,player=self.player if self.player and self.player.alive else None,keys=keys,)
 
         self.__update_npc_movement(dt)
@@ -131,22 +128,18 @@ class BaseScene:
 
         self._draw_mission_overlay(screen)
 
-  
-    # Mission failure / success
     def _check_mission_failure(self, dt):
-     #Trigger mission failure when a fire burns out, an NPC dies, or the player dies.
+     
         if not self.is_mission_scene:
             return
         if self.mission_accomplished or self.mission_failed:
             return
-
-        # Fire failure (non-spreading fires that timed out)
+        
         for fire in self.fire_manager.fires:
             if not fire.can_spread and fire.has_failed():
                 self._fail_mission()
                 return
 
-        # NPC failure — any NPC that is dead (health == 0) and not rescued
         for npc in self.npc_manager.NPCs:
             if not npc.alive:
                 self._fail_mission()
@@ -161,7 +154,7 @@ class BaseScene:
         self.mission_popup_timer = 2.5
         self.game.selected_mission = None
 
-    def _tick_mission_popup(self, dt, *, failed: bool):
+    def _tick_mission_popup(self, dt, failed):
         #Count down the result banner then return to base.
         self.mission_popup_timer -= dt
         if self.mission_popup_timer <= 0:

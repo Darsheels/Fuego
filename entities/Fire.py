@@ -2,6 +2,7 @@ import pygame
 import random
 from entities.animation import load_sprite_sheet , Animation
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT
+from entities.smokeParticles import SmokeManager
 
 class Fire(pygame.sprite.Sprite):
     def __init__(self,x,y, can_spread=True):
@@ -20,10 +21,20 @@ class Fire(pygame.sprite.Sprite):
         self.spread_timer = 0
         self.spread_delay = 4
         self.can_spread = can_spread
+        
+        self.smoke_manager = SmokeManager()
+        self.smoke_timer = 0
+        self.smoke_delay = 0.1
     
     def update(self,dt):
+        self.smoke_manager.update()
         if self.extinguished:
             return
+        
+        self.smoke_timer += dt
+        if self.smoke_timer >= self.smoke_delay:
+            self.smoke_manager.add_smoke(self.rect.x, self.rect.y - 10)
+            self.smoke_timer = 0
         
         self.FireAnimation.update()
         self.image = self.FireAnimation.image
@@ -67,7 +78,7 @@ class Fire_manager:
         new_fires = []
         for fire in self.fires:
             if not fire.extinguished and fire.can_spread and fire.spread_timer >= fire.spread_delay:
-               if random.random() < 0.02:
+               if fire.spread_timer >= fire.spread_delay:
                     nx = fire.rect.x + random.choice([-40,40])
                     ny = fire.rect.y + random.choice([-40,40])
                     if 0 <= nx <= SCREEN_WIDTH - 48 and 0 <= ny <= SCREEN_HEIGHT - 64:
@@ -78,5 +89,6 @@ class Fire_manager:
         
     def draw(self,screen,camera=None):
         for fire in self.fires:
-               pos = camera.apply(fire.rect) if camera else fire.rect
-               screen.blit(fire.image, pos)
+            fire.smoke_manager.draw(screen)
+            pos = camera.apply(fire.rect) if camera else fire.rect
+            screen.blit(fire.image, pos)
