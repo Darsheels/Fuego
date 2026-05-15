@@ -4,7 +4,6 @@ from settings import SCREEN_WIDTH, SCREEN_HEIGHT
 from entities.UI_prompt import UIPrompt
 from entities.entity_factory import OBJECT_CLASSES
 from entities.Fire import Fire, Fire_manager
-from entities.smokeParticles import SmokeManager
 from entities.npc import NPC, NPC_manager
 from entities.camera import Camera
 
@@ -21,7 +20,6 @@ class Interaction:
 
     def __repr__(self):
         return f"<Interaction '{self.name}' → '{self.target}'>"
-
 
 class BaseScene:
     def __init__(self, game, player=None, fire_truck=None, pager=None):
@@ -244,17 +242,13 @@ class BaseScene:
             for npc in self.npc_manager.NPCs:
                 if npc.rect.colliderect(fire.rect):
                     dx = npc.rect.centerx - fire.rect.centerx
-
                     speed = 200 * dt
                     
                     if dx > 0:
                         npc.rect.x += speed
-                        
                     elif dx < 0:
                         npc.rect.x -= speed
                     
-            
-    # Ladder
     def _update_ladder(self, keys, actor_rect):
         ladder_found = False
 

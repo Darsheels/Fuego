@@ -6,17 +6,15 @@ from settings import SCREEN_HEIGHT,SCREEN_WIDTH
 class MainMenu:
     def __init__(self,game):
         self.game = game
-            
         self.play_img = pygame.image.load("assets/sprites/buildingblocks/PlayButton.png").convert_alpha()
         self.exit_img = pygame.image.load("assets/sprites/buildingblocks/ExitButton.png").convert_alpha()
         self.background = pygame.image.load("assets/sprites/buildingblocks/MainBackground.png").convert_alpha()
         self.background = pygame.transform.scale(self.background, (SCREEN_WIDTH, SCREEN_HEIGHT))
         
-        self.play_button = Button(SCREEN_WIDTH *0.13, 300, self.play_img, self.start_game, scale=1.5)
-        self.exit_button = Button(SCREEN_WIDTH *0.13, 400, self.exit_img, self.quit_game, scale=1.5)
+        self.play_button = Button(SCREEN_WIDTH *0.13, 300, self.game, self.play_img, self.start_game, scale=1.5)
+        self.exit_button = Button(SCREEN_WIDTH *0.13, 400, self.game, self.exit_img, self.quit_game, scale=1.5)
 
         self.buttons = [self.play_button, self.exit_button]
-        
         self.smoke_timer = 0
         
     def on_enter(self):
@@ -36,21 +34,11 @@ class MainMenu:
         if self.smoke_timer > 0.05:
             self.game.smoke.add_smoke(random.randint(0, SCREEN_WIDTH), SCREEN_HEIGHT - 10)
             self.smoke_timer = 0
-            
-        mouse_pos = self.game.mouse_game_pos()
-        mouse_clicked = pygame.mouse.get_pressed()[0]
-        self.update_hovered()
-        
-        for button in self.buttons:
-            button.update(mouse_pos,mouse_clicked)
-    
-    def update_hovered(self):
-        for button in self.buttons:
-            if button.hovered:
-                button.image.set_alpha(128)
-            else:                
-                button.image.set_alpha(255)
-    
+
+        for event in pygame.event.get():
+            for button in self.buttons:
+                button.update(event)
+                
     def draw(self, screen):
         screen.blit(self.background, (0, 0))
         self.game.smoke.draw(screen)

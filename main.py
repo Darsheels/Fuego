@@ -7,7 +7,8 @@ from entities.entity_factory import OBJECT_CLASSES
 from entities.PlayerSys import BasePlayer
 from UI.MainMenu import MainMenu
 from entities.smokeParticles import SmokeManager
-
+from UI.button import Button
+from settings import SCREEN_HEIGHT, SCREEN_WIDTH
 
 class Game:
     def __init__(self):
@@ -15,6 +16,7 @@ class Game:
         pygame.display.set_caption("Fuego")
         self.clock   = pygame.time.Clock()
         self.running = True
+        self.paused  = False
 
         self.next_spawn  = None
         self.last_scene  = None
@@ -52,12 +54,18 @@ class Game:
         for scene_name, scene in scenes.items():
             self.scene_manager.add(scene_name, scene)
 
-        self.mission_scenes = ["FurnitureStore", "House1", "Museum", "CarCrashScene"]
+        self.mission_scenes = ["CarCrashScene","FurnitureStore","House1","Museum",]
         self.scene_manager.set("MainMenu")
 
         self.background = pygame.image.load("assets/sprites/buildingblocks/Background.png").convert_alpha()
         self.background = pygame.transform.scale(self.background, (self.base_w, self.base_h))
 
+        self.exit_img = pygame.image.load("assets/sprites/buildingblocks/LeaveButton.png").convert_alpha()
+        self.pause_img = pygame.image.load("assets/sprites/buildingblocks/PauseButton.png").convert_alpha()
+        self.exit_button = Button(SCREEN_WIDTH *0.02, 40, self , self.exit_img, self.quit_game, scale=0.8)
+        self.pause_button = Button(SCREEN_WIDTH *0.02, 110, self , self.pause_img, self.toggle_pause, scale=0.8)
+        self.buttons = [self.exit_button, self.pause_button]
+        
         self.cursor_img  = pygame.image.load("assets/sprites/buildingblocks/MousePointer.png")
         self.cursor_rect = self.cursor_img.get_rect()
 
@@ -85,7 +93,8 @@ class Game:
             self.handle_events()
             dt = self.clock.tick(60) / 1000
 
-            self.scene_manager.update(keys, dt)
+            if not self.paused:
+                self.scene_manager.update(keys, dt)
        
             self.game_surface.fill((0, 0, 0))
             self.scene_manager.draw(self.game_surface)
@@ -105,7 +114,21 @@ class Game:
             mx, my = pygame.mouse.get_pos()
             self.cursor_rect.center = (mx, my)
             self.screen.blit(self.cursor_img, self.cursor_rect)
-
+            
+            for button in self.buttons:
+                if self.scene_manager.current_name != "MainMenu":   
+                    button.draw(self.screen)
+       
+            if self.paused:
+                overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+                overlay.set_alpha(120)
+                overlay.fill((0, 0, 0))
+                self.screen.blit(overlay, (0, 0))
+                font = pygame.font.SysFont("arial", 60, bold=True)
+                text = font.render("PAUSED", True, (255, 255, 255))
+                text_rect = text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+                self.screen.blit(text, text_rect)
+                    
             pygame.display.flip()
 
     def update_fade(self, dt):
@@ -124,13 +147,26 @@ class Game:
                 self.fade_alpha = 0
                 self.fade_state = "none"
 
+    def quit_game(self):
+        self.running = False
+    
+    def toggle_pause(self):
+        self.paused = not self.paused
+    
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
             elif event.type == pygame.VIDEORESIZE:
                 self.recompute_scale()
-
+            if self.scene_manager.current_name != "MainMenu":
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_ESCAPE:
+                            self.paused = not self.paused
+            for button in self.buttons:
+                if self.scene_manager.current_name != "MainMenu":   
+                    button.update(event)
+               
 
 def main():
     pygame.init()
