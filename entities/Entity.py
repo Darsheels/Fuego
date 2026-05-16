@@ -2,7 +2,8 @@ import pygame
 from settings import GLOBAL_SCALE
 
 class Entity:
-    def __init__(self, image_path=None, base_size=None, x=0, y=0, scale=None):
+    def __init__(self, image_path=None, base_size=None, x=0, y=0, scale=None,game=None):
+        self.game = game
         self.image_path = image_path
         self.base_size = base_size
         self.scale = GLOBAL_SCALE if scale is None else scale

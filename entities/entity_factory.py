@@ -1,37 +1,31 @@
 import json
 import pygame
 from pathlib import Path
-from entities.entity import Entity
-from entities.npc import NPC
+from entities.Entity import Entity
 
-# Load definitions
-_DEFINITIONS_PATH = Path(__file__).resolve().parent / "entity_definitions.json"
+DEFINITIONS_PATH = Path(__file__).resolve().parent / "entity_definitions.json"
 
-def _load_definitions(path: Path) -> list[dict]:
+def load_definitions(path: Path) -> list[dict]:
     with path.open("r", encoding="utf-8") as fh:
         return json.load(fh)["entities"]
 
-# Class builders
-def _make_standard_class(defn: dict) -> type:
-    """Return a plain Entity subclass for a standard (non-special) entity."""
+def make_standard_class(defn: dict) -> type:
     image_path = defn["image_path"]
     base_size  = tuple(defn["base_size"]) if defn["base_size"] else None
     scale      = defn.get("scale")        
 
-    def __init__(self, x: int, y: int):
-        Entity.__init__(self, image_path, base_size, x, y, scale=scale)
+    def __init__(self,x,y,game=None):
+        Entity.__init__(self, image_path, base_size, x, y, scale=scale, game=game)
 
     return type(defn["name"], (Entity,), {"__init__": __init__})
 
-
-def _make_flip_class(defn: dict) -> type:
-   #  Entity that also stores a left-facing flipped image. Used by DefaultTruck (and anything else with extras.flip_x == true).
+def make_flip_class(defn: dict) -> type:
     image_path = defn["image_path"]
     base_size  = tuple(defn["base_size"]) if defn["base_size"] else None
     scale      = defn.get("scale")
 
-    def __init__(self, x: int, y: int):
-        Entity.__init__(self, image_path, base_size, x, y, scale=scale)
+    def __init__(self,x,y,game=None):
+        Entity.__init__(self, image_path, base_size, x, y, scale=scale, game=game)
         self.image_right = self.image
         self.image_left  = pygame.transform.flip(self.image_right, True, False)
         self.image       = self.image_right
@@ -41,43 +35,41 @@ def _make_flip_class(defn: dict) -> type:
 
     return type(defn["name"], (Entity,), {"__init__": __init__, "update": update})
 
-
-def _make_ladder_class(defn: dict) -> type:
-    #Ladder takes an extra `height` argument and exposes a `zone` rect.
+def make_ladder_class(defn: dict) -> type:
     image_path = defn["image_path"]
-    scale      = defn.get("scale", 5)
+    scale = defn.get("scale", 5)
 
-    def __init__(self, x: int, y: int, height: int = 200):
+    def __init__(self,x,y,height = 200,game=None):
         base_size = (64, height)
-        Entity.__init__(self, image_path, base_size, x, y, scale=scale)
+        Entity.__init__(self, image_path, base_size, x, y, scale=scale, game=game)
         self.zone = self.rect.copy()
 
     return type(defn["name"], (Entity,), {"__init__": __init__})
 
+def make_pager_class(defn: dict) -> type:
+    image_path = defn["image_path"]
+    base_size = tuple(defn["base_size"]) if defn["base_size"] else None
+    scale = defn.get("scale", 1)
+    default_time = defn.get("extras", {}).get("default_time_inside", 5)
 
-def _make_pager_class(defn: dict) -> type:
-    #Pager has cooldown logic and only draws when triggered.
-    image_path        = defn["image_path"]
-    base_size         = tuple(defn["base_size"]) if defn["base_size"] else None
-    scale             = defn.get("scale", 1)
-    default_time      = defn.get("extras", {}).get("default_time_inside", 5)
-
-    def __init__(self, x: int, y: int):
-        Entity.__init__(self, image_path, base_size, x, y, scale=scale)
-        self.time_inside      = default_time
+    def __init__(self,x,y,game=None):
+        Entity.__init__(self, image_path, base_size, x, y, scale=scale, game=game)
+        self.time_inside = default_time
         self.pager_triggered  = False
 
     def start_cooldown(self):
         self.time_inside     = default_time
         self.pager_triggered = False
 
-    def update(self, dt: float):
+    def update(self, dt):
         if not self.pager_triggered:
             self.time_inside -= dt
             if self.time_inside <= 0:
                 self.trigger()
 
     def trigger(self):
+        self.game.sound_manager.stop_sound("FireCrackle")
+        self.game.sound_manager.play_sound("PagerBeep")
         self.pager_triggered = True
 
     def draw(self, screen):
@@ -95,33 +87,28 @@ def _make_pager_class(defn: dict) -> type:
             "draw":          draw,
         },
     )
-    
-# Router: pick the right builder for each definition
 
-def _build_class(defn: dict) -> type:
+def build_class(defn: dict) -> type:
     extras = defn.get("extras", {})
 
     if extras.get("variable_height"):
-        return _make_ladder_class(defn)
+        return make_ladder_class(defn)
 
     if extras.get("has_cooldown"):
-        return _make_pager_class(defn)
+        return make_pager_class(defn)
 
     if extras.get("flip_x"):
-        return _make_flip_class(defn)
+        return make_flip_class(defn)
 
-    return _make_standard_class(defn)
+    return make_standard_class(defn)
 
-# Public registry — built once at import time
-
-def build_object_classes(path: Path = _DEFINITIONS_PATH) -> dict[str, type]:
+def build_object_classes(path: Path = DEFINITIONS_PATH) -> dict[str, type]:
 
     classes: dict[str, type] = {}
-    for defn in _load_definitions(path):
-        cls = _build_class(defn)
+    for defn in load_definitions(path):
+        cls = build_class(defn)
         classes[defn["name"]] = cls
     return classes
 
 
 OBJECT_CLASSES: dict[str, type] = build_object_classes()
-

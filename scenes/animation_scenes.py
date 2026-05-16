@@ -4,7 +4,7 @@ from entities.animation import load_sprite_sheet, Animation
 
 class TruckCutsceneScene(BaseScene):
     def __init__(self, game,truck): 
-        super().__init__(game, None )#truck
+        super().__init__(game, None )
         self.fire_truck = truck
         self.truck_frames = load_sprite_sheet("assets/sprites/vehicles/TruckMovingAnim.png", 92,64,scale=8)
         self.truck_anim = Animation(self.truck_frames, speed=0.05)
@@ -13,11 +13,13 @@ class TruckCutsceneScene(BaseScene):
         self.elapsed = 0.0
         self.scroll_x = 0.0
         self.scroll_speed = 3
-        
+
     def on_enter(self):
         self.elapsed = 0.0
         self.scroll_x = 0.0
         self.fire_truck.rect.topleft = (100, 270)
+        
+      
         
     def update(self, keys, dt):
         self.elapsed += dt
@@ -43,11 +45,17 @@ class TruckLeavingScene(BaseScene):
         self.animation = Animation(self.opening_scene, speed=0.01)
         self.duration = 8.0
         self.elapsed = 0.0
+        
+   
     
     def on_enter(self):
         self.elapsed = 0.0
        
     def update(self, keys, dt):
+        if self.game.scene_manager.current_name == "truck_leaving":
+            self.game.sound_manager.play_sound("TruckEngine")
+            self.game.sound_manager.play_sound("GarageOpen")
+        
         self.elapsed += dt
         self.animation.update() 
        

@@ -9,7 +9,7 @@ def load_scene_definitions(path):
         definitions = json.load(handle)
     return definitions
 
-def _build_object(obj_def):
+def build_object(obj_def, game=None):
     obj_type = obj_def.get("class")
     if obj_type not in OBJECT_CLASSES:
         raise ValueError(f"Unknown object class in scene definition: {obj_type}")
@@ -19,15 +19,16 @@ def _build_object(obj_def):
             obj_def.get("x", 0),
             obj_def.get("y", 0),
             obj_def.get("height", 200),
+            game=game,
         )
 
-    return OBJECT_CLASSES[obj_type](obj_def.get("x", 0), obj_def.get("y", 0))
+    return OBJECT_CLASSES[obj_type](obj_def.get("x", 0), obj_def.get("y", 0), game=game)
 
-def _build_zone(zone_def):
+def build_zone(zone_def):
     return pygame.Rect(zone_def["x"], zone_def["y"], zone_def["w"], zone_def["h"])
 
 
-def _get_key(key_name):
+def get_key(key_name):
     if not hasattr(pygame, key_name):
         raise ValueError(f"Unknown pygame key constant: {key_name}")
     return getattr(pygame, key_name)
@@ -38,7 +39,7 @@ def build_scene(scene_def, game):
         if obj_def.get("class") != "Fire"
         if obj_def.get("class") != "NPC"
     ]
-    objects = [_build_object(obj_def) for obj_def in regular_objects]
+    objects = [build_object(obj_def, game) for obj_def in regular_objects]
 
     scene = DataScene(
         game=game,
@@ -76,8 +77,8 @@ def build_scene(scene_def, game):
         scene.add_interaction(
             interaction["name"],
             interaction["text"],
-            zone=_build_zone(interaction["zone"]),
-            key=_get_key(interaction["key"]),
+            zone=build_zone(interaction["zone"]),
+            key=get_key(interaction["key"]),
             target_scene=interaction["target_scene"],
             spawn_point=interaction["spawn_point"],
         )

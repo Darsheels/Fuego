@@ -9,6 +9,7 @@ from UI.MainMenu import MainMenu
 from entities.smokeParticles import SmokeManager
 from UI.button import Button
 from settings import SCREEN_HEIGHT, SCREEN_WIDTH
+from audio.SoundManager import SoundManager
 
 class Game:
     def __init__(self):
@@ -40,9 +41,10 @@ class Game:
         self.fade_surface.fill((0, 0, 0))
 
         self.fire_truck = OBJECT_CLASSES["DefaultTruck"](100, 250)
-        self.pager      = OBJECT_CLASSES["Pager"](1000, 500)
+        self.pager      = OBJECT_CLASSES["Pager"](1000, 500, game=self)
         self.player     = BasePlayer(self, 400, 480, "firefighter_no_gear")
         self.smoke = SmokeManager()
+        self.sound_manager = SoundManager()
 
         self.scene_manager = SceneManager(self)
         self.scene_manager.add("truck_cutscene", TruckCutsceneScene(self, self.fire_truck))
@@ -66,6 +68,7 @@ class Game:
         self.pause_button = Button(SCREEN_WIDTH *0.02, 110, self , self.pause_img, self.toggle_pause, scale=0.8)
         self.buttons = [self.exit_button, self.pause_button]
         
+
         self.cursor_img  = pygame.image.load("assets/sprites/buildingblocks/MousePointer.png")
         self.cursor_rect = self.cursor_img.get_rect()
 
@@ -167,9 +170,9 @@ class Game:
                 if self.scene_manager.current_name != "MainMenu":   
                     button.update(event)
                
-
 def main():
     pygame.init()
+    pygame.mixer.init() 
     game = Game()
     game.run()
     pygame.quit()

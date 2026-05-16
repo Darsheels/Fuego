@@ -1,7 +1,7 @@
 import pygame
 import math
 from entities.animation import load_sprite_sheet , Animation
-from entities.entity import Entity
+from entities.Entity import Entity
 from settings import SCREEN_WIDTH , SCREEN_HEIGHT
 from entities.healthbar import HealthBar
 

@@ -11,6 +11,9 @@ class MainMenu:
         self.background = pygame.image.load("assets/sprites/buildingblocks/MainBackground.png").convert_alpha()
         self.background = pygame.transform.scale(self.background, (SCREEN_WIDTH, SCREEN_HEIGHT))
         
+        self.game.sound_manager.play_sound("BackgroundMusic")
+        self.game.sound_manager.play_sound("FireCrackle")
+        
         self.play_button = Button(SCREEN_WIDTH *0.13, 300, self.game, self.play_img, self.start_game, scale=1.5)
         self.exit_button = Button(SCREEN_WIDTH *0.13, 400, self.game, self.exit_img, self.quit_game, scale=1.5)
 
