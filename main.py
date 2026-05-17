@@ -64,7 +64,7 @@ class Game:
 
         self.exit_img = pygame.image.load("assets/sprites/buildingblocks/LeaveButton.png").convert_alpha()
         self.pause_img = pygame.image.load("assets/sprites/buildingblocks/PauseButton.png").convert_alpha()
-        self.exit_button = Button(SCREEN_WIDTH *0.02, 40, self , self.exit_img, self.open_exit_menu, scale=0.8)
+        self.exit_button = Button(SCREEN_WIDTH *0.02, 40, self , self.exit_img, self.toggle_exit_menu, scale=0.8)
         self.pause_button = Button(SCREEN_WIDTH *0.02, 110, self , self.pause_img, self.toggle_pause, scale=0.8)
         self.buttons = [self.exit_button, self.pause_button]
         
@@ -103,6 +103,9 @@ class Game:
     
     def open_exit_menu(self):
         self.show_exit_menu = True
+        
+    def toggle_exit_menu(self):
+        self.show_exit_menu = not self.show_exit_menu
         
     def run(self):
         while self.running:
@@ -198,7 +201,13 @@ class Game:
             for button in self.menu_buttons:
                 if self.scene_manager.current_name != "MainMenu":  
                     button.update(event)
-               
+            
+            if hasattr(self.sound_manager, "sound_stop_event"):
+                if event.type == self.sound_manager.sound_stop_event:
+                    if self.sound_manager.active_timed_sound:
+                        self.sound_manager.active_timed_sound.stop()
+                        self.sound_manager.active_timed_sound = None
+
 def main():
     pygame.init()
     pygame.mixer.init() 

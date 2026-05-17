@@ -44,17 +44,15 @@ class TruckLeavingScene(BaseScene):
         self.opening_scene = load_sprite_sheet("assets/sprites/vehicles/FireLeaving.png", 128, 98, scale=11)
         self.animation = Animation(self.opening_scene, speed=0.01)
         self.duration = 8.0
-        self.elapsed = 0.0
-        
-   
+        self.elapsed = 0.0  
     
     def on_enter(self):
         self.elapsed = 0.0
        
     def update(self, keys, dt):
         if self.game.scene_manager.current_name == "truck_leaving":
-            self.game.sound_manager.play_sound("TruckEngine")
-            self.game.sound_manager.play_sound("GarageOpen")
+            self.game.sound_manager.play_time_sound("TruckEngine", 1.0)
+            self.game.sound_manager.play_time_sound("GarageOpen", 2.0)
         
         self.elapsed += dt
         self.animation.update() 
