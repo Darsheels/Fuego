@@ -13,7 +13,7 @@ from audio.SoundManager import SoundManager
 
 class Game:
     def __init__(self):
-        self.screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
+        self.screen = pygame.display.set_mode((0,0), pygame.NOFRAME | pygame.FULLSCREEN)
         pygame.display.set_caption("Fuego")
         self.clock   = pygame.time.Clock()
         self.running = True
@@ -64,10 +64,18 @@ class Game:
 
         self.exit_img = pygame.image.load("assets/sprites/buildingblocks/LeaveButton.png").convert_alpha()
         self.pause_img = pygame.image.load("assets/sprites/buildingblocks/PauseButton.png").convert_alpha()
-        self.exit_button = Button(SCREEN_WIDTH *0.02, 40, self , self.exit_img, self.quit_game, scale=0.8)
+        self.exit_button = Button(SCREEN_WIDTH *0.02, 40, self , self.exit_img, self.open_exit_menu, scale=0.8)
         self.pause_button = Button(SCREEN_WIDTH *0.02, 110, self , self.pause_img, self.toggle_pause, scale=0.8)
         self.buttons = [self.exit_button, self.pause_button]
         
+        self.exitMenu_surface = pygame.image.load("assets/sprites/buildingblocks/ConfirmCancelMenu.png").convert_alpha()
+        self.exitMenu_surface = pygame.transform.scale(self.exitMenu_surface, (400, 200))
+        self.confirm_img = pygame.image.load("assets/sprites/buildingblocks/ConfirmButton.png").convert_alpha()
+        self.cancel_img = pygame.image.load("assets/sprites/buildingblocks/CancelButton.png").convert_alpha()
+        self.confirm_button = Button(SCREEN_WIDTH * 0.5 - 150, SCREEN_HEIGHT *0.5 - 35, self , self.confirm_img, self.quit_game, scale=1.5)
+        self.cancel_button = Button(SCREEN_WIDTH * 0.5 + 60, SCREEN_HEIGHT *0.5 - 35, self , self.cancel_img, self.close_exit_menu, scale=1.5)
+        self.menu_buttons = [self.confirm_button, self.cancel_button]
+        self.show_exit_menu = False
 
         self.cursor_img  = pygame.image.load("assets/sprites/buildingblocks/MousePointer.png")
         self.cursor_rect = self.cursor_img.get_rect()
@@ -89,7 +97,13 @@ class Game:
         gx = max(0, min(gx, self.base_w - 1))
         gy = max(0, min(gy, self.base_h - 1))
         return gx, gy
-
+    
+    def close_exit_menu(self):
+        self.show_exit_menu = False
+    
+    def open_exit_menu(self):
+        self.show_exit_menu = True
+        
     def run(self):
         while self.running:
             keys = pygame.key.get_pressed()
@@ -114,12 +128,20 @@ class Game:
             self.screen.fill((0, 0, 0))   
             self.screen.blit(scaled, (self._offset_x, self._offset_y))
 
-            mx, my = pygame.mouse.get_pos()
-            self.cursor_rect.center = (mx, my)
-            self.screen.blit(self.cursor_img, self.cursor_rect)
-            
             for button in self.buttons:
                 if self.scene_manager.current_name != "MainMenu":   
+                    button.draw(self.screen)
+       
+            if self.show_exit_menu:
+                overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+                overlay.set_alpha(150)
+                overlay.fill((0, 0, 0))
+                self.screen.blit(overlay, (0, 0))
+                
+                menu_rect = self.exitMenu_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+                self.screen.blit(self.exitMenu_surface, menu_rect)
+                
+                for button in self.menu_buttons:
                     button.draw(self.screen)
        
             if self.paused:
@@ -131,7 +153,11 @@ class Game:
                 text = font.render("PAUSED", True, (255, 255, 255))
                 text_rect = text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
                 self.screen.blit(text, text_rect)
-                    
+            
+            mx, my = pygame.mouse.get_pos()
+            self.cursor_rect.center = (mx, my)
+            self.screen.blit(self.cursor_img, self.cursor_rect)        
+            
             pygame.display.flip()
 
     def update_fade(self, dt):
@@ -149,7 +175,7 @@ class Game:
             if self.fade_alpha <= 0:
                 self.fade_alpha = 0
                 self.fade_state = "none"
-
+    
     def quit_game(self):
         self.running = False
     
@@ -168,6 +194,9 @@ class Game:
                             self.paused = not self.paused
             for button in self.buttons:
                 if self.scene_manager.current_name != "MainMenu":   
+                    button.update(event)
+            for button in self.menu_buttons:
+                if self.scene_manager.current_name != "MainMenu":  
                     button.update(event)
                
 def main():

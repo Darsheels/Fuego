@@ -21,6 +21,12 @@ class SoundManager:
     def stop_sound(self, name):
         if name in self.sounds:
             self.sounds[name].stop()
+            
+    def play_time_sound(self, name, duration):
+        if name in self.sounds:
+            sound = self.sounds[name]
+            sound.play()
+            pygame.time.set_timer(pygame.USEREVENT + 1, int(duration * 1000))
     
     def stop_all_sounds(self):
         pygame.mixer.stop()
