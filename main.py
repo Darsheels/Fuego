@@ -72,8 +72,8 @@ class Game:
         self.exitMenu_surface = pygame.transform.scale(self.exitMenu_surface, (400, 200))
         self.confirm_img = pygame.image.load("assets/sprites/buildingblocks/ConfirmButton.png").convert_alpha()
         self.cancel_img = pygame.image.load("assets/sprites/buildingblocks/CancelButton.png").convert_alpha()
-        self.confirm_button = Button(SCREEN_WIDTH * 0.5 - 150, SCREEN_HEIGHT *0.5 - 35, self , self.confirm_img, self.quit_game, scale=1.5)
-        self.cancel_button = Button(SCREEN_WIDTH * 0.5 + 60, SCREEN_HEIGHT *0.5 - 35, self , self.cancel_img, self.close_exit_menu, scale=1.5)
+        self.confirm_button = Button(SCREEN_WIDTH * 0.5 - 150, SCREEN_HEIGHT *0.5 - 35, self , self.confirm_img, self.quit_game, scale=0.8)
+        self.cancel_button = Button(SCREEN_WIDTH * 0.5 + 60, SCREEN_HEIGHT *0.5 - 35, self , self.cancel_img, self.close_exit_menu, scale=0.8)
         self.menu_buttons = [self.confirm_button, self.cancel_button]
         self.show_exit_menu = False
 
