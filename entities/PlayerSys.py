@@ -78,6 +78,11 @@ class BasePlayer(pygame.sprite.Sprite):
         
     def update(self,keys):
         
+        if self.moving:
+            self.game.sound_manager.play_sound("Walking")
+        else:
+            self.game.sound_manager.stop_sound("Walking")
+        
         self.healthbar.update()
             
         if self.on_ladder:

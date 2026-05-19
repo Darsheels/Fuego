@@ -49,7 +49,7 @@ class Game:
         self.scene_manager = SceneManager(self)
         self.scene_manager.add("truck_cutscene", TruckCutsceneScene(self, self.fire_truck))
         self.scene_manager.add("truck_leaving",  TruckLeavingScene(self))
-        self.scene_manager.add("MainMenu",       MainMenu(self))
+        self.scene_manager.add("MainMenu", MainMenu(self))
 
         definitions_path = Path(__file__).resolve().parent / "scenes" / "scene_definitions.json"
         scenes = build_scenes_from_definitions(definitions_path, self)
@@ -112,7 +112,7 @@ class Game:
             keys = pygame.key.get_pressed()
             self.handle_events()
             dt = self.clock.tick(60) / 1000
-
+            
             if not self.paused:
                 self.scene_manager.update(keys, dt)
        
@@ -161,6 +161,10 @@ class Game:
             self.cursor_rect.center = (mx, my)
             self.screen.blit(self.cursor_img, self.cursor_rect)        
             
+            if self.scene_manager.current_name == "TruckApparatus":
+                    self.sound_manager.stop_sound("FireCrackle")
+                    self.sound_manager.stop_sound("FireTruckSiren")    
+                    
             pygame.display.flip()
 
     def update_fade(self, dt):
@@ -202,11 +206,8 @@ class Game:
                 if self.scene_manager.current_name != "MainMenu":  
                     button.update(event)
             
-            if hasattr(self.sound_manager, "sound_stop_event"):
-                if event.type == self.sound_manager.sound_stop_event:
-                    if self.sound_manager.active_timed_sound:
-                        self.sound_manager.active_timed_sound.stop()
-                        self.sound_manager.active_timed_sound = None
+
+            self.sound_manager.handle_event(event)
 
 def main():
     pygame.init()
