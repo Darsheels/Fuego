@@ -19,10 +19,10 @@ class TruckCutsceneScene(BaseScene):
         self.scroll_x = 0.0
         self.fire_truck.rect.topleft = (100, 270)
     
-            
+
     def update(self, keys, dt):
-        # if self.game.scene_manager.current_name == "truck_cutscene":
-        #     self.game.sound_manager.play_sound("TruckEngine")
+        if self.game.scene_manager.current_name == "truck_cutscene":
+            self.game.sound_manager.play_time_sound("TruckDriving", 5.0)
         
         self.elapsed += dt
         self.scroll_x += self.scroll_speed * dt
@@ -53,6 +53,8 @@ class TruckLeavingScene(BaseScene):
        
     def update(self, keys, dt):
         if self.game.scene_manager.current_name == "truck_leaving":
+            self.game.sound_manager.set_volume("GarageOpen", 0.2)
+            self.game.sound_manager.set_volume("TruckEngine", 0.2)
             self.game.sound_manager.play_time_sound("GarageOpen", 8)
             self.game.sound_manager.play_time_sound("TruckEngine", 3)
         
@@ -65,4 +67,3 @@ class TruckLeavingScene(BaseScene):
     def draw(self, screen): 
         screen.blit(self.game.background, (0, 0))
         screen.blit(self.animation.image, (-100 , -140))
-        

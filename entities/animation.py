@@ -22,17 +22,32 @@ def load_sprite_sheet(path , frame_width , frame_height , scale):
     return frames
 
 class Animation:
-    def __init__(self , frames , speed, loop=True):
+    def __init__(self , frames , speed, loop=True,hold_last_frame=False):
         self.frames = frames
         self.speed = speed
         self.index = 0
         self.image = frames[0]
         self.loop = loop
+        self.hold_last_frame = hold_last_frame
         
     def update(self):
         self.index += self.speed
-        if self.index >= len(self.frames):
-            self.index = 0
-        self.image = self.frames[int(self.index)]
+        if self.loop:
+            if self.hold_last_frame > 0:
+                loop_end = len(self.frames) - self.hold_last_frame
+                
+                if self.index >= loop_end:
+                    self.index = loop_end
+            else:        
+                if self.index >= len(self.frames):
+                    self.index = 0
+                    
+            self.image = self.frames[int(self.index)]
+            
+    def reset(self):
+        self.index = 0
+        self.image = self.frames[0]
         
+        
+            
        

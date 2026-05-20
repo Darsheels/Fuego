@@ -10,7 +10,8 @@ class SoundManager:
             "TruckEngine": pygame.mixer.Sound("assets/sounds/TruckStarting.mp3"),
             "GarageOpen": pygame.mixer.Sound("assets/sounds/GarageDoorOpening.mp3"),
             "Walking": pygame.mixer.Sound("assets/sounds/Walking.mp3"),
-            "FireTruckSiren": pygame.mixer.Sound("assets/sounds/FireTruck.mp3")
+            "FireTruckSiren": pygame.mixer.Sound("assets/sounds/FireTruck.mp3"),
+            "TruckDriving": pygame.mixer.Sound("assets/sounds/TruckDriving.mp3"),
         }
         
         self.sound_stop_event = pygame.USEREVENT + 1
