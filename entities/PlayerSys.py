@@ -80,7 +80,7 @@ class BasePlayer(pygame.sprite.Sprite):
     def update(self,keys):
         
         self.healthbar.update()
-            
+        
         if self.on_ladder:
             self.moving = False
             self.update_ladder_logic(keys)
@@ -233,6 +233,18 @@ class BasePlayer(pygame.sprite.Sprite):
             self.extinguisher_active = False
             self.extinguisher_rect = None
     
+    def health_check(self,surface):
+        health_ratio = self.health / self.max_health
+        
+        if health_ratio < 1:
+            overlay = pygame.Surface((SCREEN_WIDTH,SCREEN_HEIGHT))
+            overlay.fill((255,0,0))
+            
+            alpha = int((1 - health_ratio) * 180)
+            overlay.set_alpha(alpha)
+            
+            surface.blit(overlay, (0,0))
+    
     def draw(self,surface):
         if self.visible:
             surface.blit(self.image, self.rect)
@@ -243,3 +255,4 @@ class BasePlayer(pygame.sprite.Sprite):
                 surface.blit(self.extinguisher_rotated,rect)
             if self.game.selected_mission:
                 self.healthbar.draw(surface)
+            self.health_check(surface)

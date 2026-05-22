@@ -12,7 +12,7 @@ def load_definitions(path: Path) -> list[dict]:
 def make_standard_class(defn: dict) -> type:
     image_path = defn["image_path"]
     base_size  = tuple(defn["base_size"]) if defn["base_size"] else None
-    scale      = defn.get("scale")        
+    scale = defn.get("scale")        
 
     def __init__(self,x,y,game=None):
         Entity.__init__(self, image_path, base_size, x, y, scale=scale, game=game)
@@ -22,13 +22,13 @@ def make_standard_class(defn: dict) -> type:
 def make_flip_class(defn: dict) -> type:
     image_path = defn["image_path"]
     base_size  = tuple(defn["base_size"]) if defn["base_size"] else None
-    scale      = defn.get("scale")
+    scale = defn.get("scale")
 
     def __init__(self,x,y,game=None):
         Entity.__init__(self, image_path, base_size, x, y, scale=scale, game=game)
         self.image_right = self.image
         self.image_left  = pygame.transform.flip(self.image_right, True, False)
-        self.image       = self.image_right
+        self.image = self.image_right
 
     def update(self, keys):
         pass

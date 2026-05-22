@@ -121,6 +121,7 @@ class Game:
             self.scene_manager.draw(self.game_surface)
         
             self.update_fade(dt)
+            
             if self.fade_state != "none":
                 self.fade_surface.set_alpha(int(self.fade_alpha))
                 self.game_surface.blit(self.fade_surface, (0, 0))
@@ -132,32 +133,10 @@ class Game:
             self.screen.fill((0, 0, 0))   
             self.screen.blit(scaled, (self._offset_x, self._offset_y))
 
-            for button in self.buttons:
-                if self.scene_manager.current_name != "MainMenu":   
-                    button.draw(self.screen)
-       
-            if self.show_exit_menu:
-                overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
-                overlay.set_alpha(150)
-                overlay.fill((0, 0, 0))
-                self.screen.blit(overlay, (0, 0))
-                
-                menu_rect = self.exitMenu_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
-                self.screen.blit(self.exitMenu_surface, menu_rect)
-                
-                for button in self.menu_buttons:
-                    button.draw(self.screen)
-       
-            if self.paused:
-                overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
-                overlay.set_alpha(120)
-                overlay.fill((0, 0, 0))
-                self.screen.blit(overlay, (0, 0))
-                font = pygame.font.SysFont("arial", 60, bold=True)
-                text = font.render("PAUSED", True, (255, 255, 255))
-                text_rect = text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
-                self.screen.blit(text, text_rect)
-            
+            self.side_buttons_update()
+            self.exit_menu()
+            self.paused_menu()
+ 
             mx, my = pygame.mouse.get_pos()
             self.cursor_rect.center = (mx, my)
             self.screen.blit(self.cursor_img, self.cursor_rect)        
@@ -166,15 +145,37 @@ class Game:
                     self.sound_manager.stop_sound("FireCrackle")
                     self.sound_manager.stop_sound("FireTruckSiren")
             
-            # if self.scene_manager.current_name in self.mission_scenes:
-            #     self.sound_manager.set_volume("Fire", 0.5)
-            #     self.sound_manager.play_sound("Fire", loop=-1)
-
-            # else:
-            #     self.sound_manager.stop_sound("Fire")
-            
             pygame.display.flip()
 
+    def side_buttons_update(self):
+        for button in self.buttons:
+            if self.scene_manager.current_name != "MainMenu":   
+                button.draw(self.screen)
+
+    def paused_menu(self):
+        if self.paused:
+            overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+            overlay.set_alpha(120)
+            overlay.fill((0, 0, 0))
+            self.screen.blit(overlay, (0, 0))
+            font = pygame.font.SysFont("arial", 60, bold=True)
+            text = font.render("PAUSED", True, (255, 255, 255))
+            text_rect = text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+            self.screen.blit(text, text_rect)
+    
+    def exit_menu(self):
+        if self.show_exit_menu:
+            overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+            overlay.set_alpha(150)
+            overlay.fill((0, 0, 0))
+            self.screen.blit(overlay, (0, 0))
+                
+            menu_rect = self.exitMenu_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+            self.screen.blit(self.exitMenu_surface, menu_rect)
+                
+            for button in self.menu_buttons:
+                    button.draw(self.screen)
+    
     def update_fade(self, dt):
         if self.fade_state == "fading_out":
             self.fade_alpha += self.fade_speed * dt
@@ -214,7 +215,6 @@ class Game:
                 if self.scene_manager.current_name != "MainMenu":  
                     button.update(event)
             
-
             self.sound_manager.handle_event(event)
 
 def main():

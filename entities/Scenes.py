@@ -84,6 +84,7 @@ class BaseScene:
 
         self.check_mission_failure(dt)
         if self.mission_failed:
+            self.game.sound_manager.stop_sound("Extinguishing")
             self.tick_mission_popup(dt, failed=True)
             return
 
@@ -168,11 +169,11 @@ class BaseScene:
             return
         fires_clear = len(self.fire_manager.fires) == 0
         npcs_clear  = len(self.npc_manager.NPCs) == 0
+        
         if fires_clear and npcs_clear:
             self.mission_accomplished = True
             self.mission_popup_timer  = 2.5
             self.game.sound_manager.stop_sound("Extinguishing")
-
     
     def select_mission(self):  
         if self.scene_name != "TruckApparatus":
