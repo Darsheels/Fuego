@@ -12,6 +12,9 @@ class SoundManager:
             "Walking": pygame.mixer.Sound("assets/sounds/Walking.mp3"),
             "FireTruckSiren": pygame.mixer.Sound("assets/sounds/FireTruck.mp3"),
             "TruckDriving": pygame.mixer.Sound("assets/sounds/TruckDriving.mp3"),
+            "Fire": pygame.mixer.Sound("assets/sounds/Fire.mp3"),
+            "DoorBreaking": pygame.mixer.Sound("assets/sounds/DoorBreaking.mp3"),
+            "Extinguishing": pygame.mixer.Sound("assets/sounds/Extinguishing.mp3")
         }
         
         self.sound_stop_event = pygame.USEREVENT + 1
@@ -22,7 +25,15 @@ class SoundManager:
     
     def play_sound(self, name, loop=0):
         if name in self.sounds:
-            self.sounds[name].play(loops=loop)
+            sound = self.sounds[name]
+            
+            for channel_id in range(pygame.mixer.get_num_channels()):
+                channel = pygame.mixer.Channel(channel_id)
+                
+                if channel.get_sound() == sound and channel.get_busy():
+                    return channel
+                
+            return sound.play(loops=loop)
             
     def stop_sound(self, name):
         if name in self.sounds:

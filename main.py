@@ -57,6 +57,7 @@ class Game:
             self.scene_manager.add(scene_name, scene)
 
         self.mission_scenes = ["CarCrashScene","FurnitureStore","House1","Museum",]
+        self.misstion_inteiors = ["House1Int","MuseumInt","FurnitureStoreInt"]
         self.scene_manager.set("MainMenu")
 
         self.background = pygame.image.load("assets/sprites/buildingblocks/Background.png").convert_alpha()
@@ -163,8 +164,15 @@ class Game:
             
             if self.scene_manager.current_name == "TruckApparatus":
                     self.sound_manager.stop_sound("FireCrackle")
-                    self.sound_manager.stop_sound("FireTruckSiren")    
-                    
+                    self.sound_manager.stop_sound("FireTruckSiren")
+            
+            # if self.scene_manager.current_name in self.mission_scenes:
+            #     self.sound_manager.set_volume("Fire", 0.5)
+            #     self.sound_manager.play_sound("Fire", loop=-1)
+
+            # else:
+            #     self.sound_manager.stop_sound("Fire")
+            
             pygame.display.flip()
 
     def update_fade(self, dt):

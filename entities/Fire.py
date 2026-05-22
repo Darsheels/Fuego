@@ -5,11 +5,12 @@ from settings import SCREEN_WIDTH, SCREEN_HEIGHT
 from entities.smokeParticles import SmokeManager
 
 class Fire(pygame.sprite.Sprite):
-    def __init__(self,x,y, can_spread=True):
+    def __init__(self,x,y, can_spread=True,game=None):
         super().__init__()
+        self.game = game
+        
         self.fireFrames = load_sprite_sheet("assets/sprites/buildingblocks/NewFire_animation.png", 48 , 64, scale=2)
         self.FireAnimation = Animation(self.fireFrames, speed=0.1)
-        
         self.image = self.FireAnimation.image
         self.rect = self.image.get_rect(topleft=(x,y))
         
@@ -29,7 +30,10 @@ class Fire(pygame.sprite.Sprite):
     def update(self,dt):
         self.smoke_manager.update()
         if self.extinguished:
+            self.game.sound_manager.stop_sound("FireCrackle")
             return
+        
+        self.game.sound_manager.play_sound("FireCrackle")
         
         self.smoke_timer += dt
         if self.smoke_timer >= self.smoke_delay:
@@ -62,11 +66,12 @@ class Fire(pygame.sprite.Sprite):
             self.extinguish_timer = 0.0
         
 class Fire_manager:
-    def __init__(self):
+    def __init__(self, game):
         self.fires = []
+        self.game = game
         
     def add_fire(self,x,y, can_spread=False):
-        self.fires.append(Fire(x,y, can_spread))
+        self.fires.append(Fire(x,y, can_spread, game=self.game))
     
     def update(self,dt):
         
@@ -82,7 +87,7 @@ class Fire_manager:
                     nx = fire.rect.x + random.choice([-40,40])
                     ny = fire.rect.y + random.choice([-40,40])
                     if 0 <= nx <= SCREEN_WIDTH - 48 and 0 <= ny <= SCREEN_HEIGHT - 64:
-                        new_fires.append(Fire(nx,ny, can_spread=True))
+                        new_fires.append(Fire(nx,ny, can_spread=True, game=self.game))
                         fire.spread_timer = 0
                     
         self.fires.extend(new_fires)

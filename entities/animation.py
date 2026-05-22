@@ -47,7 +47,3 @@ class Animation:
     def reset(self):
         self.index = 0
         self.image = self.frames[0]
-        
-        
-            
-       

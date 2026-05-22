@@ -53,9 +53,9 @@ class BasePlayer(pygame.sprite.Sprite):
         self.extinguisher = Entity("assets/sprites/buildingblocks/FireExtinguisher.png", (32,32) ,x,y, scale=3)
         self.extinguisher_rotated = self.extinguisher.image
         self.extinguisher_pos = (0, 0)
-   
-        self.beam_frames = load_sprite_sheet("assets/sprites/buildingblocks/WaterRayAnim.png", 96, 64, scale=3)
-        self.beam_animation = Animation(self.beam_frames, speed=0.05, hold_last_frame=2)
+
+        self.beam_frames = load_sprite_sheet("assets/sprites/buildingblocks/MovingWaterRayAnim.png", 96, 64, scale=3)
+        self.beam_animation = Animation(self.beam_frames, speed=0.1)
         
         self.apply_profile(profile_name)
         
@@ -191,13 +191,15 @@ class BasePlayer(pygame.sprite.Sprite):
         
         if self.facing_right:
             self.extinguisher_rotated = pygame.transform.rotate(self.extinguisher.image, angle)
+           
         else:
             flipped = pygame.transform.flip(self.extinguisher.image, True, False)
-            self.extinguisher_rotated = pygame.transform.rotate(flipped, angle + 180)
+            self.extinguisher_rotated = pygame.transform.rotate(flipped, angle + 180) 
             
         offset = self.rect.height * 0.40
         hand_x = self.rect.centerx + nx * offset
         hand_y = self.rect.centery + ny * offset
+      
         self.extinguisher_pos = (hand_x, hand_y)
         
         nozzle_offset = 40
@@ -219,11 +221,14 @@ class BasePlayer(pygame.sprite.Sprite):
         self.extinguisher_active = mouse_buttons[0] and not self.on_ladder
         
         if self.extinguisher_active:
+            self.game.sound_manager.set_volume("Extinguishing", 0.05)
+            self.game.sound_manager.play_sound("Extinguishing",loop=-1)
             self.beam_animation.update()
         
-        elif not self.extinguisher_active:
-                self.beam_animation.reset()    
-        
+        else:
+            self.game.sound_manager.stop_sound("Extinguishing")
+            self.beam_animation.reset()
+                
         if not self.extinguisher_appear:
             self.extinguisher_active = False
             self.extinguisher_rect = None

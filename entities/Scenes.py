@@ -9,35 +9,37 @@ from entities.camera import Camera
 
 
 class Interaction:
-    def __init__(self, name, text, zone, key, target_scene, spawn_point):
-        self.name        = name
-        self.zone        = zone
-        self.key         = key
-        self.target      = target_scene
-        self.spawn       = spawn_point
-        self.uses_fade   = name in ("change into gear and exit", "Break in", "Break")
-        self.prompt      = UIPrompt(text, SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.85)
+    def __init__(self, name, text, zone, key, target_scene, spawn_point, game):
+        self.game = game
+        self.name = name
+        self.zone = zone
+        self.key  = key
+        self.target = target_scene
+        self.spawn = spawn_point
+        self.uses_fade = name in ("change into gear and exit", "Break in", "Break")
+        self.breakIns = ["Break in", "Break"]
+        self.prompt = UIPrompt(text, SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.85)
 
     def __repr__(self):
         return f"<Interaction '{self.name}' → '{self.target}'>"
 
 class BaseScene:
     def __init__(self, game, player=None, fire_truck=None, pager=None):
-        self.game         = game
-        self.player       = player
-        self.fire_truck   = fire_truck
-        self.pager        = pager
-        self.objects      = []
+        self.game = game
+        self.player = player
+        self.fire_truck = fire_truck
+        self.pager = pager
+        self.objects = []
         self.interactions : list[Interaction] = []
         self.transitions  = []
-        self.has_pager    = False
-        self.fire_manager = Fire_manager()
+        self.has_pager = False
+        self.fire_manager = Fire_manager(game)
         self.npc_manager  = NPC_manager()
-        self.camera       = Camera.single_screen()
+        self.camera = Camera.single_screen()
 
-        self.is_mission_scene     = False
+        self.is_mission_scene = False
         self.mission_accomplished = False
-        self.mission_failed       = False
+        self.mission_failed = False
         self.mission_popup_timer  = 0.0
 
     def on_enter(self):
@@ -60,7 +62,7 @@ class BaseScene:
 
     def add_interaction(self, name, text, zone, key, target_scene, spawn_point):
         self.interactions.append(
-            Interaction(name, text, zone, key, target_scene, spawn_point)
+            Interaction(name, text, zone, key, target_scene, spawn_point, game=self.game)
         )
 
     def add_pager(self):
@@ -169,6 +171,7 @@ class BaseScene:
         if fires_clear and npcs_clear:
             self.mission_accomplished = True
             self.mission_popup_timer  = 2.5
+            self.game.sound_manager.stop_sound("Extinguishing")
 
     
     def select_mission(self):  
@@ -295,12 +298,15 @@ class BaseScene:
     def trigger_interaction(self, ix: "Interaction"):
         if ix.uses_fade:
             self.game.fade_target_scene = ix.target
-            self.game.next_spawn        = ix.spawn
-            self.game.fade_state        = "fading_out"
+            self.game.next_spawn = ix.spawn
+            self.game.fade_state = "fading_out"
         else:
             self.game.next_spawn = ix.spawn
             self.game.scene_manager.set(ix.target)
 
+        if ix.breakIns and ix.name in ix.breakIns:
+            self.game.sound_manager.play_sound("DoorBreaking")
+        
     def update_transitions(self, actor_rect):
         if actor_rect is None:
             return
@@ -440,7 +446,7 @@ class DataScene(BaseScene):
         self.mission_popup_timer  = 0.0
 
         self.fire_manager.fires = [
-            Fire(f["x"], f["y"], self.fire_spreading)
+            Fire(f["x"], f["y"], self.fire_spreading, game=self.game)
             for f in self.fire_defs
         ]
         self.npc_manager.NPCs = [
