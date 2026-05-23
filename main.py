@@ -65,9 +65,11 @@ class Game:
 
         self.exit_img = pygame.image.load("assets/sprites/buildingblocks/LeaveButton.png").convert_alpha()
         self.pause_img = pygame.image.load("assets/sprites/buildingblocks/PauseButton.png").convert_alpha()
+        self.settings_img = pygame.image.load("assets/sprites/buildingblocks/SettingsButton.png").convert_alpha()
         self.exit_button = Button(SCREEN_WIDTH *0.02, 40, self , self.exit_img, self.toggle_exit_menu, scale=0.8)
         self.pause_button = Button(SCREEN_WIDTH *0.02, 110, self , self.pause_img, self.toggle_pause, scale=0.8)
-        self.buttons = [self.exit_button, self.pause_button]
+        self.settings_button = Button(SCREEN_WIDTH *0.02, 180, self, self.settings_img,self.toggle_setting,scale=0.8 )
+        self.buttons = [self.exit_button, self.pause_button, self.settings_button]
         
         self.exitMenu_surface = pygame.image.load("assets/sprites/buildingblocks/ConfirmCancelMenu.png").convert_alpha()
         self.exitMenu_surface = pygame.transform.scale(self.exitMenu_surface, (400, 200))
@@ -76,8 +78,13 @@ class Game:
         self.confirm_button = Button(SCREEN_WIDTH * 0.5 - 150, SCREEN_HEIGHT *0.5 - 35, self , self.confirm_img, self.quit_game, scale=0.8)
         self.cancel_button = Button(SCREEN_WIDTH * 0.5 + 60, SCREEN_HEIGHT *0.5 - 35, self , self.cancel_img, self.close_exit_menu, scale=0.8)
         self.menu_buttons = [self.confirm_button, self.cancel_button]
+        
         self.show_exit_menu = False
+        self.setting_open = False
 
+        self.settingMenu_surface = pygame.image.load("assets/sprites/buildingblocks/SettingsMenu.png").convert_alpha()
+        self.settingMenu_surface = pygame.transform.scale(self.settingMenu_surface, (200,400))
+        
         self.cursor_img  = pygame.image.load("assets/sprites/buildingblocks/MousePointer.png")
         self.cursor_rect = self.cursor_img.get_rect()
 
@@ -136,21 +143,39 @@ class Game:
             self.side_buttons_update()
             self.exit_menu()
             self.paused_menu()
- 
+            self.setting_menu()
+            self.sound_updates()
+        
             mx, my = pygame.mouse.get_pos()
             self.cursor_rect.center = (mx, my)
-            self.screen.blit(self.cursor_img, self.cursor_rect)        
-            
-            if self.scene_manager.current_name == "TruckApparatus":
-                    self.sound_manager.stop_sound("FireCrackle")
-                    self.sound_manager.stop_sound("FireTruckSiren")
+            self.screen.blit(self.cursor_img, self.cursor_rect)              
             
             pygame.display.flip()
 
+    def sound_updates(self):
+        if self.scene_manager.current_name == "TruckApparatus":
+            self.sound_manager.stop_sound("FireCrackle")
+            self.sound_manager.stop_sound("FireTruckSiren")
+            
+        if self.scene_manager.current_name in self.mission_scenes:
+            self.sound_manager.play_sound("Fire")
+        else:
+            self.sound_manager.stop_sound("Fire")
+    
     def side_buttons_update(self):
         for button in self.buttons:
             if self.scene_manager.current_name != "MainMenu":   
                 button.draw(self.screen)
+
+    def setting_menu(self):
+        if self.setting_open:
+            overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+            overlay.set_alpha(150)
+            overlay.fill((0, 0, 0))
+            self.screen.blit(overlay, (0, 0))
+            
+            menu_rect = self.settingMenu_surface.get_rect(bottomleft=(SCREEN_WIDTH * 0.1, SCREEN_HEIGHT * 0.65))
+            self.screen.blit(self.settingMenu_surface,menu_rect)
 
     def paused_menu(self):
         if self.paused:
@@ -198,6 +223,9 @@ class Game:
     def toggle_pause(self):
         self.paused = not self.paused
     
+    def toggle_setting(self):
+        self.setting_open = not self.setting_open
+        
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

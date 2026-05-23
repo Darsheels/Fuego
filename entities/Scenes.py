@@ -7,7 +7,6 @@ from entities.Fire import Fire, Fire_manager
 from entities.npc import NPC, NPC_manager
 from entities.camera import Camera
 
-
 class Interaction:
     def __init__(self, name, text, zone, key, target_scene, spawn_point, game):
         self.game = game
