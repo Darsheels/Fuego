@@ -69,7 +69,6 @@ def make_pager_class(defn: dict) -> type:
 
     def trigger(self):
         self.game.sound_manager.play_time_sound("PagerBeep", 5)
-        self.game.sound_manager.set_volume("PagerBeep", 0.1)
         
         self.pager_triggered = True
 

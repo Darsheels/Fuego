@@ -13,7 +13,7 @@ class MainMenu:
         
         self.game.sound_manager.play_sound("BackgroundMusic",-1)
         self.game.sound_manager.play_sound("FireCrackle",-1)
-        self.game.sound_manager.set_volume("FireTruckSiren", 0.1)
+        # self.game.sound_manager.set_volume("FireTruckSiren", 0.1)
         self.game.sound_manager.play_sound("FireTruckSiren",-1)
         
         self.play_button = Button(SCREEN_WIDTH *0.13, 300, self.game, self.play_img, self.start_game, scale=1.5)

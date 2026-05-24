@@ -53,8 +53,6 @@ class TruckLeavingScene(BaseScene):
        
     def update(self, keys, dt):
         if self.game.scene_manager.current_name == "truck_leaving":
-            self.game.sound_manager.set_volume("GarageOpen", 0.2)
-            self.game.sound_manager.set_volume("TruckEngine", 0.2)
             self.game.sound_manager.play_time_sound("GarageOpen", 8)
             self.game.sound_manager.play_time_sound("TruckEngine", 3)
         

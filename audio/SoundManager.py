@@ -2,6 +2,8 @@ import pygame
 
 class SoundManager:
     def __init__(self):
+        self.master_volume = 1.0
+        
         self.sounds = {
             "buttonclick": pygame.mixer.Sound("assets/sounds/ButtonClick.mp3"),
             "FireCrackle": pygame.mixer.Sound("assets/sounds/FireCrackling.mp3"),
@@ -20,9 +22,16 @@ class SoundManager:
         self.sound_stop_event = pygame.USEREVENT + 1
         self.timed_sounds = {}
         
-    def load_sound(self, name, file_path):
-        self.sounds[name] = pygame.mixer.Sound(file_path)
-    
+        self.apply_volume()
+        
+    def apply_volume(self):
+        for sound in self.sounds.values():
+            sound.set_volume(self.master_volume)
+
+    def set_master_volume(self,volume):
+        self.master_volume = max(0.0, min(1.0,volume))
+        self.apply_volume()
+        
     def play_sound(self, name, loop=0):
         if name in self.sounds:
             sound = self.sounds[name]
@@ -60,6 +69,3 @@ class SoundManager:
     def stop_all_sounds(self):
         pygame.mixer.stop()
         
-    def set_volume(self, name, volume):
-        if name in self.sounds:
-            self.sounds[name].set_volume(volume)

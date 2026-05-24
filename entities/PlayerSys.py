@@ -81,6 +81,11 @@ class BasePlayer(pygame.sprite.Sprite):
         
         self.healthbar.update()
         
+        if self.moving:
+            self.game.sound_manager.play_sound("Walking")
+        else:
+            self.game.sound_manager.stop_sound("Walking")
+        
         if self.on_ladder:
             self.moving = False
             self.update_ladder_logic(keys)
@@ -221,7 +226,6 @@ class BasePlayer(pygame.sprite.Sprite):
         self.extinguisher_active = mouse_buttons[0] and not self.on_ladder
         
         if self.extinguisher_active:
-            self.game.sound_manager.set_volume("Extinguishing", 0.05)
             self.game.sound_manager.play_sound("Extinguishing",loop=-1)
             self.beam_animation.update()
         

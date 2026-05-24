@@ -84,17 +84,24 @@ class Game:
 
         self.settingMenu_surface = pygame.image.load("assets/sprites/buildingblocks/SettingsMenu.png").convert_alpha()
         self.settingMenu_surface = pygame.transform.scale(self.settingMenu_surface, (200,400))
+        self.MasterSound_img = pygame.image.load("assets/sprites/buildingblocks/MasterSoundSwitch.png").convert_alpha()
+        self.add_img = pygame.image.load("assets/sprites/buildingblocks/Addition.png").convert_alpha()
+        self.subtract_img = pygame.image.load("assets/sprites/buildingblocks/Subtraction.png").convert_alpha()        
+        self.MasterSound_Button = Button(SCREEN_WIDTH * 0.12, SCREEN_HEIGHT * 0.15, self, self.MasterSound_img,self.toggle_sound,scale=0.8)
+        self.add_button = Button(SCREEN_WIDTH * 0.23, SCREEN_HEIGHT * 0.25 , self,self.add_img,self.add_master_volume, scale=1)
+        self.subtract_button = Button(SCREEN_WIDTH * 0.11, SCREEN_HEIGHT * 0.25, self,self.subtract_img,self.subtract_master_volume, scale=1)
+        self.settings_buttons = [self.MasterSound_Button,self.add_button,self.subtract_button]
         
-        self.cursor_img  = pygame.image.load("assets/sprites/buildingblocks/MousePointer.png")
+        self.cursor_img  = pygame.image.load("assets/sprites/buildingblocks/MousePointer.png").convert_alpha()
         self.cursor_rect = self.cursor_img.get_rect()
 
         pygame.mouse.set_visible(False)
 
     def recompute_scale(self):
-        win_w, win_h   = self.screen.get_size()
-        self._scale    = min(win_w / self.base_w, win_h / self.base_h)
-        scaled_w       = int(self.base_w * self._scale)
-        scaled_h       = int(self.base_h * self._scale)
+        win_w, win_h = self.screen.get_size()
+        self._scale = min(win_w / self.base_w, win_h / self.base_h)
+        scaled_w = int(self.base_w * self._scale)
+        scaled_h = int(self.base_h * self._scale)
         self._offset_x = (win_w - scaled_w) // 2
         self._offset_y = (win_h - scaled_h) // 2
         
@@ -167,6 +174,7 @@ class Game:
             if self.scene_manager.current_name != "MainMenu":   
                 button.draw(self.screen)
 
+    
     def setting_menu(self):
         if self.setting_open:
             overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -176,7 +184,15 @@ class Game:
             
             menu_rect = self.settingMenu_surface.get_rect(bottomleft=(SCREEN_WIDTH * 0.1, SCREEN_HEIGHT * 0.65))
             self.screen.blit(self.settingMenu_surface,menu_rect)
-
+            
+            for button in self.settings_buttons:
+                button.draw(self.screen)
+                
+            bar_rect = pygame.Rect(SCREEN_WIDTH * 0.14,SCREEN_HEIGHT * 0.25,100,20)
+            pygame.draw.rect(self.screen, (60,60,60), bar_rect)
+            fill_width = int(bar_rect.width * self.sound_manager.master_volume)
+            pygame.draw.rect(self.screen,(0,200,0),(bar_rect.x,bar_rect.y,fill_width,bar_rect.height))
+            
     def paused_menu(self):
         if self.paused:
             overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -217,6 +233,15 @@ class Game:
                 self.fade_alpha = 0
                 self.fade_state = "none"
     
+    def add_master_volume(self):
+        self.sound_manager.set_master_volume(self.sound_manager.master_volume + 0.1)
+        
+    def subtract_master_volume(self):
+        self.sound_manager.set_master_volume(self.sound_manager.master_volume - 0.1)
+    
+    def toggle_sound(self):
+        self.sound_manager.stop_all_sounds()
+        
     def quit_game(self):
         self.running = False
     
@@ -242,7 +267,9 @@ class Game:
             for button in self.menu_buttons:
                 if self.scene_manager.current_name != "MainMenu":  
                     button.update(event)
-            
+            for button in self.settings_buttons:
+                if self.scene_manager.current_name != "MainMenu":
+                    button.update(event)
             self.sound_manager.handle_event(event)
 
 def main():

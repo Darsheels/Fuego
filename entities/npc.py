@@ -3,9 +3,9 @@ import random
 from entities.healthbar import HealthBar
 from entities.animation import Animation, load_sprite_sheet
 
-RESCUE_RANGE   = 120   # px — how close the player must be to rescue
-PANIC_SPEED    = 1.2   # px/frame while wandering
-DIRECTION_HOLD = 60    # frames before picking a new wander direction
+RESCUE_RANGE   = 120   
+PANIC_SPEED    = 1.2   
+DIRECTION_HOLD = 60   
 
 NPC_TYPES = [
     {
@@ -30,12 +30,10 @@ class NPC:
         self.health_bar = HealthBar(self, x, y)
         self.rescued = False
 
-        # Wander state — X axis only
         self._dir_x = random.choice([-1, 0, 1])
         self._dir_timer = 0
         self._facing_right = True
-
-        # Prompt state
+        
         self.show_rescue_prompt = False
 
         self.walk_frames = load_sprite_sheet(
@@ -51,7 +49,7 @@ class NPC:
         old_pos = self.rect.topleft
         self.rect = self.image.get_rect(topleft=old_pos)
 
-    def apply_fire_damage(self, dt: float):
+    def apply_fire_damage(self, dt):
         if self.rescued or not self.alive:
             return
         self.health = max(0, self.health - 15 * dt)
@@ -66,14 +64,13 @@ class NPC:
         if self.rescued or not self.alive:
             return
         self.health_bar.update()
-        self._update_wander(screen_w)
-        self._update_animation()
+        self.update_wander(screen_w)
+        self.update_animation()
 
-    def _update_wander(self, screen_w):
-        #Move left or right only; pick a new direction every DIRECTION_HOLD frames.
+    def update_wander(self, screen_w):
         self._dir_timer -= 1
         if self._dir_timer <= 0:
-            self._dir_x = random.choice([-1, 0, 0, 1])   # bias towards moving
+            self._dir_x = random.choice([-1, 0, 0, 1])   
             self._dir_timer = DIRECTION_HOLD + random.randint(-20, 20)
 
         self.rect.x += int(self._dir_x * self.speed)
@@ -84,7 +81,7 @@ class NPC:
         elif self._dir_x < 0:
             self._facing_right = False
 
-    def _update_animation(self):
+    def update_animation(self):
         moving = self._dir_x != 0
         if moving:
             self.walk_anim.update()
@@ -120,31 +117,25 @@ class NPC:
 
 class NPC_manager:
     def __init__(self):
-        self.NPCs: list[NPC] = []
+        self.NPCs = []
 
     def add_NPC(self, x, y):
         self.NPCs.append(NPC(x, y))
 
-    def update(self, dt, screen_w, screen_h,
-               fires=None, player=None, keys=None):
+    def update(self, dt, screen_w, screen_h,fires=None, player=None, keys=None):
         fires = fires or []
 
         for npc in self.NPCs:
             if npc.rescued or not npc.alive:
                 continue
 
-            # Fire damage
             for fire in fires:
                 if npc.rect.colliderect(fire.rect):
                     npc.apply_fire_damage(dt)
 
-            # Rescue prompt & trigger
             npc.show_rescue_prompt = False
             if player and player.alive:
-                dist = (
-                    (npc.rect.centerx - player.rect.centerx) ** 2
-                    + (npc.rect.centery - player.rect.centery) ** 2
-                ) ** 0.5
+                dist = ((npc.rect.centerx - player.rect.centerx) ** 2 + (npc.rect.centery - player.rect.centery) ** 2) ** 0.5
                 if dist <= RESCUE_RANGE:
                     npc.show_rescue_prompt = True
                     if keys and keys[pygame.K_r]:
@@ -160,5 +151,5 @@ class NPC_manager:
             npc.draw(screen, camera)
 
     @property
-    def all_alive_rescued_or_dead(self) -> bool:
+    def all_alive_rescued_or_dead(self):
         return len(self.NPCs) == 0
