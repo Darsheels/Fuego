@@ -1,4 +1,5 @@
 import pygame
+import json
 from pathlib import Path
 from entities.scene_manager import SceneManager
 from entities.scene_factory import build_scenes_from_definitions
@@ -10,17 +11,18 @@ from entities.smokeParticles import SmokeManager
 from UI.button import Button
 from settings import SCREEN_HEIGHT, SCREEN_WIDTH
 from audio.SoundManager import SoundManager
+from entities.stats_manager import StatsManager
 
 class Game:
     def __init__(self):
         self.screen = pygame.display.set_mode((0,0), pygame.NOFRAME | pygame.FULLSCREEN)
         pygame.display.set_caption("Fuego")
-        self.clock   = pygame.time.Clock()
+        self.clock = pygame.time.Clock()
         self.running = True
-        self.paused  = False
+        self.paused = False
 
-        self.next_spawn  = None
-        self.last_scene  = None
+        self.next_spawn = None
+        self.last_scene = None
         self.selected_mission = None
         self.previous_mission = None
 
@@ -28,23 +30,24 @@ class Game:
         self.base_h = 720  
         self.game_surface = pygame.Surface((self.base_w, self.base_h))
 
-        self._scale    = 1.0
+        self._scale = 1.0
         self._offset_x = 0
         self._offset_y = 0
         self.recompute_scale()
 
-        self.fade_state        = "none"  
-        self.fade_alpha        = 0
-        self.fade_speed        = 255     
+        self.fade_state = "none"  
+        self.fade_alpha = 0
+        self.fade_speed = 255     
         self.fade_target_scene = None
-        self.fade_surface      = pygame.Surface((self.base_w, self.base_h))
+        self.fade_surface = pygame.Surface((self.base_w, self.base_h))
         self.fade_surface.fill((0, 0, 0))
 
         self.fire_truck = OBJECT_CLASSES["DefaultTruck"](100, 250)
-        self.pager      = OBJECT_CLASSES["Pager"](1000, 500, game=self)
-        self.player     = BasePlayer(self, 400, 480, "firefighter_no_gear")
+        self.pager = OBJECT_CLASSES["Pager"](1000, 500, game=self)
+        self.player = BasePlayer(self, 400, 480, "firefighter_no_gear")
         self.smoke = SmokeManager()
         self.sound_manager = SoundManager()
+        self.stats = StatsManager()
 
         self.scene_manager = SceneManager(self)
         self.scene_manager.add("truck_cutscene", TruckCutsceneScene(self, self.fire_truck))
@@ -57,7 +60,7 @@ class Game:
             self.scene_manager.add(scene_name, scene)
 
         self.mission_scenes = ["CarCrashScene","FurnitureStore","House1","Museum",]
-        self.misstion_inteiors = ["House1Int","MuseumInt","FurnitureStoreInt"]
+        self.mission_inteiors = ["House1Int","MuseumInt","FurnitureStoreInt"]
         self.scene_manager.set("MainMenu")
 
         self.background = pygame.image.load("assets/sprites/buildingblocks/Background.png").convert_alpha()
@@ -66,13 +69,15 @@ class Game:
         self.exit_img = pygame.image.load("assets/sprites/buildingblocks/LeaveButton.png").convert_alpha()
         self.pause_img = pygame.image.load("assets/sprites/buildingblocks/PauseButton.png").convert_alpha()
         self.settings_img = pygame.image.load("assets/sprites/buildingblocks/SettingsButton.png").convert_alpha()
-        self.exit_button = Button(SCREEN_WIDTH *0.02, 40, self , self.exit_img, self.toggle_exit_menu, scale=0.8)
-        self.pause_button = Button(SCREEN_WIDTH *0.02, 110, self , self.pause_img, self.toggle_pause, scale=0.8)
-        self.settings_button = Button(SCREEN_WIDTH *0.02, 180, self, self.settings_img,self.toggle_setting,scale=0.8 )
-        self.buttons = [self.exit_button, self.pause_button, self.settings_button]
+        self.stats_img = pygame.image.load("assets/sprites/buildingblocks/Stats_img.png").convert_alpha()
+        self.exit_button = Button(SCREEN_WIDTH *0.02, SCREEN_HEIGHT * 0.05, self , self.exit_img, self.toggle_exit_menu, scale=0.8)
+        self.pause_button = Button(SCREEN_WIDTH *0.02, SCREEN_HEIGHT * 0.15, self , self.pause_img, self.toggle_pause, scale=0.8)
+        self.settings_button = Button(SCREEN_WIDTH *0.02, SCREEN_HEIGHT * 0.25, self, self.settings_img,self.toggle_setting,scale=0.8)
+        self.stats_button = Button(SCREEN_WIDTH *0.02,SCREEN_HEIGHT * 0.35, self, self.stats_img,self.toggle_stats,scale=0.8)
+        self.buttons = [self.exit_button, self.pause_button, self.settings_button, self.stats_button]
         
-        self.exitMenu_surface = pygame.image.load("assets/sprites/buildingblocks/ConfirmCancelMenu.png").convert_alpha()
-        self.exitMenu_surface = pygame.transform.scale(self.exitMenu_surface, (400, 200))
+        self.exitMenu = pygame.image.load("assets/sprites/buildingblocks/ConfirmCancelMenu.png").convert_alpha()
+        self.exitMenu = pygame.transform.scale(self.exitMenu, (400, 200))
         self.confirm_img = pygame.image.load("assets/sprites/buildingblocks/ConfirmButton.png").convert_alpha()
         self.cancel_img = pygame.image.load("assets/sprites/buildingblocks/CancelButton.png").convert_alpha()
         self.confirm_button = Button(SCREEN_WIDTH * 0.5 - 150, SCREEN_HEIGHT *0.5 - 35, self , self.confirm_img, self.quit_game, scale=0.8)
@@ -81,16 +86,25 @@ class Game:
         
         self.show_exit_menu = False
         self.setting_open = False
+        self.stats_open = False
 
-        self.settingMenu_surface = pygame.image.load("assets/sprites/buildingblocks/SettingsMenu.png").convert_alpha()
-        self.settingMenu_surface = pygame.transform.scale(self.settingMenu_surface, (200,400))
+        self.settingMenu = pygame.image.load("assets/sprites/buildingblocks/SettingsMenu.png").convert_alpha()
+        self.settingMenu = pygame.transform.scale(self.settingMenu, (200,200))
         self.MasterSound_img = pygame.image.load("assets/sprites/buildingblocks/MasterSoundSwitch.png").convert_alpha()
         self.add_img = pygame.image.load("assets/sprites/buildingblocks/Addition.png").convert_alpha()
-        self.subtract_img = pygame.image.load("assets/sprites/buildingblocks/Subtraction.png").convert_alpha()        
-        self.MasterSound_Button = Button(SCREEN_WIDTH * 0.12, SCREEN_HEIGHT * 0.15, self, self.MasterSound_img,self.toggle_sound,scale=0.8)
-        self.add_button = Button(SCREEN_WIDTH * 0.23, SCREEN_HEIGHT * 0.25 , self,self.add_img,self.add_master_volume, scale=1)
-        self.subtract_button = Button(SCREEN_WIDTH * 0.11, SCREEN_HEIGHT * 0.25, self,self.subtract_img,self.subtract_master_volume, scale=1)
-        self.settings_buttons = [self.MasterSound_Button,self.add_button,self.subtract_button]
+        self.subtract_img = pygame.image.load("assets/sprites/buildingblocks/Subtraction.png").convert_alpha()
+        self.fps_img = pygame.image.load("assets/sprites/buildingblocks/FPS_img.png").convert_alpha()        
+        self.MasterSound_Button = Button(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.3, self, self.MasterSound_img,self.toggle_sound,scale=0.8)
+        self.fps_button = Button(SCREEN_WIDTH * 0.12, SCREEN_HEIGHT * 0.3, self, self.fps_img,self.toggle_fps,scale=0.8)
+        self.add_button = Button(SCREEN_WIDTH * 0.222, SCREEN_HEIGHT * 0.227 , self,self.add_img,self.add_master_volume, scale=1)
+        self.subtract_button = Button(SCREEN_WIDTH * 0.11, SCREEN_HEIGHT * 0.23, self,self.subtract_img,self.subtract_master_volume, scale=1)
+        self.settings_buttons = [self.add_button,self.subtract_button, self.fps_button, self.MasterSound_Button]
+        
+        self.volume_on = True
+        self.fps_on = False
+        
+        self.statsMenu = pygame.image.load("assets/sprites/buildingblocks/SettingsMenu.png").convert_alpha()
+        self.statsMenu = pygame.transform.scale(self.statsMenu, (200,200))
         
         self.cursor_img  = pygame.image.load("assets/sprites/buildingblocks/MousePointer.png").convert_alpha()
         self.cursor_rect = self.cursor_img.get_rect()
@@ -119,14 +133,14 @@ class Game:
     def open_exit_menu(self):
         self.show_exit_menu = True
         
-    def toggle_exit_menu(self):
-        self.show_exit_menu = not self.show_exit_menu
-        
     def run(self):
         while self.running:
             keys = pygame.key.get_pressed()
             self.handle_events()
             dt = self.clock.tick(60) / 1000
+            
+            self.stats.update_time(dt)
+            self.stats.save()
             
             if not self.paused:
                 self.scene_manager.update(keys, dt)
@@ -151,7 +165,9 @@ class Game:
             self.exit_menu()
             self.paused_menu()
             self.setting_menu()
+            self.stats_menu()
             self.sound_updates()
+            self.fps_draw()
         
             mx, my = pygame.mouse.get_pos()
             self.cursor_rect.center = (mx, my)
@@ -174,7 +190,21 @@ class Game:
             if self.scene_manager.current_name != "MainMenu":   
                 button.draw(self.screen)
 
-    
+    def stats_menu(self):
+        if self.stats_open:
+            overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+            overlay.set_alpha(150)
+            overlay.fill((0, 0, 0))
+            self.screen.blit(overlay, (0, 0))
+            
+            menu_rect = self.statsMenu.get_rect(bottomleft=(SCREEN_WIDTH * 0.1, SCREEN_HEIGHT * 0.39))
+            self.screen.blit(self.statsMenu,menu_rect)
+            
+            font = pygame.font.SysFont("arial", 30, bold=True)
+            text = font.render("Stats", True,(255,255,255))
+            text_rect = text.get_rect(bottomleft=(SCREEN_WIDTH * 0.15 , SCREEN_HEIGHT * 0.18))
+            self.screen.blit(text,text_rect)
+            
     def setting_menu(self):
         if self.setting_open:
             overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -182,13 +212,18 @@ class Game:
             overlay.fill((0, 0, 0))
             self.screen.blit(overlay, (0, 0))
             
-            menu_rect = self.settingMenu_surface.get_rect(bottomleft=(SCREEN_WIDTH * 0.1, SCREEN_HEIGHT * 0.65))
-            self.screen.blit(self.settingMenu_surface,menu_rect)
+            menu_rect = self.settingMenu.get_rect(bottomleft=(SCREEN_WIDTH * 0.1, SCREEN_HEIGHT * 0.39))
+            self.screen.blit(self.settingMenu,menu_rect)
+            
+            font = pygame.font.SysFont("arial", 30, bold=True)
+            text = font.render("Settings", True, (255,255,255))
+            text_rect = text.get_rect(bottomleft=(SCREEN_WIDTH * 0.13 , SCREEN_HEIGHT * 0.18))
+            self.screen.blit(text,text_rect)
             
             for button in self.settings_buttons:
                 button.draw(self.screen)
                 
-            bar_rect = pygame.Rect(SCREEN_WIDTH * 0.14,SCREEN_HEIGHT * 0.25,100,20)
+            bar_rect = pygame.Rect(SCREEN_WIDTH * 0.14,SCREEN_HEIGHT * 0.23,100,20)
             pygame.draw.rect(self.screen, (60,60,60), bar_rect)
             fill_width = int(bar_rect.width * self.sound_manager.master_volume)
             pygame.draw.rect(self.screen,(0,200,0),(bar_rect.x,bar_rect.y,fill_width,bar_rect.height))
@@ -211,8 +246,8 @@ class Game:
             overlay.fill((0, 0, 0))
             self.screen.blit(overlay, (0, 0))
                 
-            menu_rect = self.exitMenu_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
-            self.screen.blit(self.exitMenu_surface, menu_rect)
+            menu_rect = self.exitMenu.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+            self.screen.blit(self.exitMenu, menu_rect)
                 
             for button in self.menu_buttons:
                     button.draw(self.screen)
@@ -233,6 +268,15 @@ class Game:
                 self.fade_alpha = 0
                 self.fade_state = "none"
     
+    def fps_draw(self):
+        if not self.fps_on:
+            return
+        
+        font = pygame.font.SysFont("arial", 30, bold=True)
+        fps_text = font.render(f"FPS: {int(self.clock.get_fps())}", True , (255,255,255))
+        fps_text_rect = fps_text.get_rect(topleft=(SCREEN_WIDTH * 0.01 , SCREEN_HEIGHT * 0.95))
+        self.screen.blit(fps_text,fps_text_rect)
+            
     def add_master_volume(self):
         self.sound_manager.set_master_volume(self.sound_manager.master_volume + 0.1)
         
@@ -240,16 +284,50 @@ class Game:
         self.sound_manager.set_master_volume(self.sound_manager.master_volume - 0.1)
     
     def toggle_sound(self):
-        self.sound_manager.stop_all_sounds()
-        
+        if self.volume_on:
+            self.sound_manager.set_master_volume(0)
+            self.volume_on = False
+        else:
+            self.sound_manager.set_master_volume(1)
+            self.volume_on = True
+    
     def quit_game(self):
         self.running = False
     
+    def toggle_exit_menu(self):
+        self.show_exit_menu = not self.show_exit_menu
+        
+        if self.show_exit_menu:
+            self.stats_open = False
+            self.setting_open = False
+            self.paused = False    
+    
     def toggle_pause(self):
         self.paused = not self.paused
+        
+        if self.paused:
+            self.setting_open = False
+            self.stats_open = False
+            self.show_exit_menu = False
     
     def toggle_setting(self):
         self.setting_open = not self.setting_open
+        
+        if self.setting_open:
+            self.stats_open = False
+            self.show_exit_menu = False
+            self.paused = False
+        
+    def toggle_stats(self):
+        self.stats_open = not self.stats_open
+        
+        if self.stats_open:
+            self.setting_open = False
+            self.show_exit_menu = False
+            self.paused = False
+        
+    def toggle_fps(self):
+        self.fps_on = not self.fps_on
         
     def handle_events(self):
         for event in pygame.event.get():

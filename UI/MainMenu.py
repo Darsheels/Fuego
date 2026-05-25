@@ -13,11 +13,10 @@ class MainMenu:
         
         self.game.sound_manager.play_sound("BackgroundMusic",-1)
         self.game.sound_manager.play_sound("FireCrackle",-1)
-        # self.game.sound_manager.set_volume("FireTruckSiren", 0.1)
         self.game.sound_manager.play_sound("FireTruckSiren",-1)
         
-        self.play_button = Button(SCREEN_WIDTH *0.13, 300, self.game, self.play_img, self.start_game, scale=1.5)
-        self.exit_button = Button(SCREEN_WIDTH *0.13, 400, self.game, self.exit_img, self.quit_game, scale=1.5)
+        self.play_button = Button(SCREEN_WIDTH *0.13, SCREEN_HEIGHT * 0.4, self.game, self.play_img, self.start_game, scale=1.5)
+        self.exit_button = Button(SCREEN_WIDTH *0.13, SCREEN_HEIGHT * 0.55, self.game, self.exit_img, self.quit_game, scale=1.5)
 
         self.buttons = [self.play_button, self.exit_button]
         self.smoke_timer = 0

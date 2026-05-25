@@ -33,7 +33,7 @@ class BaseScene:
         self.transitions  = []
         self.has_pager = False
         self.fire_manager = Fire_manager(game)
-        self.npc_manager  = NPC_manager()
+        self.npc_manager  = NPC_manager(game)
         self.camera = Camera.single_screen()
 
         self.is_mission_scene = False
@@ -173,6 +173,8 @@ class BaseScene:
             self.mission_accomplished = True
             self.mission_popup_timer  = 2.5
             self.game.sound_manager.stop_sound("Extinguishing")
+            self.game.stats.add_mission()
+            self.game.stats.save()
     
     def select_mission(self):  
         if self.scene_name != "TruckApparatus":

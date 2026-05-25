@@ -116,8 +116,9 @@ class NPC:
 
 
 class NPC_manager:
-    def __init__(self):
+    def __init__(self,game):
         self.NPCs = []
+        self.game = game
 
     def add_NPC(self, x, y):
         self.NPCs.append(NPC(x, y))
@@ -139,6 +140,8 @@ class NPC_manager:
                 if dist <= RESCUE_RANGE:
                     npc.show_rescue_prompt = True
                     if keys and keys[pygame.K_r]:
+                        self.game.stats.add_rescued()
+                        self.game.stats.save()
                         npc.set_rescued()
                         continue
 
