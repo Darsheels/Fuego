@@ -1,5 +1,4 @@
 import pygame
-import json
 from pathlib import Path
 from entities.scene_manager import SceneManager
 from entities.scene_factory import build_scenes_from_definitions
@@ -205,6 +204,33 @@ class Game:
             text_rect = text.get_rect(bottomleft=(SCREEN_WIDTH * 0.15 , SCREEN_HEIGHT * 0.18))
             self.screen.blit(text,text_rect)
             
+            stats_font = pygame.font.SysFont("arial", 20, bold=True)
+            
+            missions_completed = stats_font.render(
+                f"Missions: {self.stats.stats["Missions_Completed"]}",
+                True,
+                (255,255,255)
+            )
+            
+            people_rescued = stats_font.render(
+                f"People Rescued: {self.stats.stats["People_Rescued"]}",
+                True,
+                (255,255,255)
+            )
+            
+            hours = int(self.stats.stats["Play_Time"] // 3600)
+            minutes = int((self.stats.stats["Play_Time"]% 3600) // 60)
+            
+            play_time = stats_font.render(
+                f"Play Time: {hours}h {minutes}m",
+                True,
+                (255,255,255)
+            )
+            
+            self.screen.blit(missions_completed, (SCREEN_WIDTH * 0.11, SCREEN_HEIGHT * 0.2))
+            self.screen.blit(people_rescued, (SCREEN_WIDTH * 0.11, SCREEN_HEIGHT * 0.25))
+            self.screen.blit(play_time, (SCREEN_WIDTH * 0.11, SCREEN_HEIGHT * 0.3))
+            
     def setting_menu(self):
         if self.setting_open:
             overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -248,10 +274,15 @@ class Game:
                 
             menu_rect = self.exitMenu.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
             self.screen.blit(self.exitMenu, menu_rect)
-                
+            
+            font = pygame.font.SysFont("arial",30,bold=True)
+            text = font.render("Are you sure?", True, (255,255,255))
+            text_rect = text.get_rect(bottomleft=(SCREEN_WIDTH // 2 - 85 , SCREEN_HEIGHT // 2 - 50))
+            self.screen.blit(text,text_rect)
+            
             for button in self.menu_buttons:
                     button.draw(self.screen)
-    
+
     def update_fade(self, dt):
         if self.fade_state == "fading_out":
             self.fade_alpha += self.fade_speed * dt
@@ -306,9 +337,14 @@ class Game:
         self.paused = not self.paused
         
         if self.paused:
+            self.previous_volume = self.sound_manager.master_volume
+            self.sound_manager.set_master_volume(0)
             self.setting_open = False
             self.stats_open = False
             self.show_exit_menu = False
+    
+        else:
+            self.sound_manager.set_master_volume(self.previous_volume)
     
     def toggle_setting(self):
         self.setting_open = not self.setting_open

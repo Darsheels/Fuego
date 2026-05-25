@@ -66,12 +66,15 @@ class Fire(pygame.sprite.Sprite):
             self.extinguish_timer = 0.0
         
 class Fire_manager:
+    MAX_FIRES = 100
+    
     def __init__(self, game):
         self.fires = []
         self.game = game
         
     def add_fire(self,x,y, can_spread=False):
-        self.fires.append(Fire(x,y, can_spread, game=self.game))
+        if len(self.fires) < self.MAX_FIRES:
+            self.fires.append(Fire(x,y, can_spread, game=self.game))
     
     def update(self,dt):
         
@@ -83,7 +86,7 @@ class Fire_manager:
         new_fires = []
         for fire in self.fires:
             if not fire.extinguished and fire.can_spread and fire.spread_timer >= fire.spread_delay:
-               if fire.spread_timer >= fire.spread_delay:
+                if len(self.fires) + len(new_fires) < self.MAX_FIRES:
                     nx = fire.rect.x + random.choice([-40,40])
                     ny = fire.rect.y + random.choice([-40,40])
                     if 0 <= nx <= SCREEN_WIDTH - 48 and 0 <= ny <= SCREEN_HEIGHT - 64:
