@@ -8,8 +8,11 @@ class StatsManager:
         self.stats = {
             "Missions_Completed": 0,
             "People_Rescued":0,
-            "Play_Time":0
+            "Play_Time":0,
+            "XP": 0,
+            "Rank": "Recruit"
         }
+        
         self.load()
         
     def add_mission(self):
@@ -20,7 +23,20 @@ class StatsManager:
     
     def update_time(self,dt):
         self.stats["Play_Time"] += dt
-        
+    
+    def update_XP(self):
+        self.stats["XP"] += 15
+    
+    def update_Rank(self):
+        if self.stats["XP"] >= 100:
+            self.stats["Rank"] = "P. Firefighter"
+        elif self.stats["XP"] >= 500:
+            self.stats["Rank"] = "Firefighter"
+        elif self.stats["XP"] >= 1000:
+            self.stats["Rank"] = "S. Firefighter"
+        else:
+            self.stats["Rank"] = "Recruit"
+    
     def save(self):
         os.makedirs("save", exist_ok=True)
         

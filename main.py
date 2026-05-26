@@ -58,7 +58,7 @@ class Game:
         for scene_name, scene in scenes.items():
             self.scene_manager.add(scene_name, scene)
 
-        self.mission_scenes = ["Museum",]
+        self.mission_scenes = ["Museum","FurnitureStore","CarCrashScene","House1"]
         self.mission_inteiors = ["House1Int","MuseumInt","FurnitureStoreInt"]
         self.scene_manager.set("MainMenu")
 
@@ -69,11 +69,13 @@ class Game:
         self.pause_img = pygame.image.load("assets/sprites/buildingblocks/PauseButton.png").convert_alpha()
         self.settings_img = pygame.image.load("assets/sprites/buildingblocks/SettingsButton.png").convert_alpha()
         self.stats_img = pygame.image.load("assets/sprites/buildingblocks/Stats_img.png").convert_alpha()
+        self.profile_img = pygame.image.load("assets/sprites/buildingblocks/PlayerProfilePic.png").convert_alpha()
+        self.profile_button = Button(SCREEN_WIDTH * 0.93,SCREEN_HEIGHT * 0.03, self, self.profile_img,self.toggle_profile,scale=1)
         self.exit_button = Button(SCREEN_WIDTH *0.02, SCREEN_HEIGHT * 0.05, self , self.exit_img, self.toggle_exit_menu, scale=0.8)
         self.pause_button = Button(SCREEN_WIDTH *0.02, SCREEN_HEIGHT * 0.15, self , self.pause_img, self.toggle_pause, scale=0.8)
         self.settings_button = Button(SCREEN_WIDTH *0.02, SCREEN_HEIGHT * 0.25, self, self.settings_img,self.toggle_setting,scale=0.8)
         self.stats_button = Button(SCREEN_WIDTH *0.02,SCREEN_HEIGHT * 0.35, self, self.stats_img,self.toggle_stats,scale=0.8)
-        self.buttons = [self.exit_button, self.pause_button, self.settings_button, self.stats_button]
+        self.buttons = [self.exit_button, self.pause_button, self.settings_button, self.stats_button,self.profile_button]
         
         self.exitMenu = pygame.image.load("assets/sprites/buildingblocks/ConfirmCancelMenu.png").convert_alpha()
         self.exitMenu = pygame.transform.scale(self.exitMenu, (400, 200))
@@ -86,6 +88,7 @@ class Game:
         self.show_exit_menu = False
         self.setting_open = False
         self.stats_open = False
+        self.profile_open = False
 
         self.settingMenu = pygame.image.load("assets/sprites/buildingblocks/SettingsMenu.png").convert_alpha()
         self.settingMenu = pygame.transform.scale(self.settingMenu, (200,200))
@@ -104,6 +107,9 @@ class Game:
         
         self.statsMenu = pygame.image.load("assets/sprites/buildingblocks/SettingsMenu.png").convert_alpha()
         self.statsMenu = pygame.transform.scale(self.statsMenu, (200,200))
+        
+        self.profileMenu = pygame.image.load("assets/sprites/buildingblocks/SettingsMenu.png").convert_alpha()
+        self.profileMenu = pygame.transform.scale(self.profileMenu, (200,200))
         
         self.cursor_img  = pygame.image.load("assets/sprites/buildingblocks/MousePointer.png").convert_alpha()
         self.cursor_rect = self.cursor_img.get_rect()
@@ -139,6 +145,7 @@ class Game:
             dt = self.clock.tick(60) / 1000
             
             self.stats.update_time(dt)
+            self.stats.update_Rank()
             self.stats.save()
             
             if not self.paused:
@@ -165,6 +172,7 @@ class Game:
             self.paused_menu()
             self.setting_menu()
             self.stats_menu()
+            self.profile_menu()
             self.sound_updates()
             self.fps_draw()
         
@@ -204,7 +212,7 @@ class Game:
             text_rect = text.get_rect(bottomleft=(SCREEN_WIDTH * 0.15 , SCREEN_HEIGHT * 0.18))
             self.screen.blit(text,text_rect)
             
-            stats_font = pygame.font.SysFont("arial", 20, bold=True)
+            stats_font = pygame.font.SysFont("arial", 18, bold=True)
             
             missions_completed = stats_font.render(
                 f"Missions: {self.stats.stats["Missions_Completed"]}",
@@ -227,9 +235,42 @@ class Game:
                 (255,255,255)
             )
             
-            self.screen.blit(missions_completed, (SCREEN_WIDTH * 0.105, SCREEN_HEIGHT * 0.2))
-            self.screen.blit(people_rescued, (SCREEN_WIDTH * 0.105, SCREEN_HEIGHT * 0.25))
-            self.screen.blit(play_time, (SCREEN_WIDTH * 0.105, SCREEN_HEIGHT * 0.3))
+            self.screen.blit(missions_completed, (SCREEN_WIDTH * 0.11, SCREEN_HEIGHT * 0.2))
+            self.screen.blit(people_rescued, (SCREEN_WIDTH * 0.11, SCREEN_HEIGHT * 0.25))
+            self.screen.blit(play_time, (SCREEN_WIDTH * 0.11, SCREEN_HEIGHT * 0.3))
+    
+    def profile_menu(self):
+        if self.profile_open:
+            overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+            overlay.set_alpha(150)
+            overlay.fill((0, 0, 0))
+            self.screen.blit(overlay, (0, 0))
+            
+            menu_rect = self.profileMenu.get_rect(bottomright=(SCREEN_WIDTH * 0.9, SCREEN_HEIGHT * 0.3))
+            self.screen.blit(self.profileMenu, menu_rect)
+            
+            font = pygame.font.SysFont("arial", 25, bold=True)
+            text = font.render("Profile", True,(255,255,255))
+            text_rect = text.get_rect(bottomleft=(SCREEN_WIDTH * 0.76 , SCREEN_HEIGHT * 0.09))
+            self.screen.blit(text,text_rect)
+    
+            stats_font = pygame.font.SysFont("arial", 19, bold=True)
+            
+                 
+            XP = stats_font.render(
+                f"Total XP: {self.stats.stats["XP"]}",
+                True,
+                (255,255,255)
+            )
+            
+            Rank = stats_font.render(
+                f"Rank: {self.stats.stats["Rank"]}",
+                True,
+                (255,255,255)
+            )
+            
+            self.screen.blit(XP, (SCREEN_WIDTH * 0.755 , SCREEN_HEIGHT * 0.13))
+            self.screen.blit(Rank, (SCREEN_WIDTH * 0.755 , SCREEN_HEIGHT * 0.18))
             
     def setting_menu(self):
         if self.setting_open:
@@ -331,6 +372,7 @@ class Game:
         if self.show_exit_menu:
             self.stats_open = False
             self.setting_open = False
+            self.profile_open = False
             self.paused = False    
     
     def toggle_pause(self):
@@ -342,6 +384,7 @@ class Game:
             self.setting_open = False
             self.stats_open = False
             self.show_exit_menu = False
+            self.profile_open = False
     
         else:
             self.sound_manager.set_master_volume(self.previous_volume)
@@ -353,6 +396,7 @@ class Game:
             self.stats_open = False
             self.show_exit_menu = False
             self.paused = False
+            self.profile_open = False
         
     def toggle_stats(self):
         self.stats_open = not self.stats_open
@@ -361,9 +405,19 @@ class Game:
             self.setting_open = False
             self.show_exit_menu = False
             self.paused = False
+            self.profile_open = False
         
     def toggle_fps(self):
         self.fps_on = not self.fps_on
+        
+    def toggle_profile(self):
+        self.profile_open = not self.profile_open
+        
+        if self.profile_open:
+            self.setting_open = False
+            self.show_exit_menu = False
+            self.stats_open = False
+            self.paused = False
         
     def handle_events(self):
         for event in pygame.event.get():

@@ -36,8 +36,6 @@ class Entity:
         self.rect.topleft = (x, y)
 
     def draw(self, surface,camera=None):
-        # if self.image:
-        #     surface.blit(self.image, self.rect)
         if camera:
             surface.blit(self.image,camera.apply(self.rect))
         else:

@@ -96,35 +96,32 @@ def make_valuables_class(defn):
     def __init__(self,x,y,game=None):
         Entity.__init__(self, image_path, base_size, x, y, scale=scale, game=game)
         
-        self.saved = False
+        self.visible = True
         self.show_prompt = False
+        self.game = game
         
     def update(self,keys):
-        if self.saved:
-            return
-        
-        player = self.game.player
-        if self.rect.colliderect(player.rect):
-            self.show_prompt = True
-            
-            if keys[pygame.K_e]:
-                self.saved = True
-        else:
-            self.show_prompt = False
+        if self.visible:
+            player = self.game.player
+            if self.rect.colliderect(player.rect):
+                self.show_prompt = True
+                
+                if keys[pygame.K_e]:
+                    self.visible = False
+                    self.game.stats.update_XP()
+                    self.game.stats.save()
+            else:
+                self.show_prompt = False
     
     def draw(self,screen,camera=None):
-        Entity.draw(self,screen,camera)
-        
-        if self.saved:
-            return
-        
-        Entity.draw(self,screen)
-        
-        if self.show_prompt:
-            font = pygame.font.SysFont("arial", 24, bold=True)
-            text = font.render("Press E to save valuable", True, (255,255,255))
-            text_rect = text.get_rect(center=(self.rect.centerx,self.rect.top - 20))
-            screen.blit(text,text_rect)
+        if self.visible:
+            Entity.draw(self,screen,camera)
+            
+            if self.show_prompt:
+                font = pygame.font.SysFont("arial", 24, bold=True)
+                text = font.render("Press E to save valuable", True, (255,255,255))
+                text_rect = text.get_rect(center=(self.rect.centerx,self.rect.top - 20))
+                screen.blit(text,text_rect)
             
     return type(
             defn["name"],

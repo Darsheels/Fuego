@@ -171,6 +171,7 @@ class BaseScene:
             self.mission_popup_timer  = 2.5
             self.game.sound_manager.stop_sound("Extinguishing")
             self.game.stats.add_mission()
+            self.game.stats.update_XP()
             self.game.stats.save()
     
     def select_mission(self):  
