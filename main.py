@@ -58,7 +58,7 @@ class Game:
         for scene_name, scene in scenes.items():
             self.scene_manager.add(scene_name, scene)
 
-        self.mission_scenes = ["CarCrashScene","FurnitureStore","House1","Museum",]
+        self.mission_scenes = ["Museum",]
         self.mission_inteiors = ["House1Int","MuseumInt","FurnitureStoreInt"]
         self.scene_manager.set("MainMenu")
 
@@ -227,9 +227,9 @@ class Game:
                 (255,255,255)
             )
             
-            self.screen.blit(missions_completed, (SCREEN_WIDTH * 0.11, SCREEN_HEIGHT * 0.2))
-            self.screen.blit(people_rescued, (SCREEN_WIDTH * 0.11, SCREEN_HEIGHT * 0.25))
-            self.screen.blit(play_time, (SCREEN_WIDTH * 0.11, SCREEN_HEIGHT * 0.3))
+            self.screen.blit(missions_completed, (SCREEN_WIDTH * 0.105, SCREEN_HEIGHT * 0.2))
+            self.screen.blit(people_rescued, (SCREEN_WIDTH * 0.105, SCREEN_HEIGHT * 0.25))
+            self.screen.blit(play_time, (SCREEN_WIDTH * 0.105, SCREEN_HEIGHT * 0.3))
             
     def setting_menu(self):
         if self.setting_open:

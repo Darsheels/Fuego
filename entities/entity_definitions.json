@@ -38,7 +38,7 @@
     },
     {
       "name":"MuseumInt",
-      "image_path": "assets/sprites/buildings/Museumint.png",
+      "image_path": "assets/sprites/buildings/NewMesuemInt.png",
       "base_size": [256,256],
       "scale": 5
     },
@@ -99,6 +99,33 @@
       "image_path": "assets/sprites/buildingblocks/MainBackground.png",
       "base_size": [256,256],
       "scale":5
+    },
+    {
+      "name": "Valuable1",
+      "image_path": "assets/sprites/buildingblocks/Valuable1.png",
+      "base_size": [29,36],
+      "scale":5,
+      "extras": {
+        "valuable": true
+      }
+    },
+    {
+      "name": "Valuable2",
+      "image_path": "assets/sprites/buildingblocks/Valuable2.png",
+      "base_size": [39,36],
+      "scale":5,
+      "extras": {
+        "valuable": true
+      }
+    },
+    {
+      "name": "Valuable3",
+      "image_path": "assets/sprites/buildingblocks/Valuable3.png",
+      "base_size": [28,36],
+      "scale":5,
+      "extras": {
+        "valuable": true
+      }
     }
   ]
 }

@@ -35,6 +35,10 @@ class Entity:
         self.world_pos.update(x, y)
         self.rect.topleft = (x, y)
 
-    def draw(self, surface):
-        if self.image:
-            surface.blit(self.image, self.rect)
+    def draw(self, surface,camera=None):
+        # if self.image:
+        #     surface.blit(self.image, self.rect)
+        if camera:
+            surface.blit(self.image,camera.apply(self.rect))
+        else:
+            surface.blit(self.image,self.rect)

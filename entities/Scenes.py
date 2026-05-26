@@ -103,10 +103,7 @@ class BaseScene:
 
     def draw(self, screen):
         for obj in self.objects:
-            if obj.image:
-                screen.blit(obj.image, self.camera.apply(obj.rect))
-            else:
-                obj.draw(screen)
+            obj.draw(screen,self.camera)
 
         self.fire_manager.draw(screen, self.camera)
         self.npc_manager.draw(screen, self.camera)
@@ -325,9 +322,6 @@ class BaseScene:
     def go(self, transition: dict):
         self.game.next_spawn = transition["spawn"]
         self.game.scene_manager.set(transition["target"])
-
-    
-    # Drawing helpers
     
     def draw_ladder_prompt(self, screen):
         font = pygame.font.Font(None, 32)
@@ -343,7 +337,7 @@ class BaseScene:
             self.draw_banner(screen, "Mission Failed", (255, 0, 0))
 
     @staticmethod
-    def draw_banner(screen, text: str, color: tuple):
+    def draw_banner(screen, text, color):
         font = pygame.font.Font(None, 64)
         surf = font.render(text, True, color)
         rect = surf.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))

@@ -99,14 +99,12 @@ class NPC:
         draw_rect = camera.apply(self.rect) if camera else self.rect
         surface.blit(self.image, draw_rect)
 
-        # Health bar
         bar_rect = pygame.Rect(draw_rect.x, draw_rect.y - 20, 60, 8)
         ratio = max(0.0, self.health / self.max_health)
         pygame.draw.rect(surface, (180, 0, 0), bar_rect)
         pygame.draw.rect(surface, (0, 220, 0),
         (bar_rect.x, bar_rect.y, int(bar_rect.width * ratio), bar_rect.height))
 
-        # Rescue prompt
         if self.show_rescue_prompt:
             font = pygame.font.Font(None, 28)
             surf = font.render("Press R to rescue", True, (255, 255, 100))
