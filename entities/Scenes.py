@@ -147,7 +147,7 @@ class BaseScene:
             self.fail_mission()
 
     def fail_mission(self):
-        self.mission_failed      = True
+        self.mission_failed = True
         self.mission_popup_timer = 2.5
         self.game.selected_mission = None
 
@@ -165,6 +165,10 @@ class BaseScene:
             return
         fires_clear = len(self.fire_manager.fires) == 0
         npcs_clear  = len(self.npc_manager.NPCs) == 0
+        
+        if fires_clear:
+            self.game.sound_manager.stop_sound("Extinguishing")
+        
         
         if fires_clear and npcs_clear:
             self.mission_accomplished = True
@@ -193,7 +197,7 @@ class BaseScene:
 
 
     # Actor update
-    def update_actor(self, keys, dt) -> pygame.Rect | None:
+    def update_actor(self, keys, dt) :
         if self.fire_truck and self.player and getattr(self.player, "in_vehicle", False):
             return self.fire_truck.rect
 
@@ -206,7 +210,7 @@ class BaseScene:
 
         return None
 
-    def update_player(self, keys, dt) -> pygame.Rect:
+    def update_player(self, keys, dt) :
         actor_rect = self.player.rect
 
         # Fire damage to player
@@ -267,14 +271,14 @@ class BaseScene:
 
             if keys[pygame.K_w] or keys[pygame.K_s]:
                 self.player.on_ladder = True
-                self.player.ladder    = obj
-                ladder_found          = True
+                self.player.ladder = obj
+                ladder_found = True
                 break
 
         if not ladder_found:
-            self.player.on_ladder         = False
-            self.player.climbing          = False
-            self.player.ladder            = None
+            self.player.on_ladder = False
+            self.player.climbing = False
+            self.player.ladder = None
             self.player.show_ladder_prompt = False
     
     def update_interactions(self, keys, actor_rect):
@@ -320,7 +324,7 @@ class BaseScene:
             elif direction == "up":
                 self.go(t)
 
-    def go(self, transition: dict):
+    def go(self, transition):
         self.game.next_spawn = transition["spawn"]
         self.game.scene_manager.set(transition["target"])
     
@@ -365,19 +369,19 @@ class DataScene(BaseScene):
             game,
             player,
             game.fire_truck if use_shared_fire_truck else None,
-            game.pager      if has_pager             else None,
+            game.pager if has_pager else None,
         )
-        self.scene_name            = scene_name
-        self.spawn_points          = spawn_points or {}
-        self.draw_background       = draw_background
+        self.scene_name = scene_name
+        self.spawn_points = spawn_points or {}
+        self.draw_background = draw_background
         self.use_shared_fire_truck = use_shared_fire_truck
         self.fire_truck_alignment  = fire_truck_alignment
-        self.has_pager             = has_pager
-        self.player_profile        = player_profile
-        self.is_mission_scene      = is_mission_scene
-        self.fire_spreading        = fire_spreading
-        self.fire_defs             = []   
-        self.npc_defs              = []   
+        self.has_pager = has_pager
+        self.player_profile = player_profile
+        self.is_mission_scene = is_mission_scene
+        self.fire_spreading = fire_spreading
+        self.fire_defs = []   
+        self.npc_defs  = []   
 
         for obj in (objects or []):
             self.add_objects(obj)
@@ -412,9 +416,9 @@ class DataScene(BaseScene):
         if not self.player:
             return
         self.player.extinguisher_active = False
-        self.player.extinguisher_rect   = None
+        self.player.extinguisher_rect = None
         self.player.extinguisher_appear = False
-        self.player.extinguisher_pos    = (0, 0)
+        self.player.extinguisher_pos = (0, 0)
 
     def handle_truck_apparatus_entry(self):
         if self.scene_name != "TruckApparatus":
@@ -437,9 +441,9 @@ class DataScene(BaseScene):
         pager.pager_triggered = False
 
     def reset_mission(self):
-        self.player.health        = 100
+        self.player.health = 100
         self.mission_accomplished = False
-        self.mission_failed       = False
+        self.mission_failed = False
         self.mission_popup_timer  = 0.0
 
         self.fire_manager.fires = [
@@ -451,18 +455,18 @@ class DataScene(BaseScene):
             for n in self.npc_defs
         ]
 
-    def get_spawn_position(self, spawn_name: str):
+    def get_spawn_position(self, spawn_name):
         scene_spawns = self.spawn_points.get(self.scene_name, {})
         return scene_spawns.get(spawn_name) or scene_spawns.get("default")
 
-    def place_player(self, spawn_name: str):
+    def place_player(self, spawn_name):
         if not self.player:
             return
         pos = self.get_spawn_position(spawn_name)
         if pos:
             self.player.rect.topleft = tuple(pos)
 
-    def place_fire_truck(self, spawn_name: str):
+    def place_fire_truck(self, spawn_name):
         if not (self.fire_truck and self.use_shared_fire_truck):
             return
         pos = self.get_spawn_position(spawn_name)
@@ -470,7 +474,7 @@ class DataScene(BaseScene):
             return
         self.fire_truck.speed = 0
         if self.fire_truck_alignment == "bottom":
-            self.fire_truck.rect.x      = pos[0]
+            self.fire_truck.rect.x = pos[0]
             self.fire_truck.rect.bottom = 780
         else:
             self.fire_truck.rect.topleft = tuple(pos)

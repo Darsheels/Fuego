@@ -89,6 +89,18 @@
     "scale":4
     },
     {
+    "name": "Apartment",
+    "image_path": "assets/sprites/buildings/Apartment.png",
+    "base_size":[256,256],
+    "scale":5
+    },
+    {
+    "name": "ApartmentInt",
+    "image_path": "assets/sprites/buildings/ApartmentInt.png",
+    "base_size":[256,248],
+    "scale":1
+    },    
+    {
       "name": "FurnitureStoreInterior",
       "image_path": "assets/sprites/buildings/FurnitureStoreInterior.png",
       "base_size":[256,256],

@@ -175,8 +175,43 @@
         {"class": "Ladder","x": 800 , "y": 200 , "height": 110},
         {"class": "NPC", "x": 100, "y": 170 }
       ]
-    }  
-
+    },
+    {
+      "name": "Apartment",
+      "use_player": true,
+      "player":"firefighter_geared",
+      "is_mission_scene": false,
+      "use_shared_fire_truck":true,
+      "fire_truck_alignment": "bottom",
+      "draw_background": true,
+      "objects": [
+        {"class": "Apartment", "x":200, "y":-453},
+        {"class": "FireHydrant", "x":200, "y":-453}
+      ],
+      "interactions": [
+        {
+          "name": "Break",
+          "text": "Press E to break in through the Door!!",
+          "zone": { "x": 900, "y": 520, "w": 100, "h": 100 },
+          "key": "K_e",
+          "target_scene": "ApartmentInt",
+          "spawn_point": "default"
+        }
+      ]
+    },
+    {
+      "name": "ApartmentInt",
+      "use_player": true,
+      "player":"firefighter_with_extinguisher",
+      "is_mission_scene": true,
+      "Fire_Spreading": true,
+      "use_shared_fire_truck":false,
+      "draw_background": false,
+      "objects": [
+        {"class": "ApartmentInt", "x":0, "y":0},
+        {"class": "NPC", "x": 100, "y": 170 }
+      ]
+    }   
   ],
 
   "spawn_points": {
@@ -209,6 +244,12 @@
     },
     "FurnitureStoreInt": {
       "default": [1000,620]
+    },
+    "Apartment": {
+      "default": [-400,620]
+    },
+    "ApartmentInt": {
+      "default": [500,620]
     }  
   }
 }
