@@ -209,7 +209,14 @@
       "draw_background": false,
       "objects": [
         {"class": "ApartmentInt", "x":0, "y":0},
-        {"class": "NPC", "x": 100, "y": 170 }
+        {"class": "NPC", "x": 800, "y": 44 },
+        {"class": "NPC", "x": 0, "y": 290},
+        {"class": "NPC", "x": 930, "y":510},
+        {"class": "Ladder", "x":800 ,"y":300, "height": 84},
+        {"class": "Ladder", "x": 100, "y":61,"height": 85},
+        {"class": "Fire", "x":400,"y": 35},
+        {"class": "Fire", "x": 500, "y": 280},
+        {"class": "Fire", "x":800, "y": 520}
       ]
     }   
   ],
@@ -249,7 +256,7 @@
       "default": [-400,620]
     },
     "ApartmentInt": {
-      "default": [500,620]
+      "default": [400,620]
     }  
   }
 }

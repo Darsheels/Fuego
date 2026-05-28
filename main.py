@@ -58,7 +58,7 @@ class Game:
         for scene_name, scene in scenes.items():
             self.scene_manager.add(scene_name, scene)
 
-        self.mission_scenes = ["Apartment","Museum","FurnitureStore","CarCrashScene","House1"]
+        self.mission_scenes = ["Apartment","House1","Museum","FurnitureStore","CarCrashScene"]
         self.mission_inteiors = ["House1Int","MuseumInt","FurnitureStoreInt"]
         self.scene_manager.set("MainMenu")
 
@@ -160,13 +160,6 @@ class Game:
                 self.fade_surface.set_alpha(int(self.fade_alpha))
                 self.game_surface.blit(self.fade_surface, (0, 0))
 
-            scaled_w = int(self.base_w * self._scale)
-            scaled_h = int(self.base_h * self._scale)
-            scaled   = pygame.transform.scale(self.game_surface, (scaled_w, scaled_h))
-
-            self.screen.fill((0, 0, 0))   
-            self.screen.blit(scaled, (self._offset_x, self._offset_y))
-
             self.side_buttons_update()
             self.exit_menu()
             self.paused_menu()
@@ -175,6 +168,13 @@ class Game:
             self.profile_menu()
             self.sound_updates()
             self.fps_draw()
+            
+            scaled_w = int(self.base_w * self._scale)
+            scaled_h = int(self.base_h * self._scale)
+            scaled = pygame.transform.scale(self.game_surface, (scaled_w, scaled_h))
+
+            self.screen.fill((0, 0, 0))   
+            self.screen.blit(scaled, (self._offset_x, self._offset_y))
         
             mx, my = pygame.mouse.get_pos()
             self.cursor_rect.center = (mx, my)
@@ -195,22 +195,22 @@ class Game:
     def side_buttons_update(self):
         for button in self.buttons:
             if self.scene_manager.current_name != "MainMenu":   
-                button.draw(self.screen)
+                button.draw(self.game_surface)
 
     def stats_menu(self):
         if self.stats_open:
             overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
             overlay.set_alpha(150)
             overlay.fill((0, 0, 0))
-            self.screen.blit(overlay, (0, 0))
+            self.game_surface.blit(overlay, (0, 0))
             
             menu_rect = self.statsMenu.get_rect(bottomleft=(SCREEN_WIDTH * 0.1, SCREEN_HEIGHT * 0.39))
-            self.screen.blit(self.statsMenu,menu_rect)
+            self.game_surface.blit(self.statsMenu,menu_rect)
             
             font = pygame.font.SysFont("arial", 30, bold=True)
             text = font.render("Stats", True,(255,255,255))
             text_rect = text.get_rect(bottomleft=(SCREEN_WIDTH * 0.15 , SCREEN_HEIGHT * 0.18))
-            self.screen.blit(text,text_rect)
+            self.game_surface.blit(text,text_rect)
             
             stats_font = pygame.font.SysFont("arial", 18, bold=True)
             
@@ -235,24 +235,24 @@ class Game:
                 (255,255,255)
             )
             
-            self.screen.blit(missions_completed, (SCREEN_WIDTH * 0.11, SCREEN_HEIGHT * 0.2))
-            self.screen.blit(people_rescued, (SCREEN_WIDTH * 0.11, SCREEN_HEIGHT * 0.25))
-            self.screen.blit(play_time, (SCREEN_WIDTH * 0.11, SCREEN_HEIGHT * 0.3))
+            self.game_surface.blit(missions_completed, (SCREEN_WIDTH * 0.11, SCREEN_HEIGHT * 0.2))
+            self.game_surface.blit(people_rescued, (SCREEN_WIDTH * 0.11, SCREEN_HEIGHT * 0.25))
+            self.game_surface.blit(play_time, (SCREEN_WIDTH * 0.11, SCREEN_HEIGHT * 0.3))
     
     def profile_menu(self):
         if self.profile_open:
             overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
             overlay.set_alpha(150)
             overlay.fill((0, 0, 0))
-            self.screen.blit(overlay, (0, 0))
+            self.game_surface.blit(overlay, (0, 0))
             
             menu_rect = self.profileMenu.get_rect(bottomright=(SCREEN_WIDTH * 0.9, SCREEN_HEIGHT * 0.3))
-            self.screen.blit(self.profileMenu, menu_rect)
+            self.game_surface.blit(self.profileMenu, menu_rect)
             
             font = pygame.font.SysFont("arial", 25, bold=True)
             text = font.render("Profile", True,(255,255,255))
             text_rect = text.get_rect(bottomleft=(SCREEN_WIDTH * 0.76 , SCREEN_HEIGHT * 0.09))
-            self.screen.blit(text,text_rect)
+            self.game_surface.blit(text,text_rect)
     
             stats_font = pygame.font.SysFont("arial", 19, bold=True)
             
@@ -269,60 +269,60 @@ class Game:
                 (255,255,255)
             )
             
-            self.screen.blit(XP, (SCREEN_WIDTH * 0.755 , SCREEN_HEIGHT * 0.13))
-            self.screen.blit(Rank, (SCREEN_WIDTH * 0.755 , SCREEN_HEIGHT * 0.18))
+            self.game_surface.blit(XP, (SCREEN_WIDTH * 0.755 , SCREEN_HEIGHT * 0.13))
+            self.game_surface.blit(Rank, (SCREEN_WIDTH * 0.755 , SCREEN_HEIGHT * 0.18))
             
     def setting_menu(self):
         if self.setting_open:
             overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
             overlay.set_alpha(150)
             overlay.fill((0, 0, 0))
-            self.screen.blit(overlay, (0, 0))
+            self.game_surface.blit(overlay, (0, 0))
             
             menu_rect = self.settingMenu.get_rect(bottomleft=(SCREEN_WIDTH * 0.1, SCREEN_HEIGHT * 0.39))
-            self.screen.blit(self.settingMenu,menu_rect)
+            self.game_surface.blit(self.settingMenu,menu_rect)
             
             font = pygame.font.SysFont("arial", 30, bold=True)
             text = font.render("Settings", True, (255,255,255))
             text_rect = text.get_rect(bottomleft=(SCREEN_WIDTH * 0.13 , SCREEN_HEIGHT * 0.18))
-            self.screen.blit(text,text_rect)
+            self.game_surface.blit(text,text_rect)
             
             for button in self.settings_buttons:
-                button.draw(self.screen)
+                button.draw(self.game_surface)
                 
             bar_rect = pygame.Rect(SCREEN_WIDTH * 0.14,SCREEN_HEIGHT * 0.23,100,20)
-            pygame.draw.rect(self.screen, (60,60,60), bar_rect)
+            pygame.draw.rect(self.game_surface, (60,60,60), bar_rect)
             fill_width = int(bar_rect.width * self.sound_manager.master_volume)
-            pygame.draw.rect(self.screen,(0,200,0),(bar_rect.x,bar_rect.y,fill_width,bar_rect.height))
+            pygame.draw.rect(self.game_surface,(0,200,0),(bar_rect.x,bar_rect.y,fill_width,bar_rect.height))
             
     def paused_menu(self):
         if self.paused:
             overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
             overlay.set_alpha(120)
             overlay.fill((0, 0, 0))
-            self.screen.blit(overlay, (0, 0))
+            self.game_surface.blit(overlay, (0, 0))
             font = pygame.font.SysFont("arial", 60, bold=True)
             text = font.render("PAUSED", True, (255, 255, 255))
             text_rect = text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
-            self.screen.blit(text, text_rect)
+            self.game_surface.blit(text, text_rect)
     
     def exit_menu(self):
         if self.show_exit_menu:
             overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
             overlay.set_alpha(150)
             overlay.fill((0, 0, 0))
-            self.screen.blit(overlay, (0, 0))
+            self.game_surface.blit(overlay, (0, 0))
                 
             menu_rect = self.exitMenu.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
-            self.screen.blit(self.exitMenu, menu_rect)
+            self.game_surface.blit(self.exitMenu, menu_rect)
             
             font = pygame.font.SysFont("arial",30,bold=True)
             text = font.render("Are you sure?", True, (255,255,255))
             text_rect = text.get_rect(bottomleft=(SCREEN_WIDTH // 2 - 85 , SCREEN_HEIGHT // 2 - 50))
-            self.screen.blit(text,text_rect)
+            self.game_surface.blit(text,text_rect)
             
             for button in self.menu_buttons:
-                    button.draw(self.screen)
+                    button.draw(self.game_surface)
 
     def update_fade(self, dt):
         if self.fade_state == "fading_out":
@@ -347,7 +347,7 @@ class Game:
         font = pygame.font.SysFont("arial", 30, bold=True)
         fps_text = font.render(f"FPS: {int(self.clock.get_fps())}", True , (255,255,255))
         fps_text_rect = fps_text.get_rect(topleft=(SCREEN_WIDTH * 0.01 , SCREEN_HEIGHT * 0.95))
-        self.screen.blit(fps_text,fps_text_rect)
+        self.game_surface.blit(fps_text,fps_text_rect)
             
     def add_master_volume(self):
         self.sound_manager.set_master_volume(self.sound_manager.master_volume + 0.1)
@@ -433,10 +433,10 @@ class Game:
                 if self.scene_manager.current_name != "MainMenu":   
                     button.update(event)
             for button in self.menu_buttons:
-                if self.scene_manager.current_name != "MainMenu":  
+                if self.show_exit_menu and self.scene_manager.current_name != "MainMenu":  
                     button.update(event)
             for button in self.settings_buttons:
-                if self.scene_manager.current_name != "MainMenu":
+                if self.setting_open and self.scene_manager.current_name != "MainMenu":
                     button.update(event)
             self.sound_manager.handle_event(event)
 
@@ -446,7 +446,6 @@ def main():
     game = Game()
     game.run()
     pygame.quit()
-
 
 if __name__ == "__main__":
     main()

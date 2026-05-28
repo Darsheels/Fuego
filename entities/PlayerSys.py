@@ -5,7 +5,6 @@ from entities.Entity import Entity
 from settings import SCREEN_WIDTH , SCREEN_HEIGHT
 from entities.healthbar import HealthBar
 
-
 PLAYER_PROFILES = {
     "firefighter_no_gear": {
         "walk_frames": ("assets/sprites/player/NewPlayer.png", 48, 96, 2),

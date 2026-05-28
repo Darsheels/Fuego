@@ -31,7 +31,6 @@ class Button:
             if self.hovered:
                 self.game.sound_manager.play_sound("buttonclick")
                 self.callback()
-               
 
     def draw(self,screen):
         screen.blit(self.image,self.rect)
