@@ -58,7 +58,7 @@ class Game:
         for scene_name, scene in scenes.items():
             self.scene_manager.add(scene_name, scene)
 
-        self.mission_scenes = ["Apartment","House1","Museum","FurnitureStore","CarCrashScene"]
+        self.mission_scenes = ["House1","Museum","FurnitureStore","CarCrashScene","Apartment"]
         self.mission_inteiors = ["House1Int","MuseumInt","FurnitureStoreInt"]
         self.scene_manager.set("MainMenu")
 

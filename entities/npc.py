@@ -11,6 +11,10 @@ NPC_TYPES = [
     {
         "walk": "assets/sprites/player/NewPlayer.png",
         "idle": "assets/sprites/player/NewIdlePlayer.png"
+    },
+    {
+        "walk": "assets/sprites/player/GirlNPCAnim.png",
+        "idle": "assets/sprites/player/GirlNPCIdle.png"
     }
 ]
 
