@@ -84,7 +84,7 @@ class BaseScene:
         self.check_mission_failure(dt)
         if self.mission_failed:
             self.game.sound_manager.stop_sound("Extinguishing")
-            self.tick_mission_popup(dt, failed=True)
+            self.tick_mission_popup(dt)
             return
 
         if self.pager:
@@ -98,7 +98,7 @@ class BaseScene:
         self.update_transitions(actor_rect)
 
         if self.mission_accomplished:
-            self.tick_mission_popup(dt, failed=False)
+            self.tick_mission_popup(dt)
 
 
     def draw(self, screen):
@@ -151,8 +151,7 @@ class BaseScene:
         self.mission_popup_timer = 2.5
         self.game.selected_mission = None
 
-    def tick_mission_popup(self, dt, failed):
-        #Count down the result banner then return to base.
+    def tick_mission_popup(self, dt):
         self.mission_popup_timer -= dt
         if self.mission_popup_timer <= 0:
             self.game.next_spawn = "default_interior"
@@ -169,14 +168,11 @@ class BaseScene:
         if fires_clear:
             self.game.sound_manager.stop_sound("Extinguishing")
         
-        
         if fires_clear and npcs_clear:
             self.mission_accomplished = True
             self.mission_popup_timer  = 2.5
             self.game.sound_manager.stop_sound("Extinguishing")
             self.game.stats.add_mission()
-            self.game.stats.update_XP()
-            self.game.stats.save()
     
     def select_mission(self):  
         if self.scene_name != "TruckApparatus":
@@ -337,17 +333,24 @@ class BaseScene:
 
     def draw_mission_overlay(self, screen):
         if self.mission_accomplished:
-            self.draw_banner(screen, "Mission Accomplished!", (255, 215, 0))
+            self.draw_banner(screen, "Mission Accomplished!", (255, 215, 0),(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+            self.mission_overview(screen)
+            
         elif self.mission_failed:
-            self.draw_banner(screen, "Mission Failed", (255, 0, 0))
+            self.draw_banner(screen, "Mission Failed", (255, 0, 0),(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
 
+    def mission_overview(self,screen):
+        self.has_shown_summary = False
+        if self.mission_accomplished and not self.has_shown_summary:
+            rescued = self.game.stats.stats["Current_Mission_Rescued"]
+            self.draw_banner(screen,f"People Saved:{rescued}",(255, 215, 0),(SCREEN_WIDTH // 2, SCREEN_HEIGHT * 0.6)) 
+        
     @staticmethod
-    def draw_banner(screen, text, color):
+    def draw_banner(screen, text, color,rect):
         font = pygame.font.Font(None, 64)
         surf = font.render(text, True, color)
-        rect = surf.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+        rect = surf.get_rect(center=rect)
         screen.blit(surf, rect)
-
 
 class DataScene(BaseScene):
     def __init__(

@@ -142,8 +142,8 @@ class NPC_manager:
                 if dist <= RESCUE_RANGE:
                     npc.show_rescue_prompt = True
                     if keys and keys[pygame.K_r]:
+                        self.game.stats.add_current_rescued()
                         self.game.stats.add_rescued()
-                        self.game.stats.save()
                         npc.set_rescued()
                         continue
 

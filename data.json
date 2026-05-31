@@ -1,7 +1,8 @@
 {
-    "Missions_Completed": 66,
-    "People_Rescued": 81,
-    "Play_Time": 10217.333999905759,
-    "XP": 1050,
-    "Rank": "P. Firefighter"
+    "Missions_Completed": 0,
+    "People_Rescued": 0,
+    "Play_Time": 0,
+    "XP": 0,
+    "Rank": "Recruit",
+    "Current_Mission_Rescued": 0
 }

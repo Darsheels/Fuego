@@ -146,7 +146,6 @@ class Game:
             
             self.stats.update_time(dt)
             self.stats.update_Rank()
-            self.stats.save()
             
             if not self.paused:
                 self.scene_manager.update(keys, dt)
@@ -168,6 +167,7 @@ class Game:
             self.profile_menu()
             self.sound_updates()
             self.fps_draw()
+            self.current_rescued()
             
             scaled_w = int(self.base_w * self._scale)
             scaled_h = int(self.base_h * self._scale)
@@ -418,7 +418,11 @@ class Game:
             self.show_exit_menu = False
             self.stats_open = False
             self.paused = False
-        
+    
+    def current_rescued(self):
+        if self.scene_manager.current_name in self.mission_scenes:
+            self.stats.reset_current_rescued()
+    
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

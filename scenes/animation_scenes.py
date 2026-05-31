@@ -19,7 +19,6 @@ class TruckCutsceneScene(BaseScene):
         self.scroll_x = 0.0
         self.fire_truck.rect.topleft = (100, 270)
     
-
     def update(self, keys, dt):
         if self.game.scene_manager.current_name == "truck_cutscene":
             self.game.sound_manager.play_time_sound("TruckDriving", 5.0)
@@ -39,7 +38,6 @@ class TruckCutsceneScene(BaseScene):
         screen.blit(self.game.background, (-x, 0))
         self.fire_truck.draw(screen)
         
-
 class TruckLeavingScene(BaseScene):
     def __init__(self, game):
         super().__init__(game, None)

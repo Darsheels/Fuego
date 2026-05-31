@@ -109,7 +109,6 @@ def make_valuables_class(defn):
                 if keys[pygame.K_e]:
                     self.visible = False
                     self.game.stats.update_XP()
-                    self.game.stats.save()
             else:
                 self.show_prompt = False
     
