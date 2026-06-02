@@ -42,7 +42,11 @@ class StatsManager:
         self.save()
     
     def update_Rank(self):
-        if self.stats["XP"] >= 1000:
+        if self.stats["XP"] >= 2500:
+            self.stats["Rank"] = "Chief"
+        elif self.stats["XP"] >= 1500:
+            self.stats["Rank"] = "A. Chief"
+        elif self.stats["XP"] >= 1000:
             self.stats["Rank"] = "S. Firefighter"
         elif self.stats["XP"] >= 500:
             self.stats["Rank"] = "Firefighter"

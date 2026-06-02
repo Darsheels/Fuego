@@ -3,7 +3,6 @@ from settings import SCREEN_WIDTH, SCREEN_HEIGHT
 
 class Camera:
     def __init__(self,world_width  = SCREEN_WIDTH,world_height = SCREEN_HEIGHT,lerp_speed = 6.0,deadzone_x = 80,deadzone_y = 50):
-   
         self.world_width  = world_width
         self.world_height = world_height
         self.lerp_speed   = lerp_speed

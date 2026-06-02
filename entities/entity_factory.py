@@ -1,13 +1,35 @@
 import json
 import pygame
+import sys
 from pathlib import Path
+import importlib.resources as resources
 from entities.Entity import Entity
 
 DEFINITIONS_PATH = Path(__file__).resolve().parent / "entity_definitions.json"
 
-def load_definitions(path):
-    with path.open("r", encoding="utf-8") as fh:
-        return json.load(fh)["entities"]
+def load_definitions(path: Path):
+    try:
+        with path.open("r", encoding="utf-8") as fh:
+            return json.load(fh)["entities"]
+    except Exception:
+        pass
+
+    try:
+        pkg = __package__ or "entities"
+        text = resources.read_text(pkg, "entity_definitions.json", encoding="utf-8")
+        return json.loads(text)["entities"]
+    except Exception:
+        pass
+
+    if getattr(sys, "frozen", False):
+        meipass_path = Path(getattr(sys, "_MEIPASS", "")) / "entities" / "entity_definitions.json"
+        try:
+            with meipass_path.open("r", encoding="utf-8") as fh:
+                return json.load(fh)["entities"]
+        except Exception:
+            pass
+
+    raise FileNotFoundError(f"Could not locate entity_definitions.json (tried {path}, package resources, and _MEIPASS)")
 
 def make_standard_class(defn):
     image_path = defn["image_path"]

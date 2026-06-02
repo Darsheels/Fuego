@@ -14,8 +14,9 @@ from entities.stats_manager import StatsManager
 
 class Game:
     def __init__(self):
-        self.screen = pygame.display.set_mode((0,0), pygame.NOFRAME | pygame.FULLSCREEN)
+        self.screen = pygame.display.set_mode((0,0), pygame.NOFRAME | pygame.RESIZABLE)
         pygame.display.set_caption("Fuego")
+        pygame.display.set_icon(pygame.image.load("assets/sprites/buildingblocks/NewFire.png").convert_alpha())
         self.clock = pygame.time.Clock()
         self.running = True
         self.paused = False
@@ -26,7 +27,7 @@ class Game:
         self.previous_mission = None
 
         self.base_w = 1280 
-        self.base_h = 720  
+        self.base_h = 720 
         self.game_surface = pygame.Surface((self.base_w, self.base_h))
 
         self._scale = 1.0

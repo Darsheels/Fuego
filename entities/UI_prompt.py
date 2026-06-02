@@ -1,11 +1,11 @@
 import pygame
-from settings import SCREEN_WIDTH, SCREEN_HEIGHT
+from settings import SCREEN_HEIGHT
 
 class UIPrompt:
     def __init__(self, text, x, y):
         
         font_size = int(SCREEN_HEIGHT * 0.05)  
-        self.font = pygame.font.Font(None, font_size)
+        self.font = pygame.font.SysFont("bebas neue", font_size)
 
         self.text = text
         self.image = self.font.render(text, True, (255, 255, 255))

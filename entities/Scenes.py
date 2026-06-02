@@ -192,7 +192,6 @@ class BaseScene:
         print(f"[mission] Selected: {chosen}")
 
 
-    # Actor update
     def update_actor(self, keys, dt) :
         if self.fire_truck and self.player and getattr(self.player, "in_vehicle", False):
             return self.fire_truck.rect
@@ -346,7 +345,7 @@ class BaseScene:
             self.draw_banner(screen,f"People Saved:{rescued}",(255, 215, 0),(SCREEN_WIDTH // 2, SCREEN_HEIGHT * 0.6)) 
         
     @staticmethod
-    def draw_banner(screen, text, color,rect):
+    def draw_banner(screen, text, color, rect):
         font = pygame.font.Font(None, 64)
         surf = font.render(text, True, color)
         rect = surf.get_rect(center=rect)
